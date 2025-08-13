@@ -10,7 +10,7 @@ export default function SearchBar({ onSearch, variant = 'home' }) {
   };
 
   // 홈 vs 가게검색 페이지 레이아웃
-  const containerWidth = variant === 'store' ? 'w-[961px]' : 'w-[961px]'; // 홈도 961 쓰던 구조 유지
+  const containerWidth = variant === 'store' ? 'w-[961px]' : 'w-[961px]';
   const inputWidth = variant === 'store' ? 'w-[787px]' : 'w-[787px]';
   const btnSize =
     variant === 'store' ? 'w-[150px] h-[61px]' : 'w-[150px] h-[61px]';
@@ -28,12 +28,12 @@ export default function SearchBar({ onSearch, variant = 'home' }) {
           placeholder="가고자 하는 곳의 화장실 리뷰를 확인해봐요"
           className={`
             ${inputWidth} h-[78px]
-            rounded-[50px] border-[2px] border-[#00AEEF] bg-white
+            rounded-[50px] bg-brand-3 border-0
             pt-[27px] pb-[27px] pl-[47px] pr-[47px]
-            font-pretendard text-[20px] font-normal leading-normal
-            text-neutral-950 placeholder:text-[#0B0B0B]
-            outline-none focus:ring-2 focus:ring-[#00AEEF]/25
+            font-pretendard text-[20px] leading-normal
+            text-neutral-950 placeholder:text-neutral-950
             focus:placeholder-transparent
+            outline-none
           `}
         />
 
