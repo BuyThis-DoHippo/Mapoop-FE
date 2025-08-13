@@ -1,4 +1,3 @@
-// src/pages/Home.jsx
 import Navbar from '../components/Navbar';
 import SearchBar from '../components/SearchBar';
 import { useNavigate } from 'react-router-dom';

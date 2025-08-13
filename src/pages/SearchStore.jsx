@@ -1,4 +1,3 @@
-// src/pages/SearchStore.jsx
 import Navbar from '../components/Navbar';
 import SearchBar from '../components/SearchBar';
 
@@ -36,8 +35,13 @@ const nearbyToilets = [
 
 // Frame 97 카드 폭(피그마): [257, 256, 256, 256]
 const cardWidths = [257, 256, 256, 256];
-// 이름 영역 폭/높이(별점 영역 제외 폭, 높이는 2줄 기준 58px로 고정)
-const nameFrames = cardWidths.map((w) => ({ w: w - (24 + 8 + 31), h: 58 }));
+
+const nameFrames = [
+  { w: 83, h: 29 }, // 제순식당
+  { w: 130, h: 29 }, // 소코아 홍대점
+  { w: 172, h: 58 }, // 레드로드 R6 개방 화장실
+  { w: 136, h: 58 }, // 스타벅스 홍대 삼거리점
+];
 
 export default function SearchStore() {
   return (
@@ -49,16 +53,26 @@ export default function SearchStore() {
         {/* 네브바 하단선과 90px, 좌 198 / 우 197 */}
         <section className="mt-[90px] pl-[198px] pr-[197px]">
           <div className="inline-flex items-center gap-[24px]">
+            {/* 검색창: 입력 787×78 + 버튼 150×61 = 961px */}
             <SearchBar
               variant="store"
               onSearch={(q) => console.log('search:', q)}
             />
+
+            {/* 필터 60×60 — hover/active/focus 시 테두리/배경 변경 */}
             <button
               type="button"
               aria-label="필터"
-              className="h-[60px] w-[60px] shrink-0 inline-flex items-center justify-center
-                         rounded-[10px] border border-[#D9D9D9] bg-white hover:shadow-sm transition
-                         focus:outline-none focus:ring-2 focus:ring-[#00AEEF]/25"
+              className="
+                h-[60px] w-[60px] shrink-0
+                inline-flex items-center justify-center
+                rounded-[10px] border border-[#D9D9D9] bg-white
+                transition-all duration-150
+                hover:bg-[#EFEFEF] hover:border-[#7C7C7C] hover:border-2
+                active:bg-[#EFEFEF] active:border-[#7C7C7C] active:border-2
+                focus-visible:bg-[#EFEFEF] focus-visible:border-[#7C7C7C] focus-visible:border-2
+                focus:outline-none
+              "
             >
               <img src="/assets/filter.svg" alt="필터" className="h-5 w-5" />
             </button>
@@ -66,17 +80,16 @@ export default function SearchStore() {
         </section>
 
         {/* ===== Frame 98 : 리스트 섹션 ===== */}
-        {/* Frame107 아래 153px, 좌 123 / 우 120, 아래 여백 203px */}
+        {/* Frame107 아래 153px, 좌 123 / 우 120, 바깥 아래 203px */}
         <section className="mt-[153px] pl-[123px] pr-[120px] mb-[203px]">
-          {/* Frame 98 내부는 세로 정렬, gap 44px, 폭 = 1197px(=1440-123-120) */}
-          <div className="flex flex-col items-start gap-[44px] w-full">
-            {/* 제목 타이포 */}
+          {/* 제목(24/36 regular)과 리스트 간격 44px */}
+          <div className="flex flex-col items-start gap-[44px] w-full bg-white">
             <h2 className="text-[24px] leading-[36px] font-pretendard font-normal text-[#000]">
               지금 주변에 있는 가장 가까운 화장실
             </h2>
 
-            {/* 👉 Frame 97: [←] 24 [257] 24 [256] 24 [256] 24 [256] 24 [→]  === 총 1193px */}
-            <div className="w-[1193px] flex items-center gap-[24px]">
+            {/* 👉 Frame 97: [←] 24 [257] 24 [256] 24 [256] 24 [256] 24 [→]  = 총 1193px */}
+            <div className="w-[1193px] flex items-center gap-[24px] mb-[229px]">
               {/* 왼쪽 화살표 */}
               <button
                 type="button"
@@ -89,9 +102,9 @@ export default function SearchStore() {
               {/* 카드 4개 */}
               {nearbyToilets.map((t, idx) => {
                 const cardW = cardWidths[idx];
-                const imgSize = cardW; // 정사각 이미지
+                const imgW = cardW; // 정사각 썸네일
                 const nameBox = nameFrames[idx];
-                const isTwo = nameBox.h >= 58;
+                const isTwo = nameBox.h >= 58; // 2줄 여부
                 const extra = Math.max(0, 58 - nameBox.h); // 칩 Y정렬 보정
 
                 return (
@@ -103,7 +116,7 @@ export default function SearchStore() {
                     {/* 썸네일 */}
                     <div
                       className="relative rounded-[10px] overflow-hidden"
-                      style={{ width: `${imgSize}px`, height: `${imgSize}px` }}
+                      style={{ width: `${imgW}px`, height: `${imgW}px` }}
                     >
                       <img
                         src="/assets/NearbyToilet.svg"
@@ -156,10 +169,10 @@ export default function SearchStore() {
                         </div>
                       </div>
 
-                      {/* 보정 스페이서: 1줄 이름(29px)에 29px 추가 → 칩 Y정렬 통일 */}
+                      {/* 보정 스페이서: 1줄 이름(29px)엔 29px 추가 → 칩 Y정렬 통일 */}
                       <div style={{ height: `${extra}px` }} />
 
-                      {/* 칩 — 전부 95×35 고정, 간격 16px */}
+                      {/* 칩 — 95×35, 간격 16px */}
                       <div className="mt-[12px] flex flex-wrap items-center gap-[16px]">
                         {t.tags.map((tag, i) => (
                           <span
@@ -188,9 +201,6 @@ export default function SearchStore() {
                 <img src="/assets/arrow.svg" alt="" className="w-6 h-6" />
               </button>
             </div>
-
-            {/* (디자인 대비를 위한) 아래 흰 배경 144px — 필요 없으면 삭제 가능 */}
-            <div className="w-[1193px] h-[144px] bg-white" />
           </div>
         </section>
       </main>
