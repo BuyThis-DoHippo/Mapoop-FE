@@ -92,8 +92,11 @@ export default function Home() {
 
           {/* 2행: 하단 버튼 2개 */}
           <div className="pt-[40px] flex gap-[32px]">
+            {' '}
             <button
               type="button"
+              aria-label="화장실 등록"
+              onClick={() => navigate('/register-toilet')}
               className="w-[583px] h-[183px] flex-shrink-0 rounded-[10px] border-2 border-brand-main bg-brand-3 px-[60px] py-[41px] flex items-center justify-start gap-[45px] text-left"
             >
               <div className="font-pretendard flex-1 max-w-[463px]">
@@ -111,7 +114,6 @@ export default function Home() {
                 aria-hidden
               />
             </button>
-
             <button
               type="button"
               className="w-[583px] h-[183px] flex-shrink-0 rounded-[10px] border-2 border-brand-main bg-brand-3 px-[60px] py-[41px] flex items-center justify-start gap-[45px] text-left"

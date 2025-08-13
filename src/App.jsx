@@ -3,6 +3,7 @@ import Home from './pages/Home';
 import SearchStore from './pages/SearchStore';
 import SearchToilet from './pages/SearchToilet';
 import SearchToiletUrgent from './pages/SearchToiletUrgent';
+import RegisterToilet from './pages/RegisterToliet';
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
       <Route path="/search-store" element={<SearchStore />} />
       <Route path="/find-toilet" element={<SearchToilet />} />
       <Route path="/find-toilet/urgent" element={<SearchToiletUrgent />} />
+      <Route path="/register-toilet" element={<RegisterToilet />} />
     </Routes>
   );
 }
