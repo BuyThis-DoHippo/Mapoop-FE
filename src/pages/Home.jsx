@@ -97,7 +97,7 @@ export default function Home() {
               type="button"
               aria-label="화장실 등록"
               onClick={() => navigate('/register-toilet')}
-              className="w-[583px] h-[183px] flex-shrink-0 rounded-[10px] border-2 border-brand-main bg-brand-3 px-[60px] py-[41px] flex items-center justify-start gap-[45px] text-left"
+              className="w-[583px] h-[183px] flex-shrink-0 rounded-[10px] border-2 border-neutral-200 bg-white px-[60px] py-[41px] flex items-center justify-start gap-[45px] text-left"
             >
               <div className="font-pretendard flex-1 max-w-[463px]">
                 <p className="text-[16px] w-[169px] h-[48px] leading-[24px] text-[#0B0B0B]">
@@ -118,7 +118,7 @@ export default function Home() {
               type="button"
               aria-label="마포구 AI 화장실 챗봇"
               onClick={() => navigate('/ai-chatbot')}
-              className="w-[583px] h-[183px] flex-shrink-0 rounded-[10px] border-2 border-brand-main bg-brand-3 px-[60px] py-[41px] flex items-center justify-start gap-[45px] text-left"
+              className="w-[583px] h-[183px] flex-shrink-0 rounded-[10px] border-2 border-neutral-200 bg-white px-[60px] py-[41px] flex items-center justify-start gap-[45px] text-left"
             >
               <div className="font-pretendard flex-1 max-w-[463px]">
                 <p className="text-[16px] w-[207px] h-[48px] leading-[24px] text-[#0B0B0B]">
