@@ -1,7 +1,12 @@
 import React from 'react';
+import { NavLink } from 'react-router-dom';
 
 // 네비게이션 바
 export default function Navbar() {
+  // 메뉴 공통 클래스
+  const itemBase =
+    'w-[75px] h-6 font-pretendard text-xl leading-normal text-[#000] whitespace-nowrap hover:font-bold';
+
   return (
     <header className="w-full border-b border-line bg-brand-white">
       {/* 좌우 125px */}
@@ -18,13 +23,16 @@ export default function Navbar() {
           {/* 메뉴 (텍스트) */}
           <nav className="flex items-center gap-[56px]">
             {/* 가게 검색 */}
-            <button
-              type="button"
-              className="w-[75px] h-6 font-pretendard font-normal text-xl leading-normal text-[#000] whitespace-nowrap hover:font-bold"
+            <NavLink
+              to="/search-store"
+              end
               aria-label="가게 검색"
+              className={({ isActive }) =>
+                `${itemBase} ${isActive ? 'font-bold' : 'font-normal'}`
+              }
             >
               가게 검색
-            </button>
+            </NavLink>
 
             {/* 화장실 리뷰 */}
             <button
