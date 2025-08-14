@@ -1,6 +1,9 @@
+import Navbar from '../components/Navbar';
+
 export default function SearchToiletUrgent() {
   return (
-    <div className="w-full min-h-screen flex items-start justify-center">
+    <div className="w-full">
+      <Navbar />
       <main className="w-full">
         <section className="mt-[90px]">
           <h1 className="text-[24px] font-bold text-center">
