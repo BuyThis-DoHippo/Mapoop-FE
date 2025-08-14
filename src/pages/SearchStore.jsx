@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import Navbar from '../components/Navbar';
 import SearchBar from '../components/SearchBar';
+import Filter from '../components/Filter';
 
 // (API 연동 전) 카드 목데이터
 const nearbyToilets = [
@@ -44,6 +46,8 @@ const nameFrames = [
 ];
 
 export default function SearchStore() {
+  const [filterOpen, setFilterOpen] = useState(false);
+
   return (
     <div className="w-full">
       <Navbar />
@@ -52,7 +56,7 @@ export default function SearchStore() {
       <main className="w-[1440px] mx-auto">
         {/* 네브바 하단선과 90px, 좌 198 / 우 197 */}
         <section className="mt-[90px] pl-[198px] pr-[197px]">
-          <div className="inline-flex items-center gap-[24px]">
+          <div className="inline-flex items-center gap-[24px] relative">
             {/* 검색창: 입력 787×78 + 버튼 150×61 = 961px */}
             <SearchBar
               variant="store"
@@ -63,6 +67,7 @@ export default function SearchStore() {
             <button
               type="button"
               aria-label="필터"
+              onClick={() => setFilterOpen((v) => !v)}
               className="
                 h-[60px] w-[60px] shrink-0
                 inline-flex items-center justify-center
@@ -76,6 +81,13 @@ export default function SearchStore() {
             >
               <img src="/assets/filter.svg" alt="필터" className="h-5 w-5" />
             </button>
+
+            {/* ✅ 필터 오버레이 (버튼 아래로 드롭) */}
+            {filterOpen && (
+              <div className="absolute top-[86px] right-0 z-50">
+                <Filter open />
+              </div>
+            )}
           </div>
         </section>
 
