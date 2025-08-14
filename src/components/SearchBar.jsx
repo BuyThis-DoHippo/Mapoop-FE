@@ -9,7 +9,6 @@ export default function SearchBar({ onSearch, variant = 'home' }) {
     onSearch?.(q.trim());
   };
 
-  // 홈 vs 가게검색 페이지 레이아웃
   const containerWidth = variant === 'store' ? 'w-[961px]' : 'w-[961px]';
   const inputWidth = variant === 'store' ? 'w-[787px]' : 'w-[787px]';
   const btnSize =
@@ -17,7 +16,7 @@ export default function SearchBar({ onSearch, variant = 'home' }) {
 
   return (
     <form onSubmit={submit} className="w-full flex justify-center">
-      {/* store: 961px(= 787 + 24 + 150), home도 기존 폭 유지 */}
+      {/* 검색창 */}
       <div
         className={`${containerWidth} h-[78px] mx-auto flex items-center gap-[24px]`}
       >
@@ -37,7 +36,7 @@ export default function SearchBar({ onSearch, variant = 'home' }) {
           `}
         />
 
-        {/* 검색 버튼: store에서는 150×61 */}
+        {/* 검색 버튼 */}
         <button
           type="submit"
           className={`

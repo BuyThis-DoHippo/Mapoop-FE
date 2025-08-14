@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 export default function Filter({ open = true, className = '', style }) {
   if (!open) return null;
 
-  // 칩 공통 인터랙션 (호버/클릭/포커스)
   const chipInterations =
     'transition-colors duration-150 hover:bg-brand-3 active:bg-brand-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-2/30';
 
@@ -12,7 +11,6 @@ export default function Filter({ open = true, className = '', style }) {
       role="dialog"
       aria-label="필터"
       className={[
-        // Frame 108
         'inline-flex items-center gap-2 p-8 w-[387px]',
         'rounded-[10px] bg-white',
         'shadow-[4px_4px_11.1px_2px_rgba(0,0,0,0.25)]',
@@ -20,7 +18,6 @@ export default function Filter({ open = true, className = '', style }) {
       ].join(' ')}
       style={style}
     >
-      {/* Frame 120 */}
       <div className="flex w-[323px] flex-col items-start gap-[32px]">
         {/* 첫번째 줄 */}
         <div className="w-full flex flex-wrap items-center gap-2">
@@ -53,7 +50,7 @@ export default function Filter({ open = true, className = '', style }) {
           </button>
         </div>
 
-        {/* 2번째 줄: 최소 평점 */}
+        {/* 2번째 줄 */}
         <div className="w-full flex flex-col items-start">
           <button
             type="button"

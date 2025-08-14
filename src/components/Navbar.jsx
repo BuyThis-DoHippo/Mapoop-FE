@@ -1,4 +1,3 @@
-// Navbar.jsx
 import React from 'react';
 import { NavLink, useLocation, matchPath } from 'react-router-dom';
 
@@ -31,7 +30,7 @@ export default function Navbar() {
 
           {/* 네비게이션 */}
           <nav className="flex items-center gap-[56px]">
-            {/* 가게 검색 (SearchStore / SearchToilet / Urgent 전부 여기로 활성) */}
+            {/* 가게 검색 (SearchStore / SearchToilet / SearchToiletUrgent 전부 여기로 활성) */}
             <NavLink
               to="/search-store"
               aria-label="가게 검색"
@@ -40,7 +39,7 @@ export default function Navbar() {
               가게 검색
             </NavLink>
 
-            {/* 화장실 리뷰 (자기 경로에서만 활성) */}
+            {/* 화장실 리뷰 */}
             <NavLink
               to="/review-toilet"
               aria-label="화장실 리뷰"
