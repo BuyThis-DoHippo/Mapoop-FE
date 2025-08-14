@@ -35,13 +35,16 @@ export default function Navbar() {
             </NavLink>
 
             {/* 화장실 리뷰 */}
-            <button
-              type="button"
-              className="w-[92px] h-6 font-pretendard font-normal text-xl leading-normal text-[#000] whitespace-nowrap hover:font-bold"
+            <NavLink
+              to="/review-toilet"
+              end
               aria-label="화장실 리뷰"
+              className={({ isActive }) =>
+                `${itemBase} ${isActive ? 'font-bold' : 'font-normal'}`
+              }
             >
               화장실 리뷰
-            </button>
+            </NavLink>
 
             {/* 로그인 버튼 */}
             <button
