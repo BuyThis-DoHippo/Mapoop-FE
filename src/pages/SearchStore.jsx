@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useState, useRef, useLayoutEffect } from 'react';
 import Navbar from '../components/Navbar';
 import SearchBar from '../components/SearchBar';
 import Filter from '../components/Filter';
 
-// 목데이터: 근처 화장실 카드
+// 카드 목록 데이터
 const nearbyToilets = [
   {
     id: 1,
@@ -34,11 +34,8 @@ const nearbyToilets = [
     tags: ['깨끗한', '가게 안'],
   },
 ];
-
-// 카드 폭 배열
+// 카드 레이아웃 수치
 const cardWidths = [257, 256, 256, 256];
-
-// 카드명 영역 규격
 const nameFrames = [
   { w: 83, h: 29 },
   { w: 130, h: 29 },
@@ -47,59 +44,190 @@ const nameFrames = [
 ];
 
 export default function SearchStore() {
+  // 필터 팝오버 열림 상태
   const [filterOpen, setFilterOpen] = useState(false);
+  // 선택된 칩 라벨 배열
+  const [selected, setSelected] = useState([]);
+
+  // 칩 줄바꿈에 따른 높이 측정용
+  const chipsListRef = useRef(null);
+  const [extraRowsPx, setExtraRowsPx] = useState(0); // 첫 줄(35px) 초과 높이
+
+  // 칩 컨테이너 높이 재계산
+  useLayoutEffect(() => {
+    const calc = () => {
+      const el = chipsListRef.current;
+      if (!el) return;
+      const total = el.getBoundingClientRect().height || 0;
+      const firstRow = 35;
+      const extra = Math.max(0, Math.round(total - firstRow));
+      setExtraRowsPx(extra);
+    };
+    calc();
+    window.addEventListener('resize', calc);
+    return () => window.removeEventListener('resize', calc);
+  }, [selected]);
+
+  // 단일 선택 그룹 라벨
+  const SINGLE_KIND = ['공공', '민간'];
+  const SINGLE_RATING = ['4.5', '4.0', '3.5', '4.5+', '4.0+', '3.5+'];
+
+  // 라벨 → 그룹/모드 매핑
+  const LABEL_MAP = {
+    공공: { key: 'kind', mode: 'single' },
+    민간: { key: 'kind', mode: 'single' },
+    4.5: { key: 'minRating', mode: 'single' },
+    '4.0': { key: 'minRating', mode: 'single' },
+    3.5: { key: 'minRating', mode: 'single' },
+    '4.5+': { key: 'minRating', mode: 'single' },
+    '4.0+': { key: 'minRating', mode: 'single' },
+    '3.5+': { key: 'minRating', mode: 'single' },
+    '현재이용 가능': { key: 'use', mode: 'multi' },
+    '남녀 분리': { key: 'use', mode: 'multi' },
+    '가게 안 화장실': { key: 'place', mode: 'multi' },
+    '24시간': { key: 'place', mode: 'multi' },
+    '비데 있음': { key: 'equip', mode: 'multi' },
+    '위생용품 제공': { key: 'equip', mode: 'multi' },
+    깨끗함: { key: 'state', mode: 'multi' },
+    칸많음: { key: 'state', mode: 'multi' },
+    장애인화장실: { key: 'special', mode: 'multi' },
+    기저귀교환대: { key: 'special', mode: 'multi' },
+  };
+
+  // 선택 칩 스타일
+  const chipSelectedClass =
+    'inline-flex items-center px-8 h-[35px] rounded-[50px] border border-[var(--Main-Main-2,#0085B7)] bg-[var(--Main-Main3,#EBFAFF)] text-[#0085B7] font-pretendard text-[16px] leading-[24px] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#7FCBE6]';
+  // 전체 취소 칩 스타일
+  const clearClass =
+    'inline-flex items-center justify-center px-4 h-[35px] rounded-[50px] border border-neutral-300 bg-neutral-50 font-pretendard text-[16px] leading-[24px] text-neutral-300 hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D0D0D0]';
+
+  // 전체 해제
+  const clearAll = () => setSelected([]);
+  // 개별 해제
+  const removeOne = (label) =>
+    setSelected((prev) => prev.filter((x) => x !== label));
+
+  // 칩 토글(단일/다중 규칙)
+  const toggleChip = ({ key, label, mode }) => {
+    setSelected((prev) => {
+      if (prev.includes(label)) return prev.filter((x) => x !== label);
+      if (mode === 'single') {
+        const group = key === 'kind' ? SINGLE_KIND : SINGLE_RATING;
+        return [...prev.filter((x) => !group.includes(x)), label];
+      }
+      return [...prev, label];
+    });
+  };
+
+  // 팝오버 내부 버튼 클릭 위임
+  const handleFilterClick = (e) => {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+    const text = btn.textContent?.trim();
+    if (!text) return;
+    if (text === '필터링 취소 X') {
+      clearAll();
+      return;
+    }
+    const info = LABEL_MAP[text];
+    if (info) toggleChip({ ...info, label: text });
+  };
 
   return (
     <div className="w-full">
       <Navbar />
 
       <main className="w-[1440px] mx-auto">
-        {/* 검색/필터 영역 */}
+        {/* 상단: 검색창 + 필터 버튼 */}
         <section className="mt-[90px] pl-[198px] pr-[197px]">
-          <div className="inline-flex items-center gap-[24px] relative">
-            {/* 검색창 */}
-            <SearchBar
-              variant="store"
-              onSearch={(q) => console.log('search:', q)}
-            />
+          <div className="relative">
+            <div className="inline-flex items-center gap-[24px]">
+              <SearchBar
+                variant="store"
+                onSearch={(q) => console.log('search:', q)}
+              />
+              <button
+                type="button"
+                aria-label="필터"
+                onClick={() => setFilterOpen((v) => !v)}
+                className="
+                  h-[60px] w-[60px] shrink-0 inline-flex items-center justify-center
+                  rounded-[10px] border border-[#D9D9D9] bg-white
+                  transition-all duration-150
+                  hover:bg-[#EFEFEF] hover:border-[#7C7C7C] hover:border-2
+                  active:bg-[#EFEFEF] active:border-[#7C7C7C] active:border-2
+                  focus-visible:bg-[#EFEFEF] focus-visible:border-[#7C7C7C] focus-visible:border-2
+                  focus:outline-none
+                "
+              >
+                <img src="/assets/filter.svg" alt="필터" className="h-5 w-5" />
+              </button>
+            </div>
 
-            {/* 필터 버튼 */}
-            <button
-              type="button"
-              aria-label="필터"
-              onClick={() => setFilterOpen((v) => !v)}
-              className="
-                h-[60px] w-[60px] shrink-0
-                inline-flex items-center justify-center
-                rounded-[10px] border border-[#D9D9D9] bg-white
-                transition-all duration-150
-                hover:bg-[#EFEFEF] hover:border-[#7C7C7C] hover:border-2
-                active:bg-[#EFEFEF] active:border-[#7C7C7C] active:border-2
-                focus-visible:bg-[#EFEFEF] focus-visible:border-[#7C7C7C] focus-visible:border-2
-                focus:outline-none
-              "
-            >
-              <img src="/assets/filter.svg" alt="필터" className="h-5 w-5" />
-            </button>
+            {/* 선택 칩 바 */}
+            {selected.length > 0 && (
+              <div className="mt-6 w-[961px] flex items-start gap-[32px]">
+                {/* 라벨 */}
+                <span className="w-[92px] h-[35px] flex items-center flex-shrink-0 font-pretendard text-[16px] font-normal leading-[24px] text-black">
+                  필터링 결과
+                </span>
+
+                {/* 칩 목록(여러 줄) */}
+                <div
+                  ref={chipsListRef}
+                  className="flex flex-wrap content-start items-center gap-2"
+                >
+                  {selected.map((label) => (
+                    <button
+                      key={label}
+                      onClick={() => removeOne(label)}
+                      type="button"
+                      className={chipSelectedClass}
+                      title={label}
+                    >
+                      <span>{label}</span>
+                    </button>
+                  ))}
+
+                  {/* 전체 취소 */}
+                  <button
+                    type="button"
+                    onClick={clearAll}
+                    className={clearClass}
+                  >
+                    필터링 취소 X
+                  </button>
+                </div>
+              </div>
+            )}
 
             {/* 필터 팝오버 */}
             {filterOpen && (
-              <div className="absolute top-[86px] right-0 z-50">
-                <Filter open />
+              <div
+                className="absolute top-[86px] right-0 z-50"
+                onClickCapture={handleFilterClick}
+              >
+                <Filter open selected={selected} />
               </div>
             )}
           </div>
         </section>
 
-        {/* 카드 리스트 섹션 */}
-        <section className="mt-[153px] pl-[123px] pr-[120px] mb-[203px]">
+        {/* 카드 리스트 섹션(상단 간격 보정) */}
+        <section
+          className="pl-[123px] pr-[120px] mb-[203px]"
+          style={{
+            marginTop:
+              selected.length > 0 ? `calc(153px - ${extraRowsPx}px)` : '153px',
+          }}
+        >
           <div className="flex flex-col items-start gap-[44px] w-full bg-white">
             {/* 섹션 제목 */}
             <h2 className="text-[24px] leading-[36px] font-pretendard font-normal text-[#000]">
               지금 주변에 있는 가장 가까운 화장실
             </h2>
 
-            {/* 리스트 래퍼 */}
+            {/* 카드 리스트 */}
             <div className="w-[1193px] flex items-center gap-[24px] mb-[229px]">
               {/* 이전 버튼 */}
               <button
@@ -110,7 +238,7 @@ export default function SearchStore() {
                 <img src="/assets/arrowleft.svg" alt="" className="w-6 h-6" />
               </button>
 
-              {/* 카드들 */}
+              {/* 카드 4개 */}
               {nearbyToilets.map((t, idx) => {
                 const cardW = cardWidths[idx];
                 const imgW = cardW;
@@ -124,7 +252,7 @@ export default function SearchStore() {
                     className="flex-shrink-0 h-[393px]"
                     style={{ width: `${cardW}px` }}
                   >
-                    {/* 썸네일 */}
+                    {/* 썸네일 + 유형 뱃지 */}
                     <div
                       className="relative rounded-[10px] overflow-hidden"
                       style={{ width: `${imgW}px`, height: `${imgW}px` }}
@@ -134,7 +262,6 @@ export default function SearchStore() {
                         alt={t.name}
                         className="w-full h-full object-cover"
                       />
-                      {/* 유형 뱃지 */}
                       <span
                         className={[
                           'absolute right-[12px] bottom-[12px] h-[28px] px-[12px] rounded-full',
@@ -146,9 +273,9 @@ export default function SearchStore() {
                       </span>
                     </div>
 
-                    {/* 텍스트 영역 */}
+                    {/* 텍스트 */}
                     <div className="mt-[16px]">
-                      {/* 가게명 + 평점 */}
+                      {/* 이름 + 평점 */}
                       <div className="flex items-start justify-between">
                         <p
                           className="font-pretendard text-black text-[24px] font-bold leading-[29px]"
@@ -180,7 +307,7 @@ export default function SearchStore() {
                         </div>
                       </div>
 
-                      {/* 높이 보정 */}
+                      {/* 이름 높이 보정 */}
                       <div style={{ height: `${extra}px` }} />
 
                       {/* 태그 칩 */}
@@ -188,10 +315,7 @@ export default function SearchStore() {
                         {t.tags.map((tag, i) => (
                           <span
                             key={i}
-                            className="font-pretendard inline-flex items-center justify-center
-                                       rounded-[50px] bg-[#EFEFEF] w-[95px] h-[35px]
-                                       text-[16px] font-normal text-center text-[var(--grayscale-gray8,#2C2C2C)]
-                                       whitespace-nowrap overflow-hidden text-ellipsis"
+                            className="font-pretendard inline-flex items-center justify-center rounded-[50px] bg-[#EFEFEF] w-[95px] h-[35px] text-[16px] font-normal text-center text-[var(--grayscale-gray8,#2C2C2C)] whitespace-nowrap overflow-hidden text-ellipsis"
                             title={tag}
                           >
                             {tag}
