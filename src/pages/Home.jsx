@@ -146,13 +146,33 @@ export default function Home() {
           <div className="w-[1193px] flex flex-col items-start gap-[60px] mx-auto">
             <div className="w-full h-px bg-[#D8D8D8]" />
 
-            {/* 섹션 제목 + 리스트 */}
-            <div className="flex flex-col items-start gap-[44px]">
-              <h2 className="font-pretendard text-black text-[32px] leading-[48px] font-extrabold">
-                지금 주변에 있는
-                <br />
-                가장 가까운 화장실
-              </h2>
+            {/* 섹션 제목 + 더보기 + 리스트 */}
+            <div className="flex flex-col items-start gap-[44px] w-full">
+              {/* 제목 + 더보기 (한 줄) */}
+              <div className="w-full flex items-start justify-between">
+                <h2 className="font-pretendard text-black text-[32px] leading-[48px] font-extrabold">
+                  지금 주변에 있는
+                  <br />
+                  가장 가까운 화장실
+                </h2>
+
+                {/* 화장실 더보기 → */}
+                <button
+                  type="button"
+                  onClick={() => navigate('/find-toilet')}
+                  className="
+                    font-pretendard
+                    text-[16px] leading-[24px] font-normal
+                    text-[var(--grayscale-gray4,#7C7C7C)]
+                    tracking-[0]
+                    whitespace-nowrap
+                    hover:opacity-80
+                    focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-main/30
+                  "
+                >
+                  화장실 더보기 →
+                </button>
+              </div>
 
               {/* 리스트: 좌우 화살표 + 카드 4장 */}
               <div className="w-[1193px] flex items-center gap-[24px]">
