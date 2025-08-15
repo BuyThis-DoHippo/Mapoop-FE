@@ -218,9 +218,8 @@ export default function SearchStore() {
             )}
           </div>
         </section>
-
         {/* 카드 리스트 */}
-        <section className="pl-[123px] pr-[120px] mb-[203px] mt-[153px]">
+        <section className="pl-[123px] pr-[120px] mb-0 mt-[153px]">
           <div className="flex flex-col items-start gap-[44px] w-full bg-white">
             <h2 className="text-[24px] leading-[36px] font-pretendard font-normal text-[#000]">
               지금 주변에 있는 가장 가까운 화장실
