@@ -3,7 +3,7 @@ import Navbar from '../components/Navbar';
 import SearchBar from '../components/SearchBar';
 import Filter from '../components/Filter';
 
-// 카드 목록 데이터(API 연결할때 수정)
+// 카드 목록 데이터 (API 연결 후 수정해야 함)
 const nearbyToilets = [
   {
     id: 1,
@@ -47,24 +47,6 @@ export default function SearchStore() {
   const [filterOpen, setFilterOpen] = useState(false);
   const [selected, setSelected] = useState([]);
 
-  // 칩 줄바꿈에 따른 높이 측정용
-  const chipsListRef = useRef(null);
-  const [extraRowsPx, setExtraRowsPx] = useState(0); // 첫 줄(35px) 초과 높이
-
-  useLayoutEffect(() => {
-    const calc = () => {
-      const el = chipsListRef.current;
-      if (!el) return;
-      const total = el.getBoundingClientRect().height || 0;
-      const firstRow = 35;
-      const extra = Math.max(0, Math.round(total - firstRow));
-      setExtraRowsPx(extra);
-    };
-    calc();
-    window.addEventListener('resize', calc);
-    return () => window.removeEventListener('resize', calc);
-  }, [selected]);
-
   // 단일 선택 그룹 라벨
   const SINGLE_KIND = ['공공', '민간'];
   const SINGLE_RATING = ['4.5', '4.0', '3.5', '4.5+', '4.0+', '3.5+'];
@@ -73,20 +55,24 @@ export default function SearchStore() {
   const LABEL_MAP = {
     공공: { key: 'kind', mode: 'single' },
     민간: { key: 'kind', mode: 'single' },
+
     4.5: { key: 'minRating', mode: 'single' },
     '4.0': { key: 'minRating', mode: 'single' },
     3.5: { key: 'minRating', mode: 'single' },
     '4.5+': { key: 'minRating', mode: 'single' },
     '4.0+': { key: 'minRating', mode: 'single' },
     '3.5+': { key: 'minRating', mode: 'single' },
+
     '현재이용 가능': { key: 'use', mode: 'multi' },
     '남녀 분리': { key: 'use', mode: 'multi' },
     '가게 안 화장실': { key: 'place', mode: 'multi' },
     '24시간': { key: 'place', mode: 'multi' },
     '비데 있음': { key: 'equip', mode: 'multi' },
     '위생용품 제공': { key: 'equip', mode: 'multi' },
+
     깨끗함: { key: 'state', mode: 'multi' },
     칸많음: { key: 'state', mode: 'multi' },
+
     장애인화장실: { key: 'special', mode: 'multi' },
     기저귀교환대: { key: 'special', mode: 'multi' },
   };
@@ -99,7 +85,7 @@ export default function SearchStore() {
     'font-pretendard text-[16px] leading-[24px] ' +
     'focus:outline-none focus-visible:ring-2 focus-visible:ring-[#7FCBE6]';
 
-  // 전체 취소 칩(X)
+  // 취소 칩(X)
   const clearClass =
     'inline-flex items-center justify-center h-[35px] px-6 rounded-[50px] ' +
     'border border-[var(--grayscale-gray3,#9E9E9E)] ' +
@@ -131,13 +117,25 @@ export default function SearchStore() {
     if (!btn) return;
     const text = btn.textContent?.trim();
     if (!text) return;
-    if (text === '필터링 취소 X') {
-      clearAll();
-      return;
-    }
+    if (text === '필터링 취소 X') return clearAll();
     const info = LABEL_MAP[text];
     if (info) toggleChip({ ...info, label: text });
   };
+
+  // 검색줄 실제 높이 기반으로 칩/필터 top 계산
+  const searchRowRef = useRef(null);
+  const [chipTop, setChipTop] = useState(84);
+  useLayoutEffect(() => {
+    const calc = () => {
+      const h = Math.round(
+        searchRowRef.current?.getBoundingClientRect().height || 60
+      );
+      setChipTop(h + 24);
+    };
+    calc();
+    window.addEventListener('resize', calc);
+    return () => window.removeEventListener('resize', calc);
+  }, []);
 
   return (
     <div className="w-full">
@@ -147,7 +145,10 @@ export default function SearchStore() {
         {/* 상단: 검색창 + 필터 버튼 */}
         <section className="mt-[90px] pl-[198px] pr-[197px]">
           <div className="relative">
-            <div className="inline-flex items-center gap-[24px]">
+            <div
+              className="inline-flex items-center gap-[24px]"
+              ref={searchRowRef}
+            >
               <SearchBar
                 variant="store"
                 onSearch={(q) => console.log('search:', q)}
@@ -172,17 +173,15 @@ export default function SearchStore() {
 
             {/* 선택 칩 바 */}
             {selected.length > 0 && (
-              <div className="mt-6 w-[961px] flex items-start gap-[32px]">
-                {/* 라벨 */}
+              <div
+                className="absolute left-0 w-[961px] flex items-start gap-[32px]"
+                style={{ top: chipTop }}
+              >
                 <span className="w-[92px] h-[35px] flex items-center flex-shrink-0 font-pretendard text-[16px] font-normal leading-[24px] text-black">
                   필터링 결과
                 </span>
 
-                {/* 칩 목록(여러 줄) */}
-                <div
-                  ref={chipsListRef}
-                  className="flex flex-wrap content-start items-center gap-2"
-                >
+                <div className="flex flex-wrap content-start items-center gap-2">
                   {selected.map((label) => (
                     <button
                       key={label}
@@ -195,7 +194,6 @@ export default function SearchStore() {
                     </button>
                   ))}
 
-                  {/* 전체 취소 — 텍스트는 'X' */}
                   <button
                     type="button"
                     onClick={clearAll}
@@ -211,7 +209,8 @@ export default function SearchStore() {
             {/* 필터 팝오버 */}
             {filterOpen && (
               <div
-                className="absolute top-[86px] right-0 z-50"
+                className="absolute right-0 z-50"
+                style={{ top: chipTop }}
                 onClickCapture={handleFilterClick}
               >
                 <Filter open selected={selected} />
@@ -220,23 +219,14 @@ export default function SearchStore() {
           </div>
         </section>
 
-        {/* 카드 리스트 섹션(상단 간격 보정) */}
-        <section
-          className="pl-[123px] pr-[120px] mb-[203px]"
-          style={{
-            marginTop:
-              selected.length > 0 ? `calc(153px - ${extraRowsPx}px)` : '153px',
-          }}
-        >
+        {/* 카드 리스트 */}
+        <section className="pl-[123px] pr-[120px] mb-[203px] mt-[153px]">
           <div className="flex flex-col items-start gap-[44px] w-full bg-white">
-            {/* 섹션 제목 */}
             <h2 className="text-[24px] leading-[36px] font-pretendard font-normal text-[#000]">
               지금 주변에 있는 가장 가까운 화장실
             </h2>
 
-            {/* 카드 리스트 */}
             <div className="w-[1193px] flex items-center gap-[24px] mb-[229px]">
-              {/* 이전 버튼 */}
               <button
                 type="button"
                 aria-label="이전 목록"
@@ -245,7 +235,6 @@ export default function SearchStore() {
                 <img src="/assets/arrowleft.svg" alt="" className="w-6 h-6" />
               </button>
 
-              {/* 카드 4개 */}
               {nearbyToilets.map((t, idx) => {
                 const cardW = cardWidths[idx];
                 const imgW = cardW;
@@ -259,7 +248,6 @@ export default function SearchStore() {
                     className="flex-shrink-0 h-[393px]"
                     style={{ width: `${cardW}px` }}
                   >
-                    {/* 썸네일 + 유형 뱃지 */}
                     <div
                       className="relative rounded-[10px] overflow-hidden"
                       style={{ width: `${imgW}px`, height: `${imgW}px` }}
@@ -280,9 +268,7 @@ export default function SearchStore() {
                       </span>
                     </div>
 
-                    {/* 텍스트 */}
                     <div className="mt-[16px]">
-                      {/* 이름 + 평점 */}
                       <div className="flex items-start justify-between">
                         <p
                           className="font-pretendard text-black text-[24px] font-bold leading-[29px]"
@@ -314,10 +300,8 @@ export default function SearchStore() {
                         </div>
                       </div>
 
-                      {/* 이름 높이 보정 */}
                       <div style={{ height: `${extra}px` }} />
 
-                      {/* 태그 칩 */}
                       <div className="mt-[12px] flex flex-wrap items-center gap-[16px]">
                         {t.tags.map((tag, i) => (
                           <span
@@ -334,7 +318,6 @@ export default function SearchStore() {
                 );
               })}
 
-              {/* 다음 버튼 */}
               <button
                 type="button"
                 aria-label="다음 목록"
