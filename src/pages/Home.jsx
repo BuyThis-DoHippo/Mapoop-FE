@@ -1,4 +1,3 @@
-// src/pages/Home.jsx
 import Navbar from '../components/Navbar';
 import SearchBar from '../components/SearchBar';
 import { useNavigate } from 'react-router-dom';
@@ -6,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 export default function Home() {
   const navigate = useNavigate();
 
-  // 카드 데이터 (API 연동 전)
+  // 목데이터: 근처 화장실 카드
   const nearbyToilets = [
     {
       id: 1,
@@ -38,27 +37,27 @@ export default function Home() {
     },
   ];
 
-  // 리스트 컨테이너 폭 1193px 기준 (화살표/갭 포함 총 1193)
+  // 카드 폭 배열(슬라이드 4장)
   const cardWidths = [257, 256, 256, 256];
 
-  // 이름 프레임 (w × h) — line-height 29px 기준 (1줄=29, 2줄=58)
+  // 카드명 영역(1줄/2줄 레이아웃)
   const nameFrames = [
-    { w: 83, h: 29 }, // 제순식당
-    { w: 130, h: 29 }, // 소코아 홍대점
-    { w: 172, h: 58 }, // 레드로드 R6 개방 화장실
-    { w: 136, h: 58 }, // 스타벅스 홍대 삼거리점
+    { w: 83, h: 29 },
+    { w: 130, h: 29 },
+    { w: 172, h: 58 },
+    { w: 136, h: 58 },
   ];
 
   return (
     <div className="w-full">
       <Navbar />
 
-      {/* 화면 좌우 125px, 위 65px */}
+      {/* 상단: 검색 영역 */}
       <section className="w-full px-[125px] pt-[65px]">
         <div className="max-w-[1193px] mx-auto">
           <SearchBar onSearch={(q) => console.log('search:', q)} />
 
-          {/* 1행: 상단 큰 카드 2개 (버튼으로 변경) */}
+          {/* 메인 카드: 화장실 찾기 / 긴급 찾기 */}
           <div className="pt-[65px] flex items-start gap-[32px]">
             {/* 화장실 찾기 */}
             <button
@@ -91,11 +90,13 @@ export default function Home() {
             </button>
           </div>
 
-          {/* 2행: 하단 버튼 2개 */}
+          {/* 하단 CTA 카드: 화장실 등록 / AI 챗봇 */}
           <div className="pt-[40px] flex gap-[32px]">
             <button
               type="button"
-              className="w-[583px] h-[183px] flex-shrink-0 rounded-[10px] border-2 border-brand-main bg-brand-3 px-[60px] py-[41px] flex items-center justify-start gap-[45px] text-left"
+              aria-label="화장실 등록"
+              onClick={() => navigate('/register-toilet')}
+              className="w-[583px] h-[183px] flex-shrink-0 rounded-[10px] border-2 border-neutral-200 bg-white px-[60px] py-[41px] flex items-center justify-start gap-[45px] text-left"
             >
               <div className="font-pretendard flex-1 max-w-[463px]">
                 <p className="text-[16px] w-[169px] h-[48px] leading-[24px] text-[#0B0B0B]">
@@ -115,7 +116,9 @@ export default function Home() {
 
             <button
               type="button"
-              className="w-[583px] h-[183px] flex-shrink-0 rounded-[10px] border-2 border-brand-main bg-brand-3 px-[60px] py-[41px] flex items-center justify-start gap-[45px] text-left"
+              aria-label="마포구 AI 화장실 챗봇"
+              onClick={() => navigate('/ai-chatbot')}
+              className="w-[583px] h-[183px] flex-shrink-0 rounded-[10px] border-2 border-neutral-200 bg-white px-[60px] py-[41px] flex items-center justify-start gap-[45px] text-left"
             >
               <div className="font-pretendard flex-1 max-w-[463px]">
                 <p className="text-[16px] w-[207px] h-[48px] leading-[24px] text-[#0B0B0B]">
@@ -136,24 +139,44 @@ export default function Home() {
             </button>
           </div>
 
-          {/* 회색 선 */}
+          {/* 구분선 */}
           <div className="mt-[64px] w-[1193px] h-px bg-[#D8D8D8]" />
 
-          {/* Frame 98 */}
+          {/* 근처 화장실 섹션 */}
           <div className="w-[1193px] flex flex-col items-start gap-[60px] mx-auto">
             <div className="w-full h-px bg-[#D8D8D8]" />
 
-            {/* 제목 + 리스트(Frame 97) */}
-            <div className="flex flex-col items-start gap-[44px]">
-              <h2 className="font-pretendard text-black text-[32px] leading-[48px] font-extrabold">
-                지금 주변에 있는
-                <br />
-                가장 가까운 화장실
-              </h2>
+            {/* 섹션 제목 + 더보기 + 리스트 */}
+            <div className="flex flex-col items-start gap-[44px] w-full">
+              {/* 제목 + 더보기 (한 줄) */}
+              <div className="w-full flex items-start justify-between">
+                <h2 className="font-pretendard text-black text-[32px] leading-[48px] font-extrabold">
+                  지금 주변에 있는
+                  <br />
+                  가장 가까운 화장실
+                </h2>
 
-              {/* 👉 Frame 97: [←] 24 [257] 24 [256] 24 [256] 24 [256] 24 [→]  === 총 1193px */}
+                {/* 화장실 더보기 → */}
+                <button
+                  type="button"
+                  onClick={() => navigate('/find-toilet')}
+                  className="
+                    font-pretendard
+                    text-[16px] leading-[24px] font-normal
+                    text-[var(--grayscale-gray4,#7C7C7C)]
+                    tracking-[0]
+                    whitespace-nowrap
+                    hover:opacity-80
+                    focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-main/30
+                  "
+                >
+                  화장실 더보기 →
+                </button>
+              </div>
+
+              {/* 리스트: 좌우 화살표 + 카드 4장 */}
               <div className="w-[1193px] flex items-center gap-[24px]">
-                {/* 왼쪽 화살표 */}
+                {/* 이전 화살표 */}
                 <button
                   type="button"
                   aria-label="이전 목록"
@@ -162,13 +185,13 @@ export default function Home() {
                   <img src="/assets/arrowleft.svg" alt="" className="w-6 h-6" />
                 </button>
 
-                {/* 카드 4개 */}
+                {/* 카드 반복 */}
                 {nearbyToilets.map((t, idx) => {
                   const cardW = cardWidths[idx];
-                  const imgSize = cardW; // 정사각 이미지
+                  const imgSize = cardW;
                   const nameBox = nameFrames[idx];
                   const isTwo = nameBox.h >= 58;
-                  const extra = Math.max(0, 58 - nameBox.h); // 칩 Y정렬 보정
+                  const extra = Math.max(0, 58 - nameBox.h);
 
                   return (
                     <div
@@ -176,7 +199,7 @@ export default function Home() {
                       className="flex-shrink-0 h-[393px]"
                       style={{ width: `${cardW}px` }}
                     >
-                      {/* 썸네일 */}
+                      {/* 썸네일 + 유형 뱃지 */}
                       <div
                         className="relative rounded-[10px] overflow-hidden"
                         style={{
@@ -189,7 +212,6 @@ export default function Home() {
                           alt={t.name}
                           className="w-full h-full object-cover"
                         />
-                        {/* 민간/공공 뱃지 */}
                         <span
                           className={[
                             'absolute right-[12px] bottom-[12px] h-[28px] px-[12px] rounded-full',
@@ -201,9 +223,9 @@ export default function Home() {
                         </span>
                       </div>
 
-                      {/* 텍스트 블록 — 이미지와 16px 간격 */}
+                      {/* 텍스트 영역 */}
                       <div className="mt-[16px]">
-                        {/* 이름 + 별점 (⭐ 상단 정렬) */}
+                        {/* 가게명 + 평점 */}
                         <div className="flex items-start justify-between">
                           <p
                             className="font-pretendard text-black text-[24px] font-bold leading-[29px]"
@@ -235,22 +257,15 @@ export default function Home() {
                           </div>
                         </div>
 
-                        {/* 보정 스페이서: 1줄 이름(29px)에 29px 추가 → 칩 Y정렬 통일 */}
+                        {/* 높이 보정(1줄명 정렬) */}
                         <div style={{ height: `${extra}px` }} />
 
-                        {/* 칩 — 전부 95×35 고정, 간격 16px */}
+                        {/* 태그 칩 */}
                         <div className="mt-[12px] flex flex-wrap items-center gap-[16px]">
                           {t.tags.map((tag, i) => (
                             <span
                               key={i}
-                              className="
-                                font-pretendard inline-flex items-center justify-center
-                                rounded-[50px] bg-[#EFEFEF]
-                                w-[95px] h-[35px]
-                                text-[16px] font-normal text-center
-                                text-[var(--grayscale-gray8,#2C2C2C)]
-                                whitespace-nowrap overflow-hidden text-ellipsis
-                              "
+                              className="font-pretendard inline-flex items-center justify-center rounded-[50px] bg-[#EFEFEF] w-[95px] h-[35px] text-[16px] font-normal text-center text-[var(--grayscale-gray8,#2C2C2C)] whitespace-nowrap overflow-hidden text-ellipsis"
                               title={tag}
                             >
                               {tag}
@@ -262,7 +277,7 @@ export default function Home() {
                   );
                 })}
 
-                {/* 오른쪽 화살표 */}
+                {/* 다음 화살표 */}
                 <button
                   type="button"
                   aria-label="다음 목록"
@@ -272,7 +287,7 @@ export default function Home() {
                 </button>
               </div>
 
-              {/* 아래 여백용 흰 배경 144px */}
+              {/* 하단 여백 */}
               <div className="w-[1193px] h-[144px] bg-white" />
             </div>
           </div>
