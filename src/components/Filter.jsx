@@ -1,6 +1,6 @@
-// - props.open: 열림 여부
-// - props.selected: 선택된 칩 라벨 배열(선택된 칩은 연하늘 배경 유지)
-// - props.onClear: "필터링 취소 X" 클릭 시 호출(없어도 동작)
+// - open: 열림 여부
+// - selected: 선택된 칩 라벨 배열(선택된 칩은 연하늘 배경)
+// - onClear: 하단 "필터링 취소 X" 클릭 시 호출
 
 import PropTypes from 'prop-types';
 
@@ -13,12 +13,27 @@ export default function Filter({
 }) {
   if (!open) return null;
 
-  // 칩 공통 스타일 (미선택/선택)
+  // 팝오버 칩
+  const chipBase =
+    'inline-flex items-center h-[35px] px-8 rounded-[50px] ' +
+    'font-pretendard text-[16px] leading-[24px] whitespace-nowrap ' +
+    'focus:outline-none focus-visible:ring-2 focus-visible:ring-[#7FCBE6]';
+
   const chipIdle =
-    'px-8 py-2 rounded-[50px] border border-[var(--Main-Main-2,#0085B7)] bg-white text-[#0085B7] font-pretendard text-[16px] leading-normal whitespace-nowrap focus:outline-none focus-visible:ring-2 focus-visible:ring-[#7FCBE6]';
+    chipBase +
+    ' border border-[var(--Main-Main-2,#0085B7)] bg-white text-[#0085B7]';
   const chipOn =
-    'px-8 py-2 rounded-[50px] border border-[var(--Main-Main-2,#0085B7)] bg-[var(--Main-Main3,#EBFAFF)] text-[#0085B7] font-pretendard text-[16px] leading-normal whitespace-nowrap focus:outline-none focus-visible:ring-2 focus-visible:ring-[#7FCBE6]';
-  const isOn = (label) => selected?.includes(label);
+    chipBase +
+    ' border border-[var(--Main-Main-2,#0085B7)] bg-[var(--Main-Main3,#EBFAFF)] text-[#0085B7]';
+
+  // 선택 확인(평점은 +표기도 허용)
+  const isOn = (label) => {
+    if (!selected) return false;
+    if (label === '4.5' || label === '4.0' || label === '3.5') {
+      return selected.includes(label) || selected.includes(`${label}+`);
+    }
+    return selected.includes(label);
+  };
 
   return (
     <div
@@ -32,7 +47,7 @@ export default function Filter({
       style={style}
     >
       <div className="flex w-[323px] flex-col items-start gap-[24px]">
-        {/* 이용 주체 (단일 선택) */}
+        {/* 이용 주체 */}
         <div className="flex flex-wrap items-center gap-2">
           <button type="button" className={isOn('공공') ? chipOn : chipIdle}>
             공공
@@ -42,35 +57,25 @@ export default function Filter({
           </button>
         </div>
 
-        {/* 최소 평점 (단일 선택) */}
+        {/* 최소 평점 */}
         <div className="w-full flex flex-col items-start gap-4">
           <div className="text-left font-pretendard text-[16px] font-normal leading-normal text-[#0085B7]">
             최소 평점
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            {/* 4.5 / 4.0 / 3.5 두 표기 모두 시각적으로 같음 */}
-            <button
-              type="button"
-              className={isOn('4.5') || isOn('4.5+') ? chipOn : chipIdle}
-            >
+            <button type="button" className={isOn('4.5') ? chipOn : chipIdle}>
               4.5
             </button>
-            <button
-              type="button"
-              className={isOn('4.0') || isOn('4.0+') ? chipOn : chipIdle}
-            >
+            <button type="button" className={isOn('4.0') ? chipOn : chipIdle}>
               4.0
             </button>
-            <button
-              type="button"
-              className={isOn('3.5') || isOn('3.5+') ? chipOn : chipIdle}
-            >
+            <button type="button" className={isOn('3.5') ? chipOn : chipIdle}>
               3.5
             </button>
           </div>
         </div>
 
-        {/* 기본 시설 (다중 선택) */}
+        {/* 기본 시설 */}
         <div className="w-full flex flex-col items-start gap-4">
           <div className="text-left font-pretendard text-[16px] font-normal leading-normal text-[#0085B7]">
             기본 시설
@@ -115,7 +120,7 @@ export default function Filter({
           </div>
         </div>
 
-        {/* 상태 (다중 선택) */}
+        {/* 상태 */}
         <div className="w-full flex flex-col items-start gap-4">
           <div className="text-left font-pretendard text-[16px] font-normal leading-normal text-[#0085B7]">
             상태
@@ -136,7 +141,7 @@ export default function Filter({
           </div>
         </div>
 
-        {/* 특수 시설 (다중 선택) */}
+        {/* 특수 시설 */}
         <div className="w-full flex flex-col items-start gap-4">
           <div className="text-left font-pretendard text-[16px] font-normal leading-normal text-[#0085B7]">
             특수 시설
@@ -162,7 +167,16 @@ export default function Filter({
           <button
             type="button"
             onClick={() => onClear?.()}
-            className="inline-flex items-center justify-center px-5 h-[35px] rounded-[50px] border border-neutral-300 bg-neutral-50 font-pretendard text-[16px] leading-normal text-neutral-300 hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D0D0D0]"
+            className="
+              inline-flex items-center justify-center h-[35px] px-6
+              rounded-[50px]
+              border border-[var(--grayscale-gray3,#9E9E9E)]
+              bg-[var(--grayscale-gray0,#EFEFEF)]
+              text-[var(--grayscale-gray3,#9E9E9E)]
+              font-pretendard text-[16px] leading-[24px]
+              hover:opacity-90 focus:outline-none
+              focus-visible:ring-2 focus-visible:ring-[#D0D0D0]
+            "
           >
             필터링 취소 X
           </button>

@@ -3,7 +3,7 @@ import Navbar from '../components/Navbar';
 import SearchBar from '../components/SearchBar';
 import Filter from '../components/Filter';
 
-// 카드 목록 데이터
+// 카드 목록 데이터(API 연결할때 수정)
 const nearbyToilets = [
   {
     id: 1,
@@ -44,16 +44,13 @@ const nameFrames = [
 ];
 
 export default function SearchStore() {
-  // 필터 팝오버 열림 상태
   const [filterOpen, setFilterOpen] = useState(false);
-  // 선택된 칩 라벨 배열
   const [selected, setSelected] = useState([]);
 
   // 칩 줄바꿈에 따른 높이 측정용
   const chipsListRef = useRef(null);
   const [extraRowsPx, setExtraRowsPx] = useState(0); // 첫 줄(35px) 초과 높이
 
-  // 칩 컨테이너 높이 재계산
   useLayoutEffect(() => {
     const calc = () => {
       const el = chipsListRef.current;
@@ -94,16 +91,25 @@ export default function SearchStore() {
     기저귀교환대: { key: 'special', mode: 'multi' },
   };
 
-  // 선택 칩 스타일
+  // 선택 칩(파란 칩)
   const chipSelectedClass =
-    'inline-flex items-center px-8 h-[35px] rounded-[50px] border border-[var(--Main-Main-2,#0085B7)] bg-[var(--Main-Main3,#EBFAFF)] text-[#0085B7] font-pretendard text-[16px] leading-[24px] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#7FCBE6]';
-  // 전체 취소 칩 스타일
-  const clearClass =
-    'inline-flex items-center justify-center px-4 h-[35px] rounded-[50px] border border-neutral-300 bg-neutral-50 font-pretendard text-[16px] leading-[24px] text-neutral-300 hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D0D0D0]';
+    'inline-flex items-center px-8 h-[35px] rounded-[50px] ' +
+    'border border-[var(--Main-Main-2,#0085B7)] ' +
+    'bg-[var(--Main-Main3,#EBFAFF)] text-[#0085B7] ' +
+    'font-pretendard text-[16px] leading-[24px] ' +
+    'focus:outline-none focus-visible:ring-2 focus-visible:ring-[#7FCBE6]';
 
-  // 전체 해제
+  // 전체 취소 칩(X)
+  const clearClass =
+    'inline-flex items-center justify-center h-[35px] px-6 rounded-[50px] ' +
+    'border border-[var(--grayscale-gray3,#9E9E9E)] ' +
+    'bg-[var(--grayscale-gray0,#EFEFEF)] ' +
+    'text-[var(--grayscale-gray3,#9E9E9E)] ' +
+    'font-pretendard text-[16px] leading-[24px] ' +
+    'hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D0D0D0]';
+
+  // 전체/개별 해제
   const clearAll = () => setSelected([]);
-  // 개별 해제
   const removeOne = (label) =>
     setSelected((prev) => prev.filter((x) => x !== label));
 
@@ -189,13 +195,14 @@ export default function SearchStore() {
                     </button>
                   ))}
 
-                  {/* 전체 취소 */}
+                  {/* 전체 취소 — 텍스트는 'X' */}
                   <button
                     type="button"
                     onClick={clearAll}
                     className={clearClass}
+                    aria-label="필터링 취소"
                   >
-                    필터링 취소 X
+                    X
                   </button>
                 </div>
               </div>
