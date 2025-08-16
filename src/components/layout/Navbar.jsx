@@ -1,5 +1,5 @@
-import React from 'react';
 import { NavLink, useLocation, matchPath } from 'react-router-dom';
+import Mapoop from '@/assets/svg/Mapoop.svg?react';
 
 export default function Navbar() {
   const location = useLocation();
@@ -22,8 +22,7 @@ export default function Navbar() {
       <div className="w-full px-[125px]">
         <div className="mx-auto max-w-[1194px] h-[95px] flex items-center justify-between">
           {/* 로고 */}
-          <img
-            src="/assets/Mapoop.svg"
+          <Mapoop
             alt="MAPOOP 로고"
             className="h-[45px] block shrink-0"
           />
