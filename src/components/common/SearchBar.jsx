@@ -11,8 +11,6 @@ export default function SearchBar({ onSearch, variant = 'home' }) {
 
   const containerWidth = variant === 'store' ? 'w-[961px]' : 'w-[961px]';
   const inputWidth = variant === 'store' ? 'w-[787px]' : 'w-[787px]';
-  const btnSize =
-    variant === 'store' ? 'w-[150px] h-[61px]' : 'w-[150px] h-[61px]';
 
   return (
     <form onSubmit={submit} className="w-full flex justify-center">
@@ -39,15 +37,17 @@ export default function SearchBar({ onSearch, variant = 'home' }) {
         {/* 검색 버튼 */}
         <button
           type="submit"
-          className={`
-            ${btnSize} shrink-0
-            inline-flex items-center justify-center
-            rounded-[10px] bg-brand-main hover:bg-brand-2
-            focus:outline-none focus:ring-2 focus:ring-brand-main/30
-          `}
+          className="
+            flex items-center justify-center gap-[10px]
+            px-[54px] py-[16px]
+            rounded-[10px]
+            bg-[#00AEEF] text-white
+            hover:bg-[#0095CC] transition-colors
+            focus:outline-none focus:ring-2 focus:ring-[#00AEEF]/40
+          "
           aria-label="검색"
         >
-          <span className="font-pretendard text-white text-[20px] font-normal leading-normal">
+          <span className="font-pretendard text-[20px] font-normal leading-normal">
             검색
           </span>
         </button>
