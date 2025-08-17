@@ -1,7 +1,7 @@
 import { useState, useRef, useLayoutEffect } from 'react';
-import Navbar from '../components/Navbar';
-import SearchBar from '../components/SearchBar';
-import Filter from '../components/Filter';
+import Navbar from '@/components/layout/Navbar';
+import SearchBar from '@/components/common/SearchBar';
+import Filter from '@/components/common/Filter';
 
 // 카드 목록 데이터 (API 연결 후 수정해야 함)
 const nearbyToilets = [

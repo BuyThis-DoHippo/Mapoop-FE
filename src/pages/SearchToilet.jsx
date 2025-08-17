@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import Navbar from '../components/Navbar';
-import Filter from '../components/Filter';
+import Navbar from '@/components/layout/Navbar';
+import Filter from '@/components/common/Filter';
 
 export default function SearchToilet() {
   const [filterOpen, setFilterOpen] = useState(false);

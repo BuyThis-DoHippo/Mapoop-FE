@@ -1,5 +1,5 @@
-import Navbar from '../components/Navbar';
-import SearchBar from '../components/SearchBar';
+import Navbar from '@/components/layout/Navbar';
+import SearchBar from '@/components/common/SearchBar';
 import { useNavigate } from 'react-router-dom';
 
 export default function Home() {

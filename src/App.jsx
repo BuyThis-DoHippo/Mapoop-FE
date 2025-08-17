@@ -1,11 +1,11 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Home from './pages/Home';
-import SearchStore from './pages/SearchStore';
-import SearchToilet from './pages/SearchToilet';
-import SearchToiletUrgent from './pages/SearchToiletUrgent';
-import RegisterToilet from './pages/RegisterToliet';
-import AiChatbot from './pages/AiChatbot';
-import ReviewToilet from './pages/ReviewToilet';
+import Home from '@/pages/home/Home';
+import SearchStore from '@/pages/SearchStore';
+import SearchToilet from '@/pages/SearchToilet';
+import SearchToiletUrgent from '@/pages/SearchToiletUrgent';
+import RegisterToilet from '@/pages/registerToilet/RegisterToliet';
+import AiChatbot from '@/pages/aiChatBot/AiChatbot';
+import ReviewToilet from '@/pages/review/ReviewToilet';
 
 function App() {
   return (
