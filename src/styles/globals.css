@@ -1,0 +1,66 @@
+@import "tailwindcss";
+@import "./fonts.css";
+
+/**
+ * 기본 HTML, body 스타일 및 전역 CSS 변수 정의
+ */
+:root {
+  /* 기본 폰트 설정 */
+  font-family: "Pretendard", ui-sans-serif, system-ui, sans-serif;
+
+  /* 색상 변수 (새로운 스타일 가이드 기반) */
+  --Main-Main: #00aeef;
+  --Main-Main-2: #0085b7;
+  --Main-Main-3: #ebfaff;
+  --white: #ffffff;
+
+  --grayscale-gray0: #efefef;
+  --grayscale-gray1: #dbdbdb;
+  --grayscale-gray2: #bebebe;
+  --grayscale-gray3: #9e9e9e;
+  --grayscale-gray4: #7c7c7c;
+  --grayscale-gray5: #5c5c5c;
+  --grayscale-gray6: #4b4b4b;
+  --grayscale-gray7: #353535;
+  --grayscale-gray8: #2c2c2c;
+  --grayscale-gray9: #1a1a1a;
+  --grayscale-gray10: #0b0b0b;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  color: var(--grayscale-gray9); /* 기본 텍스트 색상 설정 */
+  background-color: var(--white); /* 기본 배경색 설정 */
+}
+
+/**
+ * 커스텀 유틸리티 클래스
+ */
+@layer utilities {
+  /* 스크롤바 숨기기 */
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+
+  /* 로딩 스피너 애니메이션 */
+  .loader {
+    width: 48px;
+    aspect-ratio: 1;
+    color: var(--Main-Main);
+    --c: no-repeat radial-gradient(farthest-side, currentColor 92%, #0000);
+    background: var(--c) top, var(--c) right, var(--c) bottom, var(--c) left;
+    background-size: 12px 12px;
+    animation: spinDots 1s linear infinite;
+  }
+  @keyframes spinDots {
+    to {
+      transform: rotate(0.5turn);
+    }
+  }
+}
