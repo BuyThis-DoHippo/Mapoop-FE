@@ -8,17 +8,67 @@ import NearbyToilet from '@/assets/svg/NearbyToilet.svg?react';
 
 export default function SearchToilet() {
   const [filterOpen, setFilterOpen] = useState(false);
+  const [selected, setSelected] = useState([]);
+
+  const SINGLE_KIND = ['공공', '민간'];
+  const SINGLE_RATING = ['4.5', '4.0', '3.5'];
+
+  const LABEL_MAP = {
+    공공: { key: 'kind', mode: 'single' },
+    민간: { key: 'kind', mode: 'single' },
+
+    4.5: { key: 'minRating', mode: 'single' },
+    '4.0': { key: 'minRating', mode: 'single' },
+    3.5: { key: 'minRating', mode: 'single' },
+
+    '현재이용 가능': { key: 'use', mode: 'multi' },
+    '남녀 분리': { key: 'use', mode: 'multi' },
+    '가게 안 화장실': { key: 'place', mode: 'multi' },
+    '24시간': { key: 'place', mode: 'multi' },
+    '비데 있음': { key: 'equip', mode: 'multi' },
+    '위생용품 제공': { key: 'equip', mode: 'multi' },
+
+    깨끗함: { key: 'state', mode: 'multi' },
+    칸많음: { key: 'state', mode: 'multi' },
+
+    장애인화장실: { key: 'special', mode: 'multi' },
+    기저귀교환대: { key: 'special', mode: 'multi' },
+  };
+
+  const toggleChip = ({ key, label, mode }) => {
+    setSelected((prev) => {
+      if (prev.includes(label)) return prev.filter((x) => x !== label);
+      if (mode === 'single') {
+        const group = key === 'kind' ? SINGLE_KIND : SINGLE_RATING;
+        return [...prev.filter((x) => !group.includes(x)), label];
+      }
+      return [...prev, label];
+    });
+  };
+
+  const clearAll = () => setSelected([]);
+  const removeOne = (label) =>
+    setSelected((prev) => prev.filter((x) => x !== label));
+
+  const handleFilterClick = (e) => {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+    const text = btn.textContent?.trim();
+    if (!text) return;
+    if (text === '필터링 취소 X') return clearAll();
+    const info = LABEL_MAP[text];
+    if (info) toggleChip({ ...info, label: text });
+  };
 
   return (
     <div className="w-full">
       <Navbar active="toilet" />
 
       <main className="relative w-[1440px] mx-auto">
-        {/* 사이드바 */}
         <section className="pl-[123px] pr-[120px] pt-[76px] pb-[40px]">
           <div className="flex flex-col w-[482px] items-start">
             {/* 타이틀 + 필터 버튼 */}
-            <div className="flex items-center gap-[24px] relative">
+            <div className="flex items-center gap-[24px]">
               <h1 className="text-[32px] leading-[48px] font-pretendard font-bold text-[#000]">
                 화장실 찾기
               </h1>
@@ -40,7 +90,39 @@ export default function SearchToilet() {
               </button>
             </div>
 
-            {/* 필터 드롭다운 (Frame 137 절대 위치 기준) */}
+            {/* 선택된 칩 바 */}
+            {selected.length > 0 && (
+              <div className="mt-[24px] flex flex-wrap gap-[8px]">
+                {selected.map((label) => (
+                  <button
+                    key={label}
+                    onClick={() => removeOne(label)}
+                    type="button"
+                    className="inline-flex items-center h-[35px] px-8 rounded-[50px]
+                               border border-[var(--Main-Main-2,#0085B7)]
+                               bg-[var(--Main-Main3,#EBFAFF)] text-[#0085B7]
+                               font-pretendard text-[16px] leading-[24px]"
+                  >
+                    {label}
+                  </button>
+                ))}
+
+                <button
+                  type="button"
+                  onClick={clearAll}
+                  className="inline-flex items-center justify-center h-[35px] px-6 rounded-[50px]
+                             border border-[var(--grayscale-gray3,#9E9E9E)]
+                             bg-[var(--grayscale-gray0,#EFEFEF)]
+                             text-[var(--grayscale-gray3,#9E9E9E)]
+                             font-pretendard text-[16px] leading-[24px]
+                             hover:opacity-90"
+                >
+                  필터링 취소 X
+                </button>
+              </div>
+            )}
+
+            {/* 필터 드롭다운 (원래 위치 그대로) */}
             {filterOpen && (
               <div
                 className="
@@ -49,8 +131,9 @@ export default function SearchToilet() {
                   w-[323px] h-[663px] 
                   z-50
                 "
+                onClickCapture={handleFilterClick}
               >
-                <Filter open />
+                <Filter open selected={selected} />
               </div>
             )}
 
@@ -61,10 +144,8 @@ export default function SearchToilet() {
                   key={t.id}
                   className="w-[482px] flex flex-col rounded-[10px] border border-[#DBDBDB] bg-white overflow-hidden relative"
                 >
-                  {/* 이미지 */}
                   <div className="relative w-full h-[180px] overflow-hidden">
                     <NearbyToilet className="w-full h-full object-contain" />
-                    {/* 상태 배지 */}
                     <div className="absolute top-[135px] right-[20px]">
                       <span
                         className={[
@@ -77,9 +158,7 @@ export default function SearchToilet() {
                     </div>
                   </div>
 
-                  {/* 텍스트 영역 */}
                   <div className="flex flex-col p-[24px]">
-                    {/* 이름 + 평점 */}
                     <div className="flex items-start justify-between">
                       <h3 className="font-pretendard text-[20px] font-bold text-black leading-[29px]">
                         {t.name}
@@ -92,12 +171,10 @@ export default function SearchToilet() {
                       </div>
                     </div>
 
-                    {/* 운영시간 */}
                     <p className="mt-[6px] text-[14px] text-[#2C2C2C] leading-[20px]">
                       매일 11:30~21:00
                     </p>
 
-                    {/* 태그 + 자세히 보기 */}
                     <div className="flex items-center justify-between mt-[20px]">
                       <div className="flex flex-wrap gap-[8px]">
                         {t.tags.map((tag, i) => (
