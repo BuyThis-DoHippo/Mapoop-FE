@@ -9,41 +9,10 @@ import Arrow from '@/assets/svg/arrow.svg?react';
 import ArrowLeft from '@/assets/svg/arrowleft.svg?react';
 import Star from '@/assets/svg/star.svg?react';
 import NearbyToilet from '@/assets/svg/NearbyToilet.svg?react';
+import { nearbyToilets } from '@/mocks/mockHome';
 
 export default function Home() {
   const navigate = useNavigate();
-
-  // 목데이터: 근처 화장실 카드
-  const nearbyToilets = [
-    {
-      id: 1,
-      name: '제순식당',
-      rating: 4.3,
-      kind: '민간',
-      tags: ['깨끗한', '가게 안'],
-    },
-    {
-      id: 2,
-      name: '소코아 홍대점',
-      rating: 4.3,
-      kind: '민간',
-      tags: ['깨끗한', '가게 밖'],
-    },
-    {
-      id: 3,
-      name: '레드로드 R6 개방 화장실',
-      rating: 4.3,
-      kind: '공공',
-      tags: ['24시간', '위생용품제공'],
-    },
-    {
-      id: 4,
-      name: '스타벅스 홍대 삼거리점',
-      rating: 4.3,
-      kind: '민간',
-      tags: ['깨끗한', '가게 안'],
-    },
-  ];
 
   // 카드 폭 배열(슬라이드 4장)
   const cardWidths = [257, 256, 256, 256];
