@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Filter from '@/components/common/Filter';
+import FilterIcon from '@/assets/svg/filter.svg';
 
 export default function SearchToilet() {
   const [filterOpen, setFilterOpen] = useState(false);
@@ -26,17 +27,17 @@ export default function SearchToilet() {
               aria-label="필터"
               onClick={() => setFilterOpen((v) => !v)}
               className="
-        h-[60px] w-[60px] shrink-0
-        inline-flex items-center justify-center
-        rounded-[10px] border border-[#D9D9D9] bg-white
-        transition-all duration-150
-        hover:bg-[#EFEFEF] hover:border-[#7C7C7C] hover:border-2
-        active:bg-[#EFEFEF] active:border-[#7C7C7C] active:border-2
-        focus-visible:bg-[#EFEFEF] focus-visible:border-[#7C7C7C] focus-visible:border-2
-        focus:outline-none
-      "
+                h-[60px] w-[60px] shrink-0
+                inline-flex items-center justify-center
+                rounded-[10px] border border-[#D9D9D9] bg-white
+                transition-all duration-150
+                hover:bg-[#EFEFEF] hover:border-[#7C7C7C] hover:border-2
+                active:bg-[#EFEFEF] active:border-[#7C7C7C] active:border-2
+                focus-visible:bg-[#EFEFEF] focus-visible:border-[#7C7C7C] focus-visible:border-2
+                focus:outline-none
+              "
             >
-              <img src="/assets/filter.svg" alt="필터" className="h-5 w-5" />
+              <FilterIcon className="h-5 w-5" />
             </button>
           </div>
 
