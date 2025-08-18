@@ -28,6 +28,7 @@ export default function SearchToilet() {
     '비데 있음': { key: 'equip', mode: 'multi' },
     '위생용품 제공': { key: 'equip', mode: 'multi' },
 
+    깨끗한: { key: 'state', mode: 'multi' },
     깨끗함: { key: 'state', mode: 'multi' },
     칸많음: { key: 'state', mode: 'multi' },
 
@@ -59,6 +60,21 @@ export default function SearchToilet() {
     const info = LABEL_MAP[text];
     if (info) toggleChip({ ...info, label: text });
   };
+
+  // 필터링된 데이터
+  const filteredToilets = nearbyToilets.filter((t) => {
+    if (selected.length === 0) return true;
+
+    return selected.every((label) => {
+      if (label === '공공' || label === '민간') {
+        return t.kind === label;
+      }
+      if (label === '4.5') return t.rating >= 4.5;
+      if (label === '4.0') return t.rating >= 4.0;
+      if (label === '3.5') return t.rating >= 3.5;
+      return t.tags.includes(label);
+    });
+  });
 
   return (
     <div className="w-full">
@@ -122,7 +138,7 @@ export default function SearchToilet() {
               </div>
             )}
 
-            {/* 필터 드롭다운 (원래 위치 그대로) */}
+            {/* 필터 드롭다운 (위치는 그대로) */}
             {filterOpen && (
               <div
                 className="
@@ -139,7 +155,7 @@ export default function SearchToilet() {
 
             {/* 카드 리스트 */}
             <div className="flex flex-col gap-[24px] w-full mt-[40px]">
-              {nearbyToilets.map((t) => (
+              {filteredToilets.map((t) => (
                 <div
                   key={t.id}
                   className="w-[482px] flex flex-col rounded-[10px] border border-[#DBDBDB] bg-white overflow-hidden relative"
@@ -193,6 +209,11 @@ export default function SearchToilet() {
                   </div>
                 </div>
               ))}
+              {filteredToilets.length === 0 && (
+                <p className="text-[16px] text-gray-500 mt-4">
+                  조건에 맞는 화장실이 없습니다.
+                </p>
+              )}
             </div>
           </div>
         </section>
