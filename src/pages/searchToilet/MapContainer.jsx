@@ -35,9 +35,8 @@ export default function MapContainer() {
   }, []);
 
   return (
-    <div
-      id="map"
-      style={{ width: '100%', height: '800px', background: '#ddd' }}
-    />
+    <div id="map" className="w-[795px] h-[1282px]">
+      {/* 카카오맵 스크립트로 로드되는 부분 */}
+    </div>
   );
 }
