@@ -95,7 +95,7 @@ export default function SearchToilet() {
                 className="
                   h-[60px] w-[60px] shrink-0
                   inline-flex items-center justify-center
-                  rounded-[10px] border border-[#D9D9D9] bg-white
+                  rounded-[10px] border-2 border-[#7C7C7C] bg-white
                   hover:bg-[#EFEFEF] hover:border-[#7C7C7C]
                   active:bg-[#EFEFEF] active:border-[#7C7C7C]
                   focus-visible:ring-2 focus-visible:ring-[#7C7C7C]
