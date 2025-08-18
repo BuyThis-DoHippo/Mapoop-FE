@@ -5,6 +5,7 @@ import FilterIcon from '@/assets/svg/filter.svg?react';
 import { nearbyToilets } from '@/mocks/mockToilets';
 import Star from '@/assets/svg/star.svg?react';
 import NearbyToilet from '@/assets/svg/NearbyToilet.svg?react';
+import MapContainer from './MapContainer';
 
 export default function SearchToilet() {
   const [filterOpen, setFilterOpen] = useState(false);
@@ -81,7 +82,8 @@ export default function SearchToilet() {
       <Navbar active="toilet" />
 
       <main className="relative w-[1440px] mx-auto">
-        <section className="pl-[123px] pr-[120px] pt-[76px] pb-[40px]">
+        <section className="pl-[123px] pr-[120px] pt-[76px] pb-[40px] flex gap-[40px]">
+          {/* 왼쪽: 카드 영역 */}
           <div className="flex flex-col w-[482px] items-start">
             {/* 타이틀 + 필터 버튼 */}
             <div className="flex items-center gap-[24px]">
@@ -138,7 +140,7 @@ export default function SearchToilet() {
               </div>
             )}
 
-            {/* 필터 드롭다운 (위치는 그대로) */}
+            {/* 필터 드롭다운 */}
             {filterOpen && (
               <div
                 className="
@@ -215,6 +217,11 @@ export default function SearchToilet() {
                 </p>
               )}
             </div>
+          </div>
+
+          {/* 오른쪽: 카카오 맵 */}
+          <div className="flex-1 min-h-[800px] rounded-[10px] overflow-hidden border border-gray-300">
+            <MapContainer />
           </div>
         </section>
       </main>
