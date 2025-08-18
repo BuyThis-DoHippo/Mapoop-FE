@@ -6,6 +6,7 @@ import SearchToiletUrgent from '@/pages/SearchToiletUrgent';
 import RegisterToilet from '@/pages/registerToilet/RegisterToliet';
 import AiChatbot from '@/pages/aiChatBot/AiChatbot';
 import ReviewToilet from '@/pages/review/ReviewToilet';
+import ToiletDetailPage from '@/pages/toiletDetail/ToiletDetailPage';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/find-toilet/urgent" element={<SearchToiletUrgent />} />
         <Route path="/register-toilet" element={<RegisterToilet />} />
         <Route path="/ai-chatbot" element={<AiChatbot />} />
+        <Route path='/toilet-detail/:id' element={<ToiletDetailPage/>} />
         <Route path="/review-toilet" element={<ReviewToilet />} />
       </Routes>
     </BrowserRouter>
