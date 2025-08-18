@@ -3,6 +3,13 @@ import Navbar from '@/components/layout/Navbar';
 import SearchBar from '@/components/common/SearchBar';
 import Filter from '@/components/common/Filter';
 
+// SVG import
+import FilterIcon from '@/assets/svg/filter.svg?react';
+import Arrow from '@/assets/svg/arrow.svg?react';
+import ArrowLeft from '@/assets/svg/arrowleft.svg?react';
+import Star from '@/assets/svg/star.svg?react';
+import NearbyToilet from '@/assets/svg/NearbyToilet.svg?react';
+
 // 카드 목록 데이터 (API 연결 후 수정해야 함)
 const nearbyToilets = [
   {
@@ -10,14 +17,14 @@ const nearbyToilets = [
     name: '제순식당',
     rating: 4.3,
     kind: '민간',
-    tags: ['깨끗한', '가게 안'],
+    tags: ['깨끗함', '가게 안 화장실'],
   },
   {
     id: 2,
     name: '소코아 홍대점',
     rating: 4.3,
     kind: '민간',
-    tags: ['깨끗한', '가게 밖'],
+    tags: ['깨끗함', '가게 밖 화장실'],
   },
   {
     id: 3,
@@ -31,9 +38,10 @@ const nearbyToilets = [
     name: '스타벅스 홍대 삼거리점',
     rating: 4.3,
     kind: '민간',
-    tags: ['깨끗한', '가게 안'],
+    tags: ['깨끗함', '가게 안 화장실'],
   },
 ];
+
 // 카드 레이아웃 수치
 const cardWidths = [257, 256, 256, 256];
 const nameFrames = [
@@ -66,6 +74,7 @@ export default function SearchStore() {
     '현재이용 가능': { key: 'use', mode: 'multi' },
     '남녀 분리': { key: 'use', mode: 'multi' },
     '가게 안 화장실': { key: 'place', mode: 'multi' },
+    '가게 밖 화장실': { key: 'place', mode: 'multi' },
     '24시간': { key: 'place', mode: 'multi' },
     '비데 있음': { key: 'equip', mode: 'multi' },
     '위생용품 제공': { key: 'equip', mode: 'multi' },
@@ -167,7 +176,7 @@ export default function SearchStore() {
                   focus:outline-none
                 "
               >
-                <img src="/assets/filter.svg" alt="필터" className="h-5 w-5" />
+                <FilterIcon className="w-5 h-5" />
               </button>
             </div>
 
@@ -218,6 +227,7 @@ export default function SearchStore() {
             )}
           </div>
         </section>
+
         {/* 카드 리스트 */}
         <section className="pl-[123px] pr-[120px] mb-0 mt-[153px]">
           <div className="flex flex-col items-start gap-[44px] w-full bg-white">
@@ -226,12 +236,8 @@ export default function SearchStore() {
             </h2>
 
             <div className="w-[1193px] flex items-center gap-[24px] mb-[229px]">
-              <button
-                type="button"
-                aria-label="이전 목록"
-                className="w-6 h-6 flex-shrink-0"
-              >
-                <img src="/assets/arrowleft.svg" alt="" className="w-6 h-6" />
+              <button type="button" aria-label="이전 목록" className="w-6 h-6">
+                <ArrowLeft className="w-6 h-6" />
               </button>
 
               {nearbyToilets.map((t, idx) => {
@@ -251,11 +257,7 @@ export default function SearchStore() {
                       className="relative rounded-[10px] overflow-hidden"
                       style={{ width: `${imgW}px`, height: `${imgW}px` }}
                     >
-                      <img
-                        src="/assets/NearbyToilet.svg"
-                        alt={t.name}
-                        className="w-full h-full object-cover"
-                      />
+                      <NearbyToilet className="w-full h-full object-cover" />
                       <span
                         className={[
                           'absolute right-[12px] bottom-[12px] h-[28px] px-[12px] rounded-full',
@@ -287,12 +289,7 @@ export default function SearchStore() {
                         </p>
 
                         <div className="flex items-center gap-[8px]">
-                          <img
-                            src="/assets/star.svg"
-                            alt=""
-                            aria-hidden
-                            className="w-[24px] h-[24px]"
-                          />
+                          <Star className="w-[24px] h-[24px]" />
                           <span className="w-[31px] h-[24px] font-pretendard text-black text-[20px] font-bold leading-[24px] text-right">
                             {t.rating.toFixed(1)}
                           </span>
@@ -301,11 +298,18 @@ export default function SearchStore() {
 
                       <div style={{ height: `${extra}px` }} />
 
-                      <div className="mt-[12px] flex flex-wrap items-center gap-[16px]">
+                      {/* 태그 칩 */}
+                      <div
+                        className={`flex flex-wrap items-center gap-[16px]`}
+                        style={{ marginTop: isTwo ? '32px' : '16px' }}
+                      >
                         {t.tags.map((tag, i) => (
                           <span
                             key={i}
-                            className="font-pretendard inline-flex items-center justify-center rounded-[50px] bg-[#EFEFEF] w-[95px] h-[35px] text-[16px] font-normal text-center text-[var(--grayscale-gray8,#2C2C2C)] whitespace-nowrap overflow-hidden text-ellipsis"
+                            className="font-pretendard inline-flex items-center justify-center rounded-[50px] bg-[#EFEFEF]
+                 px-[24px] py-[8px] h-[35px]
+                 text-[16px] font-normal leading-[24px] text-[var(--grayscale-gray8,#2C2C2C)]
+                 whitespace-nowrap overflow-hidden text-ellipsis"
                             title={tag}
                           >
                             {tag}
@@ -317,12 +321,8 @@ export default function SearchStore() {
                 );
               })}
 
-              <button
-                type="button"
-                aria-label="다음 목록"
-                className="w-6 h-6 flex-shrink-0"
-              >
-                <img src="/assets/arrow.svg" alt="" className="w-6 h-6" />
+              <button type="button" aria-label="다음 목록" className="w-6 h-6">
+                <Arrow className="w-6 h-6" />
               </button>
             </div>
           </div>
