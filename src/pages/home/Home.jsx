@@ -2,6 +2,14 @@ import Navbar from '@/components/layout/Navbar';
 import SearchBar from '@/components/common/SearchBar';
 import { useNavigate } from 'react-router-dom';
 
+// SVG import
+import FindToilet from '@/assets/svg/FindToilet.svg?react';
+import FindToiletHurry from '@/assets/svg/FindToiletHurry.svg?react';
+import Arrow from '@/assets/svg/arrow.svg?react';
+import ArrowLeft from '@/assets/svg/arrowleft.svg?react';
+import Star from '@/assets/svg/star.svg?react';
+import NearbyToilet from '@/assets/svg/NearbyToilet.svg?react';
+
 export default function Home() {
   const navigate = useNavigate();
 
@@ -66,12 +74,7 @@ export default function Home() {
               onClick={() => navigate('/find-toilet')}
               className="w-[785px] h-[482px] rounded-[20px] overflow-hidden flex-shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-main/40 hover:opacity-95"
             >
-              <img
-                src="/assets/FindToilet.svg"
-                alt=""
-                className="block w-full h-full"
-                aria-hidden
-              />
+              <FindToilet className="w-full h-full" />
             </button>
 
             {/* 긴급 찾기 */}
@@ -81,12 +84,7 @@ export default function Home() {
               onClick={() => navigate('/find-toilet/urgent')}
               className="w-[380px] h-[482px] rounded-[20px] overflow-hidden flex-shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-main/40 hover:opacity-95"
             >
-              <img
-                src="/assets/FindToiletHurry.svg"
-                alt=""
-                className="block w-full h-full"
-                aria-hidden
-              />
+              <FindToiletHurry className="w-full h-full" />
             </button>
           </div>
 
@@ -106,12 +104,7 @@ export default function Home() {
                   화장실 등록
                 </p>
               </div>
-              <img
-                src="/assets/arrow.svg"
-                alt=""
-                className="w-6 h-6"
-                aria-hidden
-              />
+              <Arrow className="w-6 h-6" />
             </button>
 
             <button
@@ -130,12 +123,7 @@ export default function Home() {
                   마포구 AI 화장실 챗봇
                 </p>
               </div>
-              <img
-                src="/assets/arrow.svg"
-                alt=""
-                className="w-6 h-6"
-                aria-hidden
-              />
+              <Arrow className="w-6 h-6" />
             </button>
           </div>
 
@@ -182,7 +170,7 @@ export default function Home() {
                   aria-label="이전 목록"
                   className="w-6 h-6 flex-shrink-0"
                 >
-                  <img src="/assets/arrowleft.svg" alt="" className="w-6 h-6" />
+                  <ArrowLeft className="w-6 h-6" />
                 </button>
 
                 {/* 카드 반복 */}
@@ -207,11 +195,7 @@ export default function Home() {
                           height: `${imgSize}px`,
                         }}
                       >
-                        <img
-                          src="/assets/NearbyToilet.svg"
-                          alt={t.name}
-                          className="w-full h-full object-cover"
-                        />
+                        <NearbyToilet className="w-full h-full object-cover" />
                         <span
                           className={[
                             'absolute right-[12px] bottom-[12px] h-[28px] px-[12px] rounded-full',
@@ -245,12 +229,7 @@ export default function Home() {
                           </p>
 
                           <div className="flex items-center gap-[8px]">
-                            <img
-                              src="/assets/star.svg"
-                              alt=""
-                              aria-hidden
-                              className="w-[24px] h-[24px]"
-                            />
+                            <Star className="w-[24px] h-[24px]" />
                             <span className="w-[31px] h-[24px] font-pretendard text-black text-[20px] font-bold leading-[24px] text-right">
                               {t.rating.toFixed(1)}
                             </span>
@@ -283,7 +262,7 @@ export default function Home() {
                   aria-label="다음 목록"
                   className="w-6 h-6 flex-shrink-0"
                 >
-                  <img src="/assets/arrow.svg" alt="" className="w-6 h-6" />
+                  <Arrow className="w-6 h-6" />
                 </button>
               </div>
 
