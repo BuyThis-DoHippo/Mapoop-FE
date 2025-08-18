@@ -1,14 +1,14 @@
 export const nearbyToilets = [
   {
     id: 1,
-    name: '제순식당',
+    name: '제순식당 화장실',
     rating: 4.3,
     kind: '민간',
     tags: ['깨끗함', '가게 안 화장실'],
   },
   {
     id: 2,
-    name: '소코아 홍대점',
+    name: '소코아 홍대점 화장실',
     rating: 4.3,
     kind: '민간',
     tags: ['깨끗함', '가게 밖'],

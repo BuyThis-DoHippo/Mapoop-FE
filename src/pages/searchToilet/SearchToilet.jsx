@@ -76,14 +76,17 @@ export default function SearchToilet() {
     });
   });
 
+  // 카드 3개만 출력
+  const limitedToilets = filteredToilets.slice(0, 3);
+
   return (
     <div className="w-[1440px] mx-auto relative">
-      {/* Navbar (고정 크기 1440x94) */}
+      {/* Navbar */}
       <Navbar active="toilet" />
 
       <main className="flex">
         {/* 왼쪽 카드 리스트 */}
-        <section className="w-[645px] h-[1281px] pt-[40px] pl-[123px] flex flex-col">
+        <section className="w-[645px] h-[1282px] pt-[40px] pl-[123px] flex flex-col">
           {/* 제목 + 필터 버튼 */}
           <div className="flex items-center gap-[24px]">
             <h1 className="text-[32px] leading-[48px] font-pretendard font-bold text-[#000]">
@@ -130,16 +133,17 @@ export default function SearchToilet() {
             </div>
           )}
 
-          {/* 카드 리스트 Frame 135 */}
+          {/* 카드 리스트 */}
           <div className="mt-[40px] flex flex-col gap-[24px]">
-            {filteredToilets.map((t) => (
+            {limitedToilets.map((t) => (
               <div
                 key={t.id}
-                className="w-[482px] flex flex-col rounded-[10px] border border-[#DBDBDB] bg-white overflow-hidden relative"
+                className="w-[482px] h-[343px] flex flex-col rounded-[10px] border border-[#DBDBDB] bg-white overflow-hidden"
               >
-                <div className="relative w-full h-[180px] overflow-hidden">
-                  <NearbyToilet className="w-full h-full object-contain" />
-                  <div className="absolute top-[135px] right-[20px]">
+                {/* 이미지 영역 (190px) */}
+                <div className="relative w-full h-[190px] overflow-hidden">
+                  <NearbyToilet className="w-full h-full object-cover" />
+                  <div className="absolute bottom-[10px] right-[20px]">
                     <span
                       className={[
                         'px-[22px] py-[4px] rounded-[20px] text-[14px] font-semibold text-white flex items-center',
@@ -151,42 +155,51 @@ export default function SearchToilet() {
                   </div>
                 </div>
 
-                <div className="flex flex-col p-[24px]">
-                  <div className="flex items-start justify-between">
-                    <h3 className="font-pretendard text-[20px] font-bold text-black leading-[29px]">
-                      {t.name}
-                    </h3>
-                    <div className="flex items-center gap-[6px]">
-                      <Star className="w-[20px] h-[20px] text-[#00AEEF]" />
-                      <span className="font-pretendard text-[16px] font-bold text-black">
-                        {t.rating.toFixed(1)}
-                      </span>
+                {/* Frame 132 영역 (343 - 190 = 153px) */}
+                <div className="flex flex-col justify-between h-[153px] px-[24px] py-[12px]">
+                  {/* 텍스트 블록 */}
+                  <div>
+                    <div className="flex items-start justify-between">
+                      <h3 className="font-pretendard text-[24px] font-bold text-black leading-[36px]">
+                        {t.name}
+                      </h3>
+
+                      <div className="flex items-center gap-[6px]">
+                        <Star className="w-[24px] h-[24px] text-[#00AEEF]" />
+                        <span className="font-pretendard text-[20px] font-bold text-black leading-[30px]">
+                          {t.rating.toFixed(1)}
+                        </span>
+                      </div>
                     </div>
+                    <p className="mt-[4px] text-[16px] leading-[24px] font-pretendard font-normal text-[#2C2C2C]">
+                      매일 11:30~21:00
+                    </p>
                   </div>
 
-                  <p className="mt-[6px] text-[14px] text-[#2C2C2C] leading-[20px]">
-                    매일 11:30~21:00
-                  </p>
-
-                  <div className="flex items-center justify-between mt-[20px]">
-                    <div className="flex flex-wrap gap-[8px]">
+                  {/* 칩들 */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex flex-wrap gap-[16px]">
                       {t.tags.map((tag, i) => (
                         <span
                           key={i}
-                          className="inline-flex items-center justify-center rounded-[50px] bg-[#EFEFEF] px-[12px] h-[30px] text-[14px] text-[#2C2C2C]"
+                          className="inline-flex items-center justify-center rounded-[50px] bg-[#EFEFEF]
+             px-[24px] py-[8px]
+             text-[16px] leading-[24px] font-pretendard font-normal text-[#2C2C2C]"
                         >
                           {tag}
                         </span>
                       ))}
                     </div>
-                    <button className="text-[16px] font-bold leading-[24px] text-[#5C5C5C] font-pretendard hover:text-[#444] transition-colors">
+
+                    <button className="text-[14px] font-bold leading-[20px] text-[#5C5C5C] font-pretendard hover:text-[#444] transition-colors">
                       자세히 보기 →
                     </button>
                   </div>
                 </div>
               </div>
             ))}
-            {filteredToilets.length === 0 && (
+
+            {limitedToilets.length === 0 && (
               <p className="text-[16px] text-gray-500 mt-4">
                 조건에 맞는 화장실이 없습니다.
               </p>
@@ -200,13 +213,13 @@ export default function SearchToilet() {
         </div>
       </main>
 
-      {/* 필터 드롭다운 (Frame 137 좌표 고정) */}
+      {/* 필터 드롭다운 */}
       {filterOpen && (
         <div
           className="absolute"
           style={{
-            top: '200px', // Navbar 밑에서 115px
-            left: '218px', // Frame 137 왼쪽 끝에서 218px
+            top: '200px',
+            left: '218px',
             width: '323px',
             height: '663px',
             zIndex: 50,
