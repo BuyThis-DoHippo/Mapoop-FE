@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from '@/pages/home/Home';
 import SearchStore from '@/pages/SearchStore';
-import SearchToilet from '@/pages/SearchToilet';
+import SearchToilet from '@/pages/searchToilet/SearchToilet';
 import SearchToiletUrgent from '@/pages/SearchToiletUrgent';
 import RegisterToilet from '@/pages/registerToilet/RegisterToliet';
 import AiChatbot from '@/pages/aiChatBot/AiChatbot';
