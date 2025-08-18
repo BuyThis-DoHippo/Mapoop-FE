@@ -3,7 +3,7 @@ import Home from '@/pages/home/Home';
 import SearchStore from '@/pages/SearchStore';
 import SearchToilet from '@/pages/searchToilet/SearchToilet';
 import SearchToiletUrgent from '@/pages/SearchToiletUrgent';
-import RegisterToilet from '@/pages/registerToilet/RegisterToliet';
+import RegisterToilet from '@/pages/registerToilet/RegisterToilet';
 import AiChatbot from '@/pages/aiChatBot/AiChatbot';
 import ReviewToilet from '@/pages/review/ReviewToilet';
 
