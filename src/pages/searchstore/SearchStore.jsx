@@ -2,6 +2,7 @@ import { useState, useRef, useLayoutEffect } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import SearchBar from '@/components/common/SearchBar';
 import Filter from '@/components/common/Filter';
+import { mockStore } from '../../mocks/mockStore';
 
 // SVG import
 import FilterIcon from '@/assets/svg/filter.svg?react';
@@ -9,38 +10,6 @@ import Arrow from '@/assets/svg/arrow.svg?react';
 import ArrowLeft from '@/assets/svg/arrowleft.svg?react';
 import Star from '@/assets/svg/star.svg?react';
 import NearbyToilet from '@/assets/svg/NearbyToilet.svg?react';
-
-// 카드 목록 데이터 (API 연결 후 수정해야 함)
-const nearbyToilets = [
-  {
-    id: 1,
-    name: '제순식당',
-    rating: 4.3,
-    kind: '민간',
-    tags: ['깨끗함', '가게 안 화장실'],
-  },
-  {
-    id: 2,
-    name: '소코아 홍대점',
-    rating: 4.3,
-    kind: '민간',
-    tags: ['깨끗함', '가게 밖 화장실'],
-  },
-  {
-    id: 3,
-    name: '레드로드 R6 개방 화장실',
-    rating: 4.3,
-    kind: '공공',
-    tags: ['24시간', '위생용품제공'],
-  },
-  {
-    id: 4,
-    name: '스타벅스 홍대 삼거리점',
-    rating: 4.3,
-    kind: '민간',
-    tags: ['깨끗함', '가게 안 화장실'],
-  },
-];
 
 // 카드 레이아웃 수치
 const cardWidths = [257, 256, 256, 256];
@@ -240,7 +209,7 @@ export default function SearchStore() {
                 <ArrowLeft className="w-6 h-6" />
               </button>
 
-              {nearbyToilets.map((t, idx) => {
+              {mockStore.map((t, idx) => {
                 const cardW = cardWidths[idx];
                 const imgW = cardW;
                 const nameBox = nameFrames[idx];
