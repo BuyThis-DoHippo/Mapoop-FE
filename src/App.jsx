@@ -8,6 +8,7 @@ import RegisterToilet from '@/pages/registerToilet/RegisterToilet';
 import AiChatbot from '@/pages/aiChatBot/AiChatbot';
 import ReviewToilet from '@/pages/review/ReviewToilet';
 import ToiletDetailPage from '@/pages/toiletDetail/ToiletDetailPage';
+import LoginPage from '@/pages/login/LoginPage';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/ai-chatbot" element={<AiChatbot />} />
         <Route path='/toilet-detail/:id' element={<ToiletDetailPage/>} />
         <Route path="/review-toilet/:id" element={<ReviewToilet />} />
+        <Route path="/login" element={<LoginPage />} />
       </Routes>
     </BrowserRouter>
   );
