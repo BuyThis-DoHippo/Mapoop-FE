@@ -100,6 +100,23 @@ export default function SearchStore() {
     if (info) toggleChip({ ...info, label: text });
   };
 
+  // 필터링 로직
+  const filteredStore = mockStore.filter((t) => {
+    if (selected.length === 0) return true;
+    return selected.every((label) => {
+      if (label === '공공' || label === '민간') {
+        return t.kind === label;
+      }
+      if (label === '4.5') return t.rating >= 4.5;
+      if (label === '4.0') return t.rating >= 4.0;
+      if (label === '3.5') return t.rating >= 3.5;
+      if (label === '4.5+') return t.rating > 4.5;
+      if (label === '4.0+') return t.rating > 4.0;
+      if (label === '3.5+') return t.rating > 3.5;
+      return t.tags.includes(label);
+    });
+  });
+
   // 검색줄 실제 높이 기반으로 칩/필터 top 계산
   const searchRowRef = useRef(null);
   const [chipTop, setChipTop] = useState(84);
@@ -188,7 +205,7 @@ export default function SearchStore() {
             {filterOpen && (
               <div
                 className="absolute right-0 z-50"
-                style={{ top: chipTop }}
+                style={{ top: chipTop - 28 }}
                 onClickCapture={handleFilterClick}
               >
                 <Filter open selected={selected} />
@@ -209,7 +226,8 @@ export default function SearchStore() {
                 <ArrowLeft className="w-6 h-6" />
               </button>
 
-              {mockStore.map((t, idx) => {
+              {/* 필터링된 카드 리스트 */}
+              {filteredStore.map((t, idx) => {
                 const cardW = cardWidths[idx];
                 const imgW = cardW;
                 const nameBox = nameFrames[idx];
