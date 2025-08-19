@@ -76,9 +76,6 @@ export default function SearchToilet() {
     });
   });
 
-  // 카드 3개만 출력
-  const limitedToilets = filteredToilets.slice(0, 3);
-
   return (
     <div className="w-[1440px] mx-auto relative">
       {/* Navbar */}
@@ -140,11 +137,11 @@ export default function SearchToilet() {
           )}
 
           {/* 카드 리스트 */}
-          <div className="mt-[40px] flex flex-col gap-[24px]">
-            {limitedToilets.map((t) => (
+          <div className="mt-[40px] flex-1 flex flex-col gap-[24px] overflow-y-auto pb-10">
+            {filteredToilets.map((t) => (
               <div
                 key={t.id}
-                className="w-[482px] h-[343px] flex flex-col rounded-[10px] border border-[#DBDBDB] bg-white overflow-hidden"
+                className="w-[482px] h-[343px] flex flex-col rounded-[10px] border border-[#DBDBDB] bg-white overflow-hidden flex-shrink-0"
               >
                 {/* 이미지 영역 (190px) */}
                 <div className="relative w-full h-[190px] overflow-hidden">
@@ -205,7 +202,7 @@ export default function SearchToilet() {
               </div>
             ))}
 
-            {limitedToilets.length === 0 && (
+            {filteredToilets.length === 0 && (
               <p className="text-[16px] text-gray-500 mt-4">
                 조건에 맞는 화장실이 없습니다.
               </p>
