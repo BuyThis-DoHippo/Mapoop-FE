@@ -152,15 +152,13 @@ export default function SearchStore() {
                 type="button"
                 aria-label="필터"
                 onClick={() => setFilterOpen((v) => !v)}
-                className="
-                  h-[60px] w-[60px] shrink-0 inline-flex items-center justify-center
-                  rounded-[10px] border border-[#D9D9D9] bg-white
-                  transition-all duration-150
-                  hover:bg-[#EFEFEF] hover:border-[#7C7C7C] hover:border-2
-                  active:bg-[#EFEFEF] active:border-[#7C7C7C] active:border-2
-                  focus-visible:bg-[#EFEFEF] focus-visible:border-[#7C7C7C] focus-visible:border-2
-                  focus:outline-none
-                "
+                className={`
+    h-[60px] w-[60px] shrink-0 inline-flex items-center justify-center
+    rounded-[10px] border-2 border-[#7C7C7C]
+    ${filterOpen ? 'bg-[#EFEFEF]' : 'bg-white'}
+    transition-all duration-150
+    focus:outline-none
+  `}
               >
                 <FilterIcon className="w-5 h-5" />
               </button>
