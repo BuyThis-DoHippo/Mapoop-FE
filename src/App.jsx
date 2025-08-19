@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Navbar from '@/components/layout/Navbar';
 import Home from '@/pages/home/Home';
 import SearchStore from '@/pages/SearchStore';
 import SearchToilet from '@/pages/SearchToilet';
@@ -11,6 +12,7 @@ import ToiletDetailPage from '@/pages/toiletDetail/ToiletDetailPage';
 function App() {
   return (
     <BrowserRouter>
+      <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/search-store" element={<SearchStore />} />
