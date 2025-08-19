@@ -21,7 +21,7 @@ function App() {
         <Route path="/register-toilet" element={<RegisterToilet />} />
         <Route path="/ai-chatbot" element={<AiChatbot />} />
         <Route path='/toilet-detail/:id' element={<ToiletDetailPage/>} />
-        <Route path="/review-toilet" element={<ReviewToilet />} />
+        <Route path="/review-toilet/:id" element={<ReviewToilet />} />
       </Routes>
     </BrowserRouter>
   );

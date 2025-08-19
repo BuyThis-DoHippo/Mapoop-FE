@@ -95,7 +95,7 @@ const ReviewSidebar = ({ toilet, ratingDistribution }) => {
 
       {/* Write Review Button */}
       <button 
-        onClick={() => navigate('/review-toilet')}
+        onClick={() => navigate('/review-toilet/${toilet.id}')}
         className="w-full px-24 py-9 bg-main rounded-[10px] flex items-center justify-between gap-2 text-heading3-bold text-white"
       >
         <Pencil/>
