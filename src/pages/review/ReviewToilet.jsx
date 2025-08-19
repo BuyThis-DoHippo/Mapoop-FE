@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { mockToiletData } from '@/mocks/toiletData';
 import Pencil from '@/assets/svg/toiletDetail/pencil.svg?react';
-
 // Components
 import ToiletInfoCard from '@/components/review/ToiletInfoCard';
 import FacilitySelector from '@/components/review/FacilitySelector';
@@ -68,6 +67,17 @@ const ReviewToilet = () => {
       file,
       url: URL.createObjectURL(file)
     }))]);
+  };
+
+  const handleImageRemove = (imageId) => {
+    setUploadedImages(prev => {
+      const imageToRemove = prev.find(img => img.id === imageId);
+      if (imageToRemove) {
+        // 메모리 정리를 위해 URL 해제
+        URL.revokeObjectURL(imageToRemove.url);
+      }
+      return prev.filter(img => img.id !== imageId);
+    });
   };
 
   const handleSubmit = () => {
@@ -148,6 +158,7 @@ const ReviewToilet = () => {
                 onTitleChange={setTitle}
                 onContentChange={setContent}
                 onImageUpload={handleImageUpload}
+                onImageRemove={handleImageRemove}
               />
             </div>
 
