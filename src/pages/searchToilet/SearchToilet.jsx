@@ -96,9 +96,15 @@ export default function SearchToilet() {
               type="button"
               aria-label="필터"
               onClick={() => setFilterOpen((v) => !v)}
-              className="h-[60px] w-[60px] flex items-center justify-center rounded-[10px] border-2 border-[#7C7C7C] bg-white"
+              className={`
+    h-[60px] w-[60px] shrink-0 inline-flex items-center justify-center
+    rounded-[10px] border-2 border-[#7C7C7C]
+    ${filterOpen ? 'bg-[#EFEFEF]' : 'bg-white'}
+    transition-all duration-150
+    focus:outline-none
+  `}
             >
-              <FilterIcon className="h-5 w-5" />
+              <FilterIcon className="w-5 h-5" />
             </button>
           </div>
 
