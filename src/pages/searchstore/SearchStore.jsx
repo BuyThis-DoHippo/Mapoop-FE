@@ -58,18 +58,18 @@ export default function SearchStore() {
   // 선택 칩(파란 칩)
   const chipSelectedClass =
     'inline-flex items-center px-8 h-[35px] rounded-[50px] ' +
-    'border border-[var(--Main-Main-2,#0085B7)] ' +
-    'bg-[var(--Main-Main3,#EBFAFF)] text-[#0085B7] ' +
-    'font-pretendard text-[16px] leading-[24px] ' +
+    'border border-main-2 ' +
+    'bg-main-3 text-main-2 ' +
+    'text-body2 ' +
     'focus:outline-none focus-visible:ring-2 focus-visible:ring-[#7FCBE6]';
 
   // 취소 칩(X)
   const clearClass =
     'inline-flex items-center justify-center h-[35px] px-6 rounded-[50px] ' +
-    'border border-[var(--grayscale-gray3,#9E9E9E)] ' +
-    'bg-[var(--grayscale-gray0,#EFEFEF)] ' +
-    'text-[var(--grayscale-gray3,#9E9E9E)] ' +
-    'font-pretendard text-[16px] leading-[24px] ' +
+    'border border-gray-3 ' +
+    'bg-gray-0 ' +
+    'text-gray-3 ' +
+    'text-body2 ' +
     'hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D0D0D0]';
 
   // 전체/개별 해제
@@ -141,7 +141,7 @@ export default function SearchStore() {
         <section className="mt-[90px] pl-[198px] pr-[197px]">
           <div className="relative">
             <div
-              className="inline-flex items-center gap-[24px]"
+              className="inline-flex items-center gap-6"
               ref={searchRowRef}
             >
               <SearchBar
@@ -154,8 +154,8 @@ export default function SearchStore() {
                 onClick={() => setFilterOpen((v) => !v)}
                 className={`
     h-[60px] w-[60px] shrink-0 inline-flex items-center justify-center
-    rounded-[10px] border-2 border-[#7C7C7C]
-    ${filterOpen ? 'bg-[#EFEFEF]' : 'bg-white'}
+    rounded-[10px] border-2 border-gray-4
+    ${filterOpen ? 'bg-gray-0' : 'bg-white'}
     transition-all duration-150
     focus:outline-none
   `}
@@ -167,10 +167,10 @@ export default function SearchStore() {
             {/* 선택 칩 바 */}
             {selected.length > 0 && (
               <div
-                className="absolute left-0 w-[961px] flex items-start gap-[32px]"
+                className="absolute left-0 w-[961px] flex items-start gap-8"
                 style={{ top: chipTop }}
               >
-                <span className="w-[92px] h-[35px] flex items-center flex-shrink-0 font-pretendard text-[16px] font-normal leading-[24px] text-black">
+                <span className="w-[92px] h-[35px] flex items-center flex-shrink-0 text-body2 text-gray-10">
                   필터링 결과
                 </span>
 
@@ -214,12 +214,12 @@ export default function SearchStore() {
 
         {/* 카드 리스트 */}
         <section className="pl-[123px] pr-[120px] mb-0 mt-[153px]">
-          <div className="flex flex-col items-start gap-[44px] w-full bg-white">
-            <h2 className="text-[24px] leading-[36px] font-pretendard font-normal text-[#000]">
+          <div className="flex flex-col items-start gap-11 w-full bg-white">
+            <h2 className="text-heading3-regular text-gray-10">
               지금 주변에 있는 가장 가까운 화장실
             </h2>
 
-            <div className="w-[1193px] flex items-center gap-[24px] mb-[229px]">
+            <div className="w-[1193px] flex items-center gap-6 mb-[229px]">
               <button type="button" aria-label="이전 목록" className="w-6 h-6">
                 <ArrowLeft className="w-6 h-6" />
               </button>
@@ -245,7 +245,7 @@ export default function SearchStore() {
                       <NearbyToilet className="w-full h-full object-cover" />
                       <span
                         className={[
-                          'absolute right-[12px] bottom-[12px] h-[28px] px-[12px] rounded-full',
+                          'absolute right-3 bottom-3 h-7 px-3 rounded-full',
                           'text-[12px] font-semibold text-white flex items-center',
                           t.kind === '공공' ? 'bg-[#1FC37A]' : 'bg-[#FFC83A]',
                         ].join(' ')}
@@ -254,10 +254,10 @@ export default function SearchStore() {
                       </span>
                     </div>
 
-                    <div className="mt-[16px]">
+                    <div className="mt-4">
                       <div className="flex items-start justify-between">
                         <p
-                          className="font-pretendard text-black text-[24px] font-bold leading-[29px]"
+                          className="text-heading3-bold text-gray-10"
                           style={{
                             width: `${nameBox.w}px`,
                             height: `${nameBox.h}px`,
@@ -273,9 +273,9 @@ export default function SearchStore() {
                           {t.name}
                         </p>
 
-                        <div className="flex items-center gap-[8px]">
-                          <Star className="w-[24px] h-[24px]" />
-                          <span className="w-[31px] h-[24px] font-pretendard text-black text-[20px] font-bold leading-[24px] text-right">
+                        <div className="flex items-center gap-2">
+                          <Star className="w-6 h-6" />
+                          <span className="w-[31px] h-6 text-body1-bold text-gray-10 text-right">
                             {t.rating.toFixed(1)}
                           </span>
                         </div>
@@ -285,15 +285,15 @@ export default function SearchStore() {
 
                       {/* 태그 칩 */}
                       <div
-                        className={`flex flex-wrap items-center gap-[16px]`}
+                        className={`flex flex-wrap items-center gap-4`}
                         style={{ marginTop: isTwo ? '32px' : '16px' }}
                       >
                         {t.tags.map((tag, i) => (
                           <span
                             key={i}
-                            className="font-pretendard inline-flex items-center justify-center rounded-[50px] bg-[#EFEFEF]
-                 px-[24px] py-[8px] h-[35px]
-                 text-[16px] font-normal leading-[24px] text-[var(--grayscale-gray8,#2C2C2C)]
+                            className="inline-flex items-center justify-center rounded-[50px] bg-gray-0
+                 px-6 py-2 h-[35px]
+                 text-body2 text-gray-8
                  whitespace-nowrap overflow-hidden text-ellipsis"
                             title={tag}
                           >

@@ -15,10 +15,10 @@ export default function Navbar() {
   const activeReview = isActiveBy(REVIEW_ROUTES);
 
   const itemBase =
-    'w-[75px] h-6 font-pretendard text-xl leading-normal text-[#000] whitespace-nowrap hover:font-bold';
+    'w-[75px] h-6 text-body1 text-gray-10 whitespace-nowrap hover:font-bold';
 
   return (
-    <header className="w-full border-b border-line bg-brand-white">
+    <header className="w-full border-b border-gray-1 bg-white">
       <div className="w-full px-[125px]">
         <div className="mx-auto max-w-[1194px] h-[95px] flex items-center justify-between">
           {/* 로고 */}
@@ -28,7 +28,7 @@ export default function Navbar() {
           />
 
           {/* 네비게이션 */}
-          <nav className="flex items-center gap-[56px]">
+          <nav className="flex items-center gap-14">
             {/* 가게 검색 (SearchStore / SearchToilet / SearchToiletUrgent 전부 여기로 활성) */}
             <NavLink
               to="/search-store"
@@ -54,14 +54,14 @@ export default function Navbar() {
               className="
                 inline-flex items-center justify-center gap-2.5
                 px-[37px] py-2.5 rounded-[10px]
-                bg-brand-main hover:bg-brand-2 text-white
+                bg-main hover:bg-main-2 text-white
                 transition-colors duration-200
                 focus:outline-none focus-visible:ring-2
-                focus-visible:ring-brand-main/40 focus-visible:ring-offset-2
-                focus-visible:ring-offset-brand-white
+                focus-visible:ring-main/40 focus-visible:ring-offset-2
+                focus-visible:ring-offset-white
               "
             >
-              <span className="font-pretendard font-normal text-xl leading-normal">
+              <span className="text-body1">
                 로그인
               </span>
             </button>
