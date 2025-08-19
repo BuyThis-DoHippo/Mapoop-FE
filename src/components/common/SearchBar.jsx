@@ -11,8 +11,6 @@ export default function SearchBar({ onSearch, variant = 'home' }) {
 
   const containerWidth = variant === 'store' ? 'w-[961px]' : 'w-[961px]';
   const inputWidth = variant === 'store' ? 'w-[787px]' : 'w-[787px]';
-  const btnSize =
-    variant === 'store' ? 'w-[150px] h-[61px]' : 'w-[150px] h-[61px]';
 
   return (
     <form onSubmit={submit} className="w-full flex justify-center">

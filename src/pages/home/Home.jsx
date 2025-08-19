@@ -1,22 +1,20 @@
 import SearchBar from '@/components/common/SearchBar';
 import { useNavigate } from 'react-router-dom';
+import { nearbyToilets } from '@/mocks/mockToilets';
 
-// SVG import
+// svg 컴포넌트 import
 import FindToilet from '@/assets/svg/FindToilet.svg?react';
 import FindToiletHurry from '@/assets/svg/FindToiletHurry.svg?react';
 import Arrow from '@/assets/svg/arrow.svg?react';
 import ArrowLeft from '@/assets/svg/arrowleft.svg?react';
-import Star from '@/assets/svg/star.svg?react';
 import NearbyToilet from '@/assets/svg/NearbyToilet.svg?react';
-import { nearbyToilets } from '@/mocks/mockHome';
+import Star from '@/assets/svg/star.svg?react';
 
 export default function Home() {
   const navigate = useNavigate();
 
   // 카드 폭 배열(슬라이드 4장)
   const cardWidths = [257, 256, 256, 256];
-
-  // 카드명 영역(1줄/2줄 레이아웃)
   const nameFrames = [
     { w: 83, h: 29 },
     { w: 130, h: 29 },
@@ -27,36 +25,33 @@ export default function Home() {
   return (
     <div className="w-full">
 
-      {/* 상단: 검색 영역 */}
       <section className="w-full px-[125px] pt-[65px]">
         <div className="max-w-[1193px] mx-auto">
           <SearchBar onSearch={(q) => console.log('search:', q)} />
 
-          {/* 메인 카드: 화장실 찾기 / 긴급 찾기 */}
-          <div className="pt-[65px] flex items-start gap-8">
-            {/* 화장실 찾기 */}
+          {/* 화장실 찾기 / 긴급 찾기 */}
+          <div className="pt-[65px] flex items-start gap-[32px]">
             <button
               type="button"
               aria-label="화장실 찾기"
               onClick={() => navigate('/find-toilet')}
-              className="w-[785px] h-[482px] rounded-[20px] overflow-hidden flex-shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-main/40 hover:opacity-95"
+              className="w-[785px] h-[482px] rounded-[20px] overflow-hidden flex-shrink-0 focus:outline-none hover:opacity-95"
             >
-              <FindToilet className="w-full h-full" />
+              <FindToilet className="block w-full h-full" />
             </button>
 
-            {/* 긴급 찾기 */}
             <button
               type="button"
               aria-label="긴급 찾기"
               onClick={() => navigate('/find-toilet/urgent')}
-              className="w-[380px] h-[482px] rounded-[20px] overflow-hidden flex-shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-main/40 hover:opacity-95"
+              className="w-[380px] h-[482px] rounded-[20px] overflow-hidden flex-shrink-0 focus:outline-none hover:opacity-95"
             >
-              <FindToiletHurry className="w-full h-full" />
+              <FindToiletHurry className="block w-full h-full" />
             </button>
           </div>
 
-          {/* 하단 CTA 카드: 화장실 등록 / AI 챗봇 */}
-          <div className="pt-10 flex gap-8">
+          {/* 등록 / 챗봇 CTA */}
+          <div className="pt-[40px] flex gap-[32px]">
             <button
               type="button"
               aria-label="화장실 등록"
@@ -101,9 +96,7 @@ export default function Home() {
           <div className="w-[1193px] flex flex-col items-start gap-[60px] mx-auto">
             <div className="w-full h-px bg-gray-1" />
 
-            {/* 섹션 제목 + 더보기 + 리스트 */}
-            <div className="flex flex-col items-start gap-11 w-full">
-              {/* 제목 + 더보기 (한 줄) */}
+            <div className="flex flex-col items-start gap-[44px] w-full">
               <div className="w-full flex items-start justify-between">
                 <h2 className="text-heading2 text-gray-10">
                   지금 주변에 있는
@@ -111,7 +104,6 @@ export default function Home() {
                   가장 가까운 화장실
                 </h2>
 
-                {/* 화장실 더보기 → */}
                 <button
                   type="button"
                   onClick={() => navigate('/find-toilet')}
@@ -138,7 +130,6 @@ export default function Home() {
                   <ArrowLeft className="w-6 h-6" />
                 </button>
 
-                {/* 카드 반복 */}
                 {nearbyToilets.map((t, idx) => {
                   const cardW = cardWidths[idx];
                   const imgSize = cardW;
@@ -152,7 +143,6 @@ export default function Home() {
                       className="flex-shrink-0 h-[393px]"
                       style={{ width: `${cardW}px` }}
                     >
-                      {/* 썸네일 + 유형 뱃지 */}
                       <div
                         className="relative rounded-[10px] overflow-hidden"
                         style={{
@@ -160,7 +150,8 @@ export default function Home() {
                           height: `${imgSize}px`,
                         }}
                       >
-                        <NearbyToilet className="w-full h-full object-cover" />
+                        <NearbyToilet className="w-full h-full object-contain" />
+
                         <span
                           className={[
                             'absolute right-3 bottom-3 h-7 px-3 rounded-full',
@@ -201,7 +192,6 @@ export default function Home() {
                           </div>
                         </div>
 
-                        {/* 높이 보정(1줄명 정렬) */}
                         <div style={{ height: `${extra}px` }} />
 
                         {/* 태그 칩 */}
@@ -227,7 +217,6 @@ export default function Home() {
                   );
                 })}
 
-                {/* 다음 화살표 */}
                 <button
                   type="button"
                   aria-label="다음 목록"
@@ -237,7 +226,6 @@ export default function Home() {
                 </button>
               </div>
 
-              {/* 하단 여백 */}
               <div className="w-[1193px] h-[144px] bg-white" />
             </div>
           </div>
