@@ -42,7 +42,7 @@ export default function SearchBar({ onSearch, variant = 'home' }) {
           className={`
             ${btnSize} shrink-0
             inline-flex items-center justify-center
-            rounded-[10px] bg-brand-main hover:bg-brand-2
+            rounded-[10px] bg-Main-Main3 hover:bg-brand-2
             focus:outline-none focus:ring-2 focus:ring-brand-main/30
           `}
           aria-label="검색"

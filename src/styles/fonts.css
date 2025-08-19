@@ -1,0 +1,78 @@
+@font-face {
+  font-family: "Pretendard";
+  src: url("@/assets/fonts/PretendardVariable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+/**
+ * TailwindCSS의 @layer 지시어를 사용하여
+ * 텍스트 스타일 유틸리티 클래스를 정의합니다.
+ * HTML/JSX에서 className으로 바로 사용할 수 있습니다.
+ * * 예시: <div className="text-heading1">제목</div>
+ */
+@layer base {
+  /* Heading/Heading1 */
+  .text-heading1 {
+    font-family: "Pretendard", sans-serif;
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 150%; /* 60px */
+  }
+
+  /* Heading/Heading2 */
+  .text-heading2 {
+    font-family: "Pretendard", sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 150%; /* 48px */
+  }
+
+  /* Heading/Heading3_Bold */
+  .text-heading3-bold {
+    font-family: "Pretendard", sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 150%; /* 36px */
+  }
+
+  /* Heading/Heading3_regular */
+  .text-heading3-regular {
+    font-family: "Pretendard", sans-serif;
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 150%; /* 36px */
+  }
+
+  /* Body/Body1 */
+  .text-body1 {
+    font-family: "Pretendard", sans-serif;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 150%; /* 30px */
+  }
+
+  /* Body/Body1_Bold */
+  .text-body1-bold {
+    font-family: "Pretendard", sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 150%; /* 30px */
+  }
+
+  /* Body/Body2 */
+  .text-body2 {
+    font-family: "Pretendard", sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 150%; /* 24px */
+  }
+
+  /* Body/Body2_Bold */
+  .text-body2-bold {
+    font-family: "Pretendard", sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 150%; /* 24px */
+  }
+}

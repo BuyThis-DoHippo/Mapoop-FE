@@ -2,40 +2,17 @@ import Navbar from '@/components/layout/Navbar';
 import SearchBar from '@/components/common/SearchBar';
 import { useNavigate } from 'react-router-dom';
 
+// SVG import
+import FindToilet from '@/assets/svg/FindToilet.svg?react';
+import FindToiletHurry from '@/assets/svg/FindToiletHurry.svg?react';
+import Arrow from '@/assets/svg/arrow.svg?react';
+import ArrowLeft from '@/assets/svg/arrowleft.svg?react';
+import Star from '@/assets/svg/star.svg?react';
+import NearbyToilet from '@/assets/svg/NearbyToilet.svg?react';
+import { nearbyToilets } from '@/mocks/mockHome';
+
 export default function Home() {
   const navigate = useNavigate();
-
-  // 목데이터: 근처 화장실 카드
-  const nearbyToilets = [
-    {
-      id: 1,
-      name: '제순식당',
-      rating: 4.3,
-      kind: '민간',
-      tags: ['깨끗한', '가게 안'],
-    },
-    {
-      id: 2,
-      name: '소코아 홍대점',
-      rating: 4.3,
-      kind: '민간',
-      tags: ['깨끗한', '가게 밖'],
-    },
-    {
-      id: 3,
-      name: '레드로드 R6 개방 화장실',
-      rating: 4.3,
-      kind: '공공',
-      tags: ['24시간', '위생용품제공'],
-    },
-    {
-      id: 4,
-      name: '스타벅스 홍대 삼거리점',
-      rating: 4.3,
-      kind: '민간',
-      tags: ['깨끗한', '가게 안'],
-    },
-  ];
 
   // 카드 폭 배열(슬라이드 4장)
   const cardWidths = [257, 256, 256, 256];
@@ -58,20 +35,15 @@ export default function Home() {
           <SearchBar onSearch={(q) => console.log('search:', q)} />
 
           {/* 메인 카드: 화장실 찾기 / 긴급 찾기 */}
-          <div className="pt-[65px] flex items-start gap-[32px]">
+          <div className="pt-[65px] flex items-start gap-8">
             {/* 화장실 찾기 */}
             <button
               type="button"
               aria-label="화장실 찾기"
               onClick={() => navigate('/find-toilet')}
-              className="w-[785px] h-[482px] rounded-[20px] overflow-hidden flex-shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-main/40 hover:opacity-95"
+              className="w-[785px] h-[482px] rounded-[20px] overflow-hidden flex-shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-main/40 hover:opacity-95"
             >
-              <img
-                src="/assets/FindToilet.svg"
-                alt=""
-                className="block w-full h-full"
-                aria-hidden
-              />
+              <FindToilet className="w-full h-full" />
             </button>
 
             {/* 긴급 찾기 */}
@@ -79,78 +51,63 @@ export default function Home() {
               type="button"
               aria-label="긴급 찾기"
               onClick={() => navigate('/find-toilet/urgent')}
-              className="w-[380px] h-[482px] rounded-[20px] overflow-hidden flex-shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-main/40 hover:opacity-95"
+              className="w-[380px] h-[482px] rounded-[20px] overflow-hidden flex-shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-main/40 hover:opacity-95"
             >
-              <img
-                src="/assets/FindToiletHurry.svg"
-                alt=""
-                className="block w-full h-full"
-                aria-hidden
-              />
+              <FindToiletHurry className="w-full h-full" />
             </button>
           </div>
 
           {/* 하단 CTA 카드: 화장실 등록 / AI 챗봇 */}
-          <div className="pt-[40px] flex gap-[32px]">
+          <div className="pt-10 flex gap-8">
             <button
               type="button"
               aria-label="화장실 등록"
               onClick={() => navigate('/register-toilet')}
-              className="w-[583px] h-[183px] flex-shrink-0 rounded-[10px] border-2 border-neutral-200 bg-white px-[60px] py-[41px] flex items-center justify-start gap-[45px] text-left"
+              className="w-[583px] h-[183px] flex-shrink-0 rounded-[10px] border-2 border-gray-2 bg-white px-[60px] py-[41px] flex items-center justify-start gap-[45px] text-left"
             >
-              <div className="font-pretendard flex-1 max-w-[463px]">
-                <p className="text-[16px] w-[169px] h-[48px] leading-[24px] text-[#0B0B0B]">
+              <div className="flex-1 max-w-[463px]">
+                <p className="text-body2 w-[169px] h-[48px] text-gray-10">
                   지도에 등록되어 있지 않은 화장실을 등록해요
                 </p>
-                <p className="mt-[24px] text-[24px] font-bold text-black">
+                <p className="mt-6 text-heading3-bold text-gray-10">
                   화장실 등록
                 </p>
               </div>
-              <img
-                src="/assets/arrow.svg"
-                alt=""
-                className="w-6 h-6"
-                aria-hidden
-              />
+              <Arrow className="w-6 h-6" />
             </button>
 
             <button
               type="button"
-              aria-label="마포구 AI 화장실 챗봇"
+              aria-label="마푸구 AI 화장실 챗봇"
               onClick={() => navigate('/ai-chatbot')}
-              className="w-[583px] h-[183px] flex-shrink-0 rounded-[10px] border-2 border-neutral-200 bg-white px-[60px] py-[41px] flex items-center justify-start gap-[45px] text-left"
+              className="w-[583px] h-[183px] flex-shrink-0 rounded-[10px] border-2 border-gray-2 bg-white px-[60px] py-[41px] flex items-center justify-start gap-[45px] text-left"
             >
-              <div className="font-pretendard flex-1 max-w-[463px]">
-                <p className="text-[16px] w-[207px] h-[48px] leading-[24px] text-[#0B0B0B]">
-                  AI 챗봇에게 마포구
+              <div className="flex-1 max-w-[463px]">
+                <p className="text-body2 w-[207px] h-[48px] text-gray-10">
+                  AI 챗봇에게 마푸구
                   <br />
                   화장실 정보를 물어봐요
                 </p>
-                <p className="mt-[24px] text-[24px] font-bold text-black">
-                  마포구 AI 화장실 챗봇
+                <p className="mt-6 text-heading3-bold text-gray-10">
+                  마푸구 AI 화장실 챗봇
                 </p>
               </div>
-              <img
-                src="/assets/arrow.svg"
-                alt=""
-                className="w-6 h-6"
-                aria-hidden
-              />
+              <Arrow className="w-6 h-6" />
             </button>
           </div>
 
           {/* 구분선 */}
-          <div className="mt-[64px] w-[1193px] h-px bg-[#D8D8D8]" />
+          <div className="mt-16 w-[1193px] h-px bg-gray-1" />
 
           {/* 근처 화장실 섹션 */}
           <div className="w-[1193px] flex flex-col items-start gap-[60px] mx-auto">
-            <div className="w-full h-px bg-[#D8D8D8]" />
+            <div className="w-full h-px bg-gray-1" />
 
             {/* 섹션 제목 + 더보기 + 리스트 */}
-            <div className="flex flex-col items-start gap-[44px] w-full">
+            <div className="flex flex-col items-start gap-11 w-full">
               {/* 제목 + 더보기 (한 줄) */}
               <div className="w-full flex items-start justify-between">
-                <h2 className="font-pretendard text-black text-[32px] leading-[48px] font-extrabold">
+                <h2 className="text-heading2 text-gray-10">
                   지금 주변에 있는
                   <br />
                   가장 가까운 화장실
@@ -161,13 +118,11 @@ export default function Home() {
                   type="button"
                   onClick={() => navigate('/find-toilet')}
                   className="
-                    font-pretendard
-                    text-[16px] leading-[24px] font-normal
-                    text-[var(--grayscale-gray4,#7C7C7C)]
-                    tracking-[0]
+                    text-body2
+                    text-gray-4
                     whitespace-nowrap
                     hover:opacity-80
-                    focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-main/30
+                    focus:outline-none focus-visible:ring-2 focus-visible:ring-main/30
                   "
                 >
                   화장실 더보기 →
@@ -175,14 +130,14 @@ export default function Home() {
               </div>
 
               {/* 리스트: 좌우 화살표 + 카드 4장 */}
-              <div className="w-[1193px] flex items-center gap-[24px]">
+              <div className="w-[1193px] flex items-center gap-6">
                 {/* 이전 화살표 */}
                 <button
                   type="button"
                   aria-label="이전 목록"
                   className="w-6 h-6 flex-shrink-0"
                 >
-                  <img src="/assets/arrowleft.svg" alt="" className="w-6 h-6" />
+                  <ArrowLeft className="w-6 h-6" />
                 </button>
 
                 {/* 카드 반복 */}
@@ -207,14 +162,10 @@ export default function Home() {
                           height: `${imgSize}px`,
                         }}
                       >
-                        <img
-                          src="/assets/NearbyToilet.svg"
-                          alt={t.name}
-                          className="w-full h-full object-cover"
-                        />
+                        <NearbyToilet className="w-full h-full object-cover" />
                         <span
                           className={[
-                            'absolute right-[12px] bottom-[12px] h-[28px] px-[12px] rounded-full',
+                            'absolute right-3 bottom-3 h-7 px-3 rounded-full',
                             'text-[12px] font-semibold text-white flex items-center',
                             t.kind === '공공' ? 'bg-[#1FC37A]' : 'bg-[#FFC83A]',
                           ].join(' ')}
@@ -224,11 +175,11 @@ export default function Home() {
                       </div>
 
                       {/* 텍스트 영역 */}
-                      <div className="mt-[16px]">
+                      <div className="mt-4">
                         {/* 가게명 + 평점 */}
                         <div className="flex items-start justify-between">
                           <p
-                            className="font-pretendard text-black text-[24px] font-bold leading-[29px]"
+                            className="text-heading3-bold text-gray-10"
                             style={{
                               width: `${nameBox.w}px`,
                               height: `${nameBox.h}px`,
@@ -244,14 +195,9 @@ export default function Home() {
                             {t.name}
                           </p>
 
-                          <div className="flex items-center gap-[8px]">
-                            <img
-                              src="/assets/star.svg"
-                              alt=""
-                              aria-hidden
-                              className="w-[24px] h-[24px]"
-                            />
-                            <span className="w-[31px] h-[24px] font-pretendard text-black text-[20px] font-bold leading-[24px] text-right">
+                          <div className="flex items-center gap-2">
+                            <Star className="w-6 h-6" />
+                            <span className="w-[31px] h-6 text-body1-bold text-gray-10 text-right">
                               {t.rating.toFixed(1)}
                             </span>
                           </div>
@@ -261,11 +207,17 @@ export default function Home() {
                         <div style={{ height: `${extra}px` }} />
 
                         {/* 태그 칩 */}
-                        <div className="mt-[12px] flex flex-wrap items-center gap-[16px]">
+                        <div
+                          className={`flex flex-wrap items-center gap-4`}
+                          style={{ marginTop: isTwo ? '32px' : '16px' }}
+                        >
                           {t.tags.map((tag, i) => (
                             <span
                               key={i}
-                              className="font-pretendard inline-flex items-center justify-center rounded-[50px] bg-[#EFEFEF] w-[95px] h-[35px] text-[16px] font-normal text-center text-[var(--grayscale-gray8,#2C2C2C)] whitespace-nowrap overflow-hidden text-ellipsis"
+                              className="inline-flex items-center justify-center rounded-[50px] bg-gray-0
+                 px-6 py-2 h-[35px]
+                 text-body2 text-gray-8
+                 whitespace-nowrap overflow-hidden text-ellipsis"
                               title={tag}
                             >
                               {tag}
@@ -283,7 +235,7 @@ export default function Home() {
                   aria-label="다음 목록"
                   className="w-6 h-6 flex-shrink-0"
                 >
-                  <img src="/assets/arrow.svg" alt="" className="w-6 h-6" />
+                  <Arrow className="w-6 h-6" />
                 </button>
               </div>
 
