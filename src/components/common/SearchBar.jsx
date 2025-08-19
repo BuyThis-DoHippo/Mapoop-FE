@@ -18,7 +18,7 @@ export default function SearchBar({ onSearch, variant = 'home' }) {
     <form onSubmit={submit} className="w-full flex justify-center">
       {/* 검색창 */}
       <div
-        className={`${containerWidth} h-[78px] mx-auto flex items-center gap-[24px]`}
+        className={`${containerWidth} h-[78px] mx-auto flex items-center gap-6`}
       >
         <input
           type="text"
@@ -27,10 +27,10 @@ export default function SearchBar({ onSearch, variant = 'home' }) {
           placeholder="가고자 하는 곳의 화장실 리뷰를 확인해봐요"
           className={`
             ${inputWidth} h-[78px]
-            rounded-[50px] bg-brand-3 border-0
+            rounded-[50px] bg-main-3 border-0
             pt-[27px] pb-[27px] pl-[47px] pr-[47px]
-            font-pretendard text-[20px] leading-normal
-            text-neutral-950 placeholder:text-neutral-950
+            text-body1
+            text-gray-9 placeholder:text-gray-9
             focus:placeholder-transparent
             outline-none
           `}
@@ -42,12 +42,12 @@ export default function SearchBar({ onSearch, variant = 'home' }) {
           className={`
             ${btnSize} shrink-0
             inline-flex items-center justify-center
-            rounded-[10px] bg-Main-Main3 hover:bg-brand-2
-            focus:outline-none focus:ring-2 focus:ring-brand-main/30
+            rounded-[10px] bg-main hover:bg-main-2
+            focus:outline-none focus:ring-2 focus:ring-main/30
           `}
           aria-label="검색"
         >
-          <span className="font-pretendard text-white text-[20px] font-normal leading-normal">
+          <span className="text-body1 text-white">
             검색
           </span>
         </button>

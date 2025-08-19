@@ -78,18 +78,18 @@ export default function Home() {
 
             <button
               type="button"
-              aria-label="마푸구 AI 화장실 챗봇"
+              aria-label="마포구 AI 화장실 챗봇"
               onClick={() => navigate('/ai-chatbot')}
               className="w-[583px] h-[183px] flex-shrink-0 rounded-[10px] border-2 border-gray-2 bg-white px-[60px] py-[41px] flex items-center justify-start gap-[45px] text-left"
             >
               <div className="flex-1 max-w-[463px]">
                 <p className="text-body2 w-[207px] h-[48px] text-gray-10">
-                  AI 챗봇에게 마푸구
+                  AI 챗봇에게 마포구
                   <br />
                   화장실 정보를 물어봐요
                 </p>
                 <p className="mt-6 text-heading3-bold text-gray-10">
-                  마푸구 AI 화장실 챗봇
+                  마포구 AI 화장실 챗봇
                 </p>
               </div>
               <Arrow className="w-6 h-6" />
