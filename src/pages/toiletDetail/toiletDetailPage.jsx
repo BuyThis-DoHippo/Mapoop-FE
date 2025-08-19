@@ -15,6 +15,7 @@ const ToiletDetailPage = () => {
     reviews,
     ratingDistribution,
     pagination,
+    currentSort,
     isLoading,
     error,
     fetchToiletDetail,
@@ -36,11 +37,6 @@ const ToiletDetailPage = () => {
       resetToiletData();
     };
   }, [id]);
-
-  // 디버깅용 로그 추가
-  console.log('ToiletDetailPage render - reviews:', reviews);
-  console.log('ToiletDetailPage render - currentToilet:', currentToilet);
-  console.log('ToiletDetailPage render - ratingDistribution:', ratingDistribution);
 
   const handlePageChange = (page) => {
     fetchReviews(id, page, 4);
