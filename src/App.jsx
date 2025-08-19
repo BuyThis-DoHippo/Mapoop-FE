@@ -4,7 +4,7 @@ import Home from '@/pages/home/Home';
 import SearchStore from '@/pages/searchstore/SearchStore';
 import SearchToilet from '@/pages/searchToilet/SearchToilet';
 import SearchToiletUrgent from '@/pages/searchtoileturgent/SearchToiletUrgent';
-import RegisterToilet from '@/pages/registerToilet/RegisterToliet';
+import RegisterToilet from '@/pages/registerToilet/RegisterToilet';
 import AiChatbot from '@/pages/aiChatBot/AiChatbot';
 import ReviewToilet from '@/pages/review/ReviewToilet';
 import ToiletDetailPage from '@/pages/toiletDetail/ToiletDetailPage';

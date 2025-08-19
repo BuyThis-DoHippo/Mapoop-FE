@@ -1,4 +1,3 @@
-import Navbar from '@/components/layout/Navbar';
 import { nearbyToiletsUrgent } from '@/mocks/mockUrgent';
 import Star from '@/assets/svg/star.svg?react';
 import NearbyToilet from '@/assets/svg/NearbyToilet.svg?react';
@@ -7,9 +6,6 @@ import MapContainer from './MapContainer';
 export default function SearchToiletUrgent() {
   return (
     <div className="w-[1440px] mx-auto relative">
-      {/* Navbar */}
-      <Navbar active="toilet" />
-
       <main className="flex">
         {/* 왼쪽 카드 리스트 */}
         <section className="w-[645px] h-[1282px] pt-[40px] pl-[123px] flex flex-col">
