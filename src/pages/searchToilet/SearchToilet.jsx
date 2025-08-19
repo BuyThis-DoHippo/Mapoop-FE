@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import Navbar from '@/components/layout/Navbar';
 import Filter from '@/components/common/Filter';
 import FilterIcon from '@/assets/svg/filter.svg?react';
 import { nearbyToilets } from '@/mocks/mockToilets';
@@ -78,8 +77,6 @@ export default function SearchToilet() {
 
   return (
     <div className="w-[1440px] mx-auto relative">
-      {/* Navbar */}
-      <Navbar active="toilet" />
 
       <main className="flex">
         {/* 왼쪽 카드 리스트 */}

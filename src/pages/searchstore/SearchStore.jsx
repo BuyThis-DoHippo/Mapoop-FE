@@ -1,5 +1,4 @@
 import { useState, useRef, useLayoutEffect } from 'react';
-import Navbar from '@/components/layout/Navbar';
 import SearchBar from '@/components/common/SearchBar';
 import Filter from '@/components/common/Filter';
 import { mockStore } from '../../mocks/mockStore';
@@ -134,7 +133,6 @@ export default function SearchStore() {
 
   return (
     <div className="w-full">
-      <Navbar />
 
       <main className="w-[1440px] mx-auto">
         {/* 상단: 검색창 + 필터 버튼 */}
