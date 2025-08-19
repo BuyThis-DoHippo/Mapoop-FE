@@ -1,5 +1,5 @@
 // components/toiletDetail/ReviewList.jsx
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import StarBlue from '@/assets/svg/toiletDetail/star-blue.svg?react';
 import StarGray from '@/assets/svg/toiletDetail/star-gray.svg?react';
 import Arrow from '@/assets/svg/arrow.svg?react';
@@ -7,6 +7,13 @@ import Arrow from '@/assets/svg/arrow.svg?react';
 const ReviewList = ({ reviews, pagination, onPageChange }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageRange, setPageRange] = useState([1, 5]);
+
+  // pagination.page와 currentPage 동기화
+  useEffect(() => {
+    if (pagination?.page) {
+      setCurrentPage(pagination.page);
+    }
+  }, [pagination?.page]);
 
   const renderStars = (rating) => {
     return Array.from({ length: 5 }, (_, index) => {
@@ -46,8 +53,8 @@ const ReviewList = ({ reviews, pagination, onPageChange }) => {
         <button
           key={i}
           onClick={() => handlePageChange(i)}
-          className={`w-10 h-10 rounded flex items-center justify-center text-body2 ${
-            currentPage === i 
+          className={`w-[60px] h-[60px] rounded flex items-center justify-center text-heading3-regular ${
+            pagination.page === i 
               ? 'bg-main text-white' 
               : 'bg-white text-gray-7 border border-gray-2'
           }`}
@@ -67,9 +74,9 @@ const ReviewList = ({ reviews, pagination, onPageChange }) => {
               setPageRange([nextPage - 4, nextPage]);
               handlePageChange(nextPage);
             }}
-            className="w-10 h-10 rounded flex items-center justify-center text-body2 bg-white text-gray-7 border border-gray-2"
+            className="w-[60px] h-[60px] rounded flex items-center justify-center bg-white text-gray-7 border border-gray-2"
           >
-            <Arrow className="w-4 h-4" />
+            <Arrow className="w-6 h-6" />
           </button>
         )}
       </div>
@@ -86,7 +93,7 @@ const ReviewList = ({ reviews, pagination, onPageChange }) => {
               key={review.id} 
               className={`px-14 py-12 bg-white ${
                 index === 0 ? 'border-t' : ''
-              } border-b border-gray-3 flex flex-col`}
+              } border-b border-gray-1 flex flex-col`}
             >
               <div className="flex items-start gap-6">
                 <div className="w-11 h-11 bg-main rounded-full flex items-center justify-center">

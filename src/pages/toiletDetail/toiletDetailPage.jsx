@@ -74,7 +74,7 @@ const ToiletDetailPage = () => {
     <div className="min-h-screen bg-white">
       <div className="max-w-6xl mx-auto px-4 py-8">
         {/* Main Content */}
-        <div className="flex flex-col gap-16">
+        <div className="flex flex-col">
           {/* Toilet Info Section */}
           <div className="flex flex-col gap-10">
             {/* Title and Rating */}
@@ -84,8 +84,15 @@ const ToiletDetailPage = () => {
             <ToiletLocation toilet={currentToilet} />
           </div>
 
-          {/* Hours and Special Info */}
-          <ToiletOperationInfo toilet={currentToilet} />
+          {/* Hours and Special Info - 72px gap */}
+          <div className="mt-[72px]">
+            <ToiletOperationInfo toilet={currentToilet} />
+          </div>
+
+          {/* Divider Line - 56px below ToiletOperation */}
+          <div className="mt-[56px] mb-[56px]">
+            <div className="w-[1196px] h-px bg-gray-1"></div>
+          </div>
 
           {/* Reviews Section */}
           <ReviewSection 

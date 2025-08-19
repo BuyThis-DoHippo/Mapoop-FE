@@ -1,6 +1,7 @@
 // components/toiletDetail/ReviewSidebar.jsx
 import { useNavigate } from 'react-router-dom';
 import Pencil from '@/assets/svg/toiletDetail/pencil.svg?react';
+import ToiletPic from '@/assets/svg/NearbyToilet.svg?react';
 
 const ReviewSidebar = ({ toilet, ratingDistribution }) => {
   const navigate = useNavigate();
@@ -32,33 +33,33 @@ const ReviewSidebar = ({ toilet, ratingDistribution }) => {
       <div className="flex flex-col gap-4">
         <h3 className="text-body1-bold text-black">화장실 사진</h3>
         
-        {/* 이미지 레이아웃 */}
-        <div className="flex gap-4">
-          {/* 큰 이미지 */}
-          <div className="w-[385px] h-[274px] bg-gray-1 rounded-lg overflow-hidden flex items-center justify-center">
-            <div className="text-4xl">🚽</div>
+        {/* 이미지 레이아웃 - L자 형태 */}
+        <div className="w-[385px]">
+          {/* 첫 번째 줄: 큰 이미지 */}
+          <div className="w-[385px] h-[274px] bg-gray-1 rounded-lg overflow-hidden flex items-center justify-center mb-4">
+            <ToiletPic className="w-full h-full object-cover" />
           </div>
           
-          {/* 오른쪽 이미지들 */}
-          <div className="flex flex-col gap-4">
+          {/* 두 번째 줄: 세로 긴 이미지 + 작은 이미지 2개 */}
+          <div className="flex gap-4">
             {/* 세로 긴 이미지 */}
             <div className="w-[181px] h-[290px] bg-gray-1 rounded-lg overflow-hidden flex items-center justify-center">
-              <div className="text-2xl">🚽</div>
+              <ToiletPic className="w-full h-full object-cover" />
             </div>
-          </div>
-          
-          {/* 작은 이미지 2개 */}
-          <div className="flex flex-col gap-4">
-            <div className="w-[188px] h-[137px] bg-gray-1 rounded-lg overflow-hidden flex items-center justify-center">
-              <div className="text-xl">🚽</div>
-            </div>
-            <div className="w-[188px] h-[137px] bg-gray-1 rounded-lg overflow-hidden flex items-center justify-center">
-              <div className="text-xl">🚽</div>
+            
+            {/* 작은 이미지 2개 (세로 배치) */}
+            <div className="flex flex-col gap-4">
+              <div className="w-[188px] h-[137px] bg-gray-1 rounded-lg overflow-hidden flex items-center justify-center">
+                <ToiletPic className="w-full h-full object-cover" />
+              </div>
+              <div className="w-[188px] h-[137px] bg-gray-1 rounded-lg overflow-hidden flex items-center justify-center">
+                <ToiletPic className="w-full h-full object-cover" />
+              </div>
             </div>
           </div>
         </div>
         
-        <button className="text-body1 self-end">
+        <button className="text-body1 self-end mt-2">
           사진 더보기 →
         </button>
       </div>

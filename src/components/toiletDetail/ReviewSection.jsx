@@ -13,12 +13,12 @@ const ReviewSection = ({
   if (!toilet) return null;
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col">
       {/* Review Header */}
       <ReviewHeader toilet={toilet} />
 
-      {/* Main Reviews Content - Left Sidebar + Right Reviews */}
-      <div className="flex gap-20">
+      {/* Main Reviews Content - 48px below ReviewHeader */}
+      <div className="mt-[48px] flex gap-20">
         {/* Left Sidebar */}
         <ReviewSidebar 
           toilet={toilet} 
