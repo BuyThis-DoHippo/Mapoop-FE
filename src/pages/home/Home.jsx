@@ -209,11 +209,17 @@ export default function Home() {
                         <div style={{ height: `${extra}px` }} />
 
                         {/* 태그 칩 */}
-                        <div className="mt-[12px] flex flex-wrap items-center gap-[16px]">
+                        <div
+                          className={`flex flex-wrap items-center gap-[16px]`}
+                          style={{ marginTop: isTwo ? '32px' : '16px' }}
+                        >
                           {t.tags.map((tag, i) => (
                             <span
                               key={i}
-                              className="font-pretendard inline-flex items-center justify-center rounded-[50px] bg-[#EFEFEF] w-[95px] h-[35px] text-[16px] font-normal text-center text-[var(--grayscale-gray8,#2C2C2C)] whitespace-nowrap overflow-hidden text-ellipsis"
+                              className="font-pretendard inline-flex items-center justify-center rounded-[50px] bg-[#EFEFEF]
+                 px-[24px] py-[8px] h-[35px]
+                 text-[16px] font-normal leading-[24px] text-[var(--grayscale-gray8,#2C2C2C)]
+                 whitespace-nowrap overflow-hidden text-ellipsis"
                               title={tag}
                             >
                               {tag}
