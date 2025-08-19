@@ -1,4 +1,3 @@
-import Navbar from '@/components/layout/Navbar';
 import SearchBar from '@/components/common/SearchBar';
 import { useNavigate } from 'react-router-dom';
 
@@ -50,7 +49,6 @@ export default function Home() {
 
   return (
     <div className="w-full">
-      <Navbar />
 
       {/* 상단: 검색 영역 */}
       <section className="w-full px-[125px] pt-[65px]">

@@ -93,7 +93,7 @@ const ReviewList = ({ reviews, pagination, onPageChange }) => {
               key={review.id} 
               className={`px-14 py-12 bg-white ${
                 index === 0 ? 'border-t' : ''
-              } border-b border-gray-1 flex flex-col`}
+              } border-b border-gray-3 flex flex-col`}
             >
               <div className="flex items-start gap-6">
                 <div className="w-11 h-11 bg-main rounded-full flex items-center justify-center">
@@ -113,6 +113,15 @@ const ReviewList = ({ reviews, pagination, onPageChange }) => {
                       </div>
                       <span className="text-body2 text-gray-6">{review.created_at}</span>
                     </div>
+                    {review.images && review.images.length > 0 && (
+                      <div className="flex gap-2">
+                        {review.images.map((image, imageIndex) => (
+                          <div key={imageIndex} className="w-[180px] h-[180px] bg-gray-1 rounded overflow-hidden flex items-center justify-center">
+                            <div className="text-lg">📷</div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                     <p className="text-body1 text-gray-6">{review.content}</p>
                   </div>
                   
@@ -125,15 +134,7 @@ const ReviewList = ({ reviews, pagination, onPageChange }) => {
                       ))}
                     </div>
                     
-                    {review.images && review.images.length > 0 && (
-                      <div className="flex gap-2">
-                        {review.images.map((image, imageIndex) => (
-                          <div key={imageIndex} className="w-20 h-20 bg-gray-1 rounded overflow-hidden flex items-center justify-center">
-                            <div className="text-lg">📷</div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
+                    
                   </div>
                 </div>
               </div>
