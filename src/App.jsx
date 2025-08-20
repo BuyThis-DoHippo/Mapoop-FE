@@ -13,9 +13,7 @@ import LoginPage from '@/pages/login/LoginPage';
 // MyPage 관련 import
 import MyPage from '@/pages/mypage/MyPage';
 import ReviewManagement from '@/pages/mypage/ReviewManagement';
-{
-  /*import ToiletManagement from '@/pages/mypage/ToiletManagement'; */
-}
+import ToiletManagement from '@/pages/mypage/ToiletManagement';
 import ProfileManagement from '@/pages/mypage/ProfileManagement';
 
 function App() {
@@ -37,7 +35,7 @@ function App() {
         <Route path="/mypage" element={<MyPage />}>
           <Route path="reviews" element={<ReviewManagement />} />
           <Route path="profile" element={<ProfileManagement />} />
-          {/*<Route path="toilets" element={<ToiletManagement />} /> */}
+          <Route path="toilets" element={<ToiletManagement />} />
         </Route>
       </Routes>
     </BrowserRouter>
