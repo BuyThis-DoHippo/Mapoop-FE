@@ -20,7 +20,14 @@ export default function AiChatbot({ onClose }) {
 
   // 칩 버튼 클릭
   const handleChipClick = (text) => {
-    setMessages((prev) => [...prev, { sender: 'user', text }]);
+    setMessages((prev) => [
+      ...prev,
+      { sender: 'user', text },
+      {
+        sender: 'bot',
+        text: '현재 회원님의 위치에서 제일 가까운 화장실은 레드로드 R6 개방화장실입니다. 회원님의 위치에서부터 약 230m 거리에 위치했습니다.',
+      },
+    ]);
   };
 
   return (
