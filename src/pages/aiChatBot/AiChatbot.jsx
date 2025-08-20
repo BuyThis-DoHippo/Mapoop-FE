@@ -14,7 +14,17 @@ export default function AiChatbot({ onClose }) {
   // 사용자 입력 전송
   const handleSend = () => {
     if (!input.trim()) return;
-    setMessages((prev) => [...prev, { sender: 'user', text: input.trim() }]);
+    const userText = input.trim();
+
+    setMessages((prev) => [
+      ...prev,
+      { sender: 'user', text: userText },
+      {
+        sender: 'bot',
+        text: '현재 회원님의 위치에서 제일 가까운 화장실은 레드로드 R6 개방화장실입니다. 회원님의 위치에서부터 약 230m 거리에 위치했습니다.',
+      },
+    ]);
+
     setInput('');
   };
 
@@ -60,7 +70,7 @@ export default function AiChatbot({ onClose }) {
                   <div className="bg-[#0085B7] text-white text-[16px] px-6 py-4 rounded-[20px_20px_20px_0] max-w-[420px]">
                     {msg.text}
                   </div>
-                  {/* 첫 번째 챗봇 메시지 뒤에 칩 노출 */}
+                  {/* 두 번째 챗봇 메시지 뒤에 칩 노출 */}
                   {i === 1 && (
                     <div className="flex gap-[15px] mt-3">
                       <button
@@ -89,8 +99,8 @@ export default function AiChatbot({ onClose }) {
           )}
         </div>
 
+        {/* 입력 영역 */}
         <div className="flex items-center w-full px-[40px] pb-[37px] gap-[24px]">
-          {/* 입력창 */}
           <input
             type="text"
             value={input}
@@ -100,7 +110,6 @@ export default function AiChatbot({ onClose }) {
                bg-[#EBFAFF] text-gray-700 text-[16px] outline-none"
           />
 
-          {/* 전송 버튼 */}
           <button
             onClick={handleSend}
             className="w-[134px] h-[62px] rounded-[10px] bg-[#00AEEF] text-white text-[16px] font-medium
