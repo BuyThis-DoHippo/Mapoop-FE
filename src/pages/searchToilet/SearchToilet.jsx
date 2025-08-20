@@ -77,7 +77,6 @@ export default function SearchToilet() {
 
   return (
     <div className="w-[1440px] mx-auto relative">
-
       <main className="flex">
         {/* 왼쪽 카드 리스트 */}
         <section className="w-[645px] h-[1282px] pt-[40px] pl-[123px] flex flex-col">

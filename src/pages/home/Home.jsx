@@ -1,6 +1,8 @@
 import SearchBar from '@/components/common/SearchBar';
 import { useNavigate } from 'react-router-dom';
 import { nearbyToilets } from '@/mocks/mockToilets';
+import { useState } from 'react';
+import AiChatbot from '@/pages/aiChatBot/AiChatbot';
 
 // svg 컴포넌트 import
 import FindToilet from '@/assets/svg/FindToilet.svg?react';
@@ -12,6 +14,7 @@ import Star from '@/assets/svg/star.svg?react';
 
 export default function Home() {
   const navigate = useNavigate();
+  const [chatOpen, setChatOpen] = useState(false);
 
   // 카드 폭 배열(슬라이드 4장)
   const cardWidths = [257, 256, 256, 256];
@@ -24,7 +27,6 @@ export default function Home() {
 
   return (
     <div className="w-full">
-
       <section className="w-full px-[125px] pt-[65px]">
         <div className="max-w-[1193px] mx-auto">
           <SearchBar onSearch={(q) => console.log('search:', q)} />
@@ -72,7 +74,7 @@ export default function Home() {
             <button
               type="button"
               aria-label="마포구 AI 화장실 챗봇"
-              onClick={() => navigate('/ai-chatbot')}
+              onClick={() => setChatOpen(true)}
               className="w-[583px] h-[183px] flex-shrink-0 rounded-[10px] border-2 border-gray-2 bg-white px-[60px] py-[41px] flex items-center justify-start gap-[45px] text-left"
             >
               <div className="flex-1 max-w-[463px]">
@@ -88,6 +90,9 @@ export default function Home() {
               <Arrow className="w-6 h-6" />
             </button>
           </div>
+
+          {/* 챗봇 모달 */}
+          {chatOpen && <AiChatbot onClose={() => setChatOpen(false)} />}
 
           {/* 구분선 */}
           <div className="mt-16 w-[1193px] h-px bg-gray-1" />
