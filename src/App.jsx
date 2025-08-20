@@ -10,6 +10,12 @@ import ReviewToilet from '@/pages/review/ReviewToilet';
 import ToiletDetailPage from '@/pages/toiletDetail/ToiletDetailPage';
 import LoginPage from '@/pages/login/LoginPage';
 
+// MyPage 관련 import
+import MyPage from '@/pages/mypage/MyPage';
+import ReviewManagement from '@/pages/mypage/ReviewManagement';
+// import ToiletManagement from '@/pages/mypage/ToiletManagement';
+// import ProfileManagement from '@/pages/mypage/ProfileManagement';
+
 function App() {
   return (
     <BrowserRouter>
@@ -24,6 +30,13 @@ function App() {
         <Route path='/toilet-detail/:id' element={<ToiletDetailPage/>} />
         <Route path="/review-toilet/:id" element={<ReviewToilet />} />
         <Route path="/login" element={<LoginPage />} />
+        
+        {/* MyPage 중첩 라우팅 */}
+        <Route path="/mypage" element={<MyPage />}>
+          <Route path="reviews" element={<ReviewManagement />} />
+          {/* <Route path="toilets" element={<ToiletManagement />} />
+          <Route path="profile" element={<ProfileManagement />} /> */}
+        </Route>
       </Routes>
     </BrowserRouter>
   );
