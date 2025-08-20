@@ -218,7 +218,7 @@ export default function SearchToilet() {
         <div
           className="absolute"
           style={{
-            top: '200px',
+            top: '106px',
             left: '218px',
             width: '323px',
             height: '663px',
