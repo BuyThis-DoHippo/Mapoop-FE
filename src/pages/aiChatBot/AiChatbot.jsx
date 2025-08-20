@@ -41,47 +41,53 @@ export default function AiChatbot({ onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end bg-[rgba(0,0,0,0.3)]">
+    <div className="fixed inset-0 z-50 flex justify-end bg-[rgba(0,0,0,0.3)] font-pretendard">
       {/* 메인 대화창 */}
-      <div className="w-[649px] h-screen bg-white shadow-[-11px_4px_18px_rgba(0,0,0,0.25)] rounded-tl-[20px] rounded-br-[20px] flex flex-col">
+      <div
+        className="w-full max-w-[649px] h-screen bg-white shadow-[-11px_4px_18px_rgba(0,0,0,0.25)] 
+                      rounded-tl-[20px] rounded-br-[20px] flex flex-col"
+      >
         {/* 헤더 */}
-        <header className="flex items-center justify-center w-full h-[81px] bg-[#EFEFEF] relative">
-          <h1 className="text-[24px] font-normal leading-[36px] text-[#0085B7]">
-            MAPOOP 챗봇
-          </h1>
+        <header className="flex items-center justify-center w-full h-[60px] md:h-[81px] bg-gray-0 relative">
+          <h1 className="text-heading3-regular text-main-2">MAPOOP 챗봇</h1>
           <button
             onClick={onClose}
-            className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-black"
+            className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-5 hover:text-gray-9 text-lg"
           >
             ✕
           </button>
         </header>
 
         {/* 대화 영역 */}
-        <div className="flex-1 px-6 py-6 overflow-y-auto space-y-6">
+        <div className="flex-1 px-4 py-4 md:px-6 md:py-6 overflow-y-auto space-y-6 scrollbar-hide">
           {messages.map((msg, i) =>
             msg.sender === 'bot' ? (
               <div key={i} className="flex items-start gap-2">
-                <ChatbotToilet className="w-[46px] h-[46px] rounded-full bg-[#00AEEF] p-2" />
-                <div>
-                  <p className="text-[16px] font-bold text-black mb-2">
+                <ChatbotToilet className="w-9 h-9 md:w-[46px] md:h-[46px] rounded-full bg-main p-2 shrink-0" />
+                <div className="max-w-[80%] md:max-w-[420px]">
+                  <p className="text-sm md:text-body2-bold text-gray-9 mb-1 md:mb-2">
                     MAPOOP 챗봇
                   </p>
-                  <div className="bg-[#0085B7] text-white text-[16px] px-6 py-4 rounded-[20px_20px_20px_0] max-w-[420px]">
+                  <div
+                    className="bg-main-2 text-white text-sm md:text-body2 px-4 py-3 md:px-6 md:py-4 
+                                  rounded-[20px_20px_20px_0] break-words"
+                  >
                     {msg.text}
                   </div>
                   {/* 두 번째 챗봇 메시지 뒤에 칩 노출 */}
                   {i === 1 && (
-                    <div className="flex gap-[15px] mt-3">
+                    <div className="flex flex-wrap gap-2 mt-3">
                       <button
                         onClick={() => handleChipClick('가장 가까운 화장실')}
-                        className="px-8 py-2 border border-[#0085B7] rounded-full text-[#0085B7] text-[16px] bg-white hover:bg-[#EBFAFF]"
+                        className="px-4 md:px-8 py-2 border border-main-2 rounded-full 
+                                   text-main-2 text-sm md:text-body2 bg-white hover:bg-main-3"
                       >
                         가장 가까운 화장실
                       </button>
                       <button
                         onClick={() => handleChipClick('가장 평점 좋은 화장실')}
-                        className="px-8 py-2 border border-[#0085B7] rounded-full text-[#0085B7] text-[16px] bg-white hover:bg-[#EBFAFF]"
+                        className="px-4 md:px-8 py-2 border border-main-2 rounded-full 
+                                   text-main-2 text-sm md:text-body2 bg-white hover:bg-main-3"
                       >
                         가장 평점 좋은 화장실
                       </button>
@@ -91,7 +97,10 @@ export default function AiChatbot({ onClose }) {
               </div>
             ) : (
               <div key={i} className="flex justify-end">
-                <div className="bg-[#DBDBDB] text-[#4B4B4B] text-[16px] px-6 py-3 rounded-[20px_20px_0_20px] max-w-[300px]">
+                <div
+                  className="bg-gray-1 text-gray-6 text-sm md:text-body2 px-4 md:px-6 py-2 md:py-3 
+                                rounded-[20px_20px_0_20px] max-w-[70%] md:max-w-[300px] break-words"
+                >
                   {msg.text}
                 </div>
               </div>
@@ -100,20 +109,20 @@ export default function AiChatbot({ onClose }) {
         </div>
 
         {/* 입력 영역 */}
-        <div className="flex items-center w-full px-[40px] pb-[37px] gap-[24px]">
+        <div className="flex items-center w-full px-4 pb-5 gap-3 md:px-[40px] md:pb-[37px] md:gap-[24px]">
           <input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="내용을 입력해주세요"
-            className="w-[413px] h-[62px] px-[27px] py-[19px] rounded-[10px] 
-               bg-[#EBFAFF] text-gray-700 text-[16px] outline-none"
+            className="flex-1 h-12 md:h-[62px] px-4 md:px-[27px] rounded-[10px] 
+                       bg-main-3 text-gray-6 text-sm md:text-body2 outline-none break-words"
           />
 
           <button
             onClick={handleSend}
-            className="w-[134px] h-[62px] rounded-[10px] bg-[#00AEEF] text-white text-[16px] font-medium
-               flex items-center justify-center"
+            className="shrink-0 w-[90px] h-12 md:w-[134px] md:h-[62px] rounded-[10px] 
+                       bg-main text-white text-sm md:text-body2-bold flex items-center justify-center"
           >
             전송
           </button>
