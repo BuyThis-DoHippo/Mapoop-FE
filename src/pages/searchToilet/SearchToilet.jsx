@@ -77,7 +77,6 @@ export default function SearchToilet() {
 
   return (
     <div className="w-[1440px] mx-auto relative">
-
       <main className="flex">
         {/* 왼쪽 카드 리스트 */}
         <section className="w-[645px] h-[1282px] pt-[40px] pl-[123px] flex flex-col">
@@ -218,7 +217,7 @@ export default function SearchToilet() {
         <div
           className="absolute"
           style={{
-            top: '200px',
+            top: '120px', // -> 106px로 변경⭐
             left: '218px',
             width: '323px',
             height: '663px',
