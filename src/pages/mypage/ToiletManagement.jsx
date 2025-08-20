@@ -3,7 +3,17 @@ import ToiletCard from '@/components/mypage/ToiletCard';
 import { mockMyToilets } from '@/mocks/mockMyToilets';
 
 const ToiletManagement = () => {
-  const [toilets] = useState(mockMyToilets);
+  const [toilets, setToilets] = useState(mockMyToilets);
+  const [editingId, setEditingId] = useState(null);
+
+  const handleSave = (id, updatedData) => {
+    setToilets((prev) =>
+      prev.map((toilet) =>
+        toilet.id === id ? { ...toilet, ...updatedData } : toilet
+      )
+    );
+    setEditingId(null);
+  };
 
   return (
     <div className="w-full">
@@ -13,7 +23,14 @@ const ToiletManagement = () => {
 
       <div className="divide-y divide-gray-2 border-t border-b border-gray-2">
         {toilets.map((toilet) => (
-          <ToiletCard key={toilet.id} toilet={toilet} />
+          <ToiletCard
+            key={toilet.id}
+            toilet={toilet}
+            isEditing={editingId === toilet.id}
+            onEdit={() => setEditingId(toilet.id)}
+            onSave={(updatedData) => handleSave(toilet.id, updatedData)}
+            onCancel={() => setEditingId(null)}
+          />
         ))}
       </div>
     </div>
