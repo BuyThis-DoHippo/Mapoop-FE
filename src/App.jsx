@@ -13,8 +13,10 @@ import LoginPage from '@/pages/login/LoginPage';
 // MyPage 관련 import
 import MyPage from '@/pages/mypage/MyPage';
 import ReviewManagement from '@/pages/mypage/ReviewManagement';
-// import ToiletManagement from '@/pages/mypage/ToiletManagement';
-// import ProfileManagement from '@/pages/mypage/ProfileManagement';
+{
+  /*import ToiletManagement from '@/pages/mypage/ToiletManagement'; */
+}
+import ProfileManagement from '@/pages/mypage/ProfileManagement';
 
 function App() {
   return (
@@ -27,15 +29,15 @@ function App() {
         <Route path="/find-toilet/urgent" element={<SearchToiletUrgent />} />
         <Route path="/register-toilet" element={<RegisterToilet />} />
         <Route path="/ai-chatbot" element={<AiChatbot />} />
-        <Route path='/toilet-detail/:id' element={<ToiletDetailPage/>} />
+        <Route path="/toilet-detail/:id" element={<ToiletDetailPage />} />
         <Route path="/review-toilet/:id" element={<ReviewToilet />} />
         <Route path="/login" element={<LoginPage />} />
-        
+
         {/* MyPage 중첩 라우팅 */}
         <Route path="/mypage" element={<MyPage />}>
           <Route path="reviews" element={<ReviewManagement />} />
-          {/* <Route path="toilets" element={<ToiletManagement />} />
-          <Route path="profile" element={<ProfileManagement />} /> */}
+          <Route path="profile" element={<ProfileManagement />} />
+          {/*<Route path="toilets" element={<ToiletManagement />} /> */}
         </Route>
       </Routes>
     </BrowserRouter>
