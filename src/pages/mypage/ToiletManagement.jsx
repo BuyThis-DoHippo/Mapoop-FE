@@ -1,18 +1,17 @@
 import { useState } from 'react';
+import { mockMyToilets as initialToilets } from '@/mocks/mockMyToilets';
 import ToiletCard from '@/components/mypage/ToiletCard';
-import { mockMyToilets } from '@/mocks/mockMyToilets';
 
 const ToiletManagement = () => {
-  const [toilets, setToilets] = useState(mockMyToilets);
-  const [editingId, setEditingId] = useState(null);
+  const [toilets, setToilets] = useState(initialToilets);
 
+  // 저장 시 리스트 업데이트
   const handleSave = (id, updatedData) => {
     setToilets((prev) =>
       prev.map((toilet) =>
         toilet.id === id ? { ...toilet, ...updatedData } : toilet
       )
     );
-    setEditingId(null);
   };
 
   return (
@@ -23,14 +22,7 @@ const ToiletManagement = () => {
 
       <div className="divide-y divide-gray-2 border-t border-b border-gray-2">
         {toilets.map((toilet) => (
-          <ToiletCard
-            key={toilet.id}
-            toilet={toilet}
-            isEditing={editingId === toilet.id}
-            onEdit={() => setEditingId(toilet.id)}
-            onSave={(updatedData) => handleSave(toilet.id, updatedData)}
-            onCancel={() => setEditingId(null)}
-          />
+          <ToiletCard key={toilet.id} toilet={toilet} onSave={handleSave} />
         ))}
       </div>
     </div>
