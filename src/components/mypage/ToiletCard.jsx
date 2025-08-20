@@ -1,14 +1,24 @@
+import { useNavigate } from 'react-router-dom';
 import ArrowIcon from '@/assets/svg/arrow.svg?react';
 
 const ToiletCard = ({ toilet }) => {
+  const navigate = useNavigate();
+
+  const handleToiletClick = () => {
+    navigate(`/toilet-detail/${toilet.id}`);
+  };
+
   return (
     <div className="flex justify-between items-start px-14 py-12 bg-white">
       {/* 왼쪽: 화장실 정보 */}
       <div>
-        <div className="flex items-center gap-[16px] mb-2">
-          <h3 className="text-heading3-bold text-gray-10">{toilet.name}</h3>
+        <button
+          onClick={handleToiletClick}
+          className="flex items-center gap-[16px] mb-2 text-heading3-bold text-gray-10 hover:text-main transition-colors cursor-pointer"
+        >
+          {toilet.name}
           <ArrowIcon className="w-4 h-4 text-gray-10" />
-        </div>
+        </button>
         <p className="text-body1 text-gray-5 mb-1">{toilet.address}</p>
         <p className="text-body2 text-gray-5">등록일 {toilet.date}</p>
       </div>
