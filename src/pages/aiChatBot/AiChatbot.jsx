@@ -41,21 +41,19 @@ export default function AiChatbot({ onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end bg-[rgba(0,0,0,0.3)] font-pretendard">
+    <div
+      className="fixed inset-0 z-50 flex justify-end bg-[rgba(0,0,0,0.3)] font-pretendard"
+      onClick={onClose}
+    >
       {/* 메인 대화창 */}
       <div
         className="w-full max-w-[649px] h-screen bg-white shadow-[-11px_4px_18px_rgba(0,0,0,0.25)] 
                       rounded-tl-[20px] rounded-br-[20px] flex flex-col"
+        onClick={(e) => e.stopPropagation()}
       >
         {/* 헤더 */}
         <header className="flex items-center justify-center w-full h-[60px] md:h-[81px] bg-gray-0 relative">
           <h1 className="text-heading3-regular text-main-2">MAPOOP 챗봇</h1>
-          <button
-            onClick={onClose}
-            className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-5 hover:text-gray-9 text-lg"
-          >
-            ✕
-          </button>
         </header>
 
         {/* 대화 영역 */}
