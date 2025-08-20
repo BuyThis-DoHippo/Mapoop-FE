@@ -217,7 +217,7 @@ export default function SearchToilet() {
         <div
           className="absolute"
           style={{
-            top: '120px', // -> 106px로 변경⭐
+            top: '106px',
             left: '218px',
             width: '323px',
             height: '663px',
