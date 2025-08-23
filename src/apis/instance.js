@@ -1,9 +1,8 @@
 import axios from 'axios';
-import qs from 'qs';
 
 // 토큰 가져오는 함수
 const getAccessToken = () => {
-  const nameEQ = 'access_token=';
+  const nameEQ = "access_token=";
   const ca = document.cookie.split(';');
   for (let i = 0; i < ca.length; i++) {
     let c = ca[i];
@@ -20,7 +19,6 @@ const axiosInstance = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  paramsSerializer: (params) => qs.stringify(params, { arrayFormat: 'repeat' }), // 배열을 repeat 방식으로 직렬화
 });
 
 // 요청 인터셉터 (디버깅 로그 추가)
@@ -31,10 +29,9 @@ axiosInstance.interceptors.request.use(
       url: config.url,
       baseURL: config.baseURL,
       headers: config.headers,
-      params: config.params,
-      data: config.data,
+      data: config.data
     });
-
+    
     // 인증이 필요한 요청에 토큰 추가
     const token = getAccessToken();
     if (token) {
@@ -54,7 +51,7 @@ axiosInstance.interceptors.response.use(
   (response) => {
     console.log('axios 응답 성공:', {
       status: response.status,
-      data: response.data,
+      data: response.data
     });
     return response;
   },
@@ -62,25 +59,24 @@ axiosInstance.interceptors.response.use(
     console.error('axios 응답 에러:', {
       status: error.response?.status,
       data: error.response?.data,
-      message: error.message,
+      message: error.message
     });
-
+    
     const originalRequest = error.config;
 
     // 401 에러 처리 (토큰 만료 등)
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-
+      
       try {
-        // 리프레시 토큰 가져오기
+        // 리프레시 토큰으로 새 토큰 발급 시도
         const refreshToken = (() => {
-          const nameEQ = 'refresh_token=';
+          const nameEQ = "refresh_token=";
           const ca = document.cookie.split(';');
           for (let i = 0; i < ca.length; i++) {
             let c = ca[i];
             while (c.charAt(0) === ' ') c = c.substring(1, c.length);
-            if (c.indexOf(nameEQ) === 0)
-              return c.substring(nameEQ.length, c.length);
+            if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
           }
           return null;
         })();
@@ -96,12 +92,12 @@ axiosInstance.interceptors.response.use(
 
         if (refreshResponse.data.statusCode === 200) {
           const newAccessToken = refreshResponse.data.data.access_token;
-
+          
           // 새 토큰을 쿠키에 저장
           const expires = new Date();
           expires.setTime(expires.getTime() + 24 * 60 * 60 * 1000); // 1일
           document.cookie = `access_token=${newAccessToken};expires=${expires.toUTCString()};path=/;SameSite=Strict;Secure`;
-
+          
           // 원래 요청에 새 토큰 설정
           originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
           return axiosInstance(originalRequest);
@@ -109,10 +105,8 @@ axiosInstance.interceptors.response.use(
       } catch (refreshError) {
         console.error('토큰 갱신 실패:', refreshError);
         // 리프레시 실패 시 로그아웃 처리
-        document.cookie =
-          'access_token=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;';
-        document.cookie =
-          'refresh_token=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;';
+        document.cookie = "access_token=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;";
+        document.cookie = "refresh_token=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;";
         window.location.href = '/login';
         return Promise.reject(refreshError);
       }
