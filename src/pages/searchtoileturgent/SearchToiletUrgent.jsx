@@ -4,7 +4,7 @@ import Star from '@/assets/svg/star.svg?react';
 import NearbyToilet from '@/assets/svg/NearbyToilet.svg?react';
 import MapContainer from './MapContainer';
 
-import { useNearbyToilets } from '@/hooks/map/useMapApi';
+import { useEmergencyToilets } from '@/hooks/map/useMapApi';
 import { requestLocationWithPermission } from '@/utils/locationUtils';
 
 export default function SearchToiletUrgent() {
@@ -20,21 +20,21 @@ export default function SearchToiletUrgent() {
 
   const params = useMemo(() => {
     if (!coords) return null;
-    return { lat: coords.lat, lng: coords.lng, limit: 5 };
+    return { lat: coords.lat, lng: coords.lng };
   }, [coords]);
 
-  const { data: toilets = [], isLoading, isError, error } = useNearbyToilets(params ?? {}, {
+  const { data: toilets = [], isLoading, isError, error } = useEmergencyToilets(params ?? {}, {
     enabled: !!params,
   });
 
   const items = (toilets || []).map(t => ({
-    id: t.id,
+    id: t.toiletId,
     name: t.name,
     kind: t.type === 'PUBLIC' ? '공공' : '민간',
-    rating: Number(t.avgRating ?? t.rating ?? 0),
+    rating: Number(t.rating ?? 0),
     tags: Array.isArray(t.tags) ? t.tags : [],
     operatingHours: t.operatingHours || '운영시간 정보 없음',
-    toiletId: t.id,
+    toiletId: t.toiletId,
     image: t.thumbnailUrl,
   }));
 
@@ -126,7 +126,7 @@ export default function SearchToiletUrgent() {
         </section>
 
         {/* 오른쪽 지도 */}
-        <MapContainer />
+        <MapContainer coords={coords} />
       </main>
     </div>
   );

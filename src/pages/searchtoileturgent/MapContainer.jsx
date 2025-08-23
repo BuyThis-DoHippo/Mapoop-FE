@@ -1,35 +1,18 @@
 import { useEffect, useRef, useState } from 'react';
-import { useNearbyToilets } from '@/hooks/map/useMapApi';
-import { requestLocationWithPermission } from '@/utils/locationUtils';
+import { useEmergencyToilets } from '@/hooks/map/useMapApi';
 
-export default function MapContainer() {
+export default function MapContainer({ coords }) {
   const mapRef = useRef(null);
   const markersRef = useRef([]);
   const [isMapReady, setIsMapReady] = useState(false);
-  const [userLocation, setUserLocation] = useState(null);
 
-  // 사용자 위치 가져오기
-  useEffect(() => {
-    requestLocationWithPermission(
-      (location) => {
-        setUserLocation(location);
-        console.log('긴급 찾기 지도용 사용자 위치 설정:', location);
-      },
-      (error) => {
-        console.warn('위치 조회 실패, 홍대입구역 기본 위치 사용:', error.message);
-        setUserLocation({ latitude: 37.5563, longitude: 126.9236 });
-      }
-    );
-  }, []);
-
-  // 근처 화장실 데이터 조회
-  const params = userLocation ? {
-    lat: userLocation.latitude,
-    lng: userLocation.longitude,
-    limit: 5
+  // 긴급 화장실 데이터 조회
+  const params = coords ? {
+    lat: coords.lat,
+    lng: coords.lng
   } : null;
 
-  const { data: toilets = [] } = useNearbyToilets(params || {}, {
+  const { data: toilets = [] } = useEmergencyToilets(params || {}, {
     enabled: !!params,
   });
 
@@ -58,8 +41,8 @@ export default function MapContainer() {
       if (!container) return;
 
       // 사용자 위치가 있으면 해당 위치로, 없으면 홍대입구역으로
-      const center = userLocation 
-        ? new window.kakao.maps.LatLng(userLocation.latitude, userLocation.longitude)
+      const center = coords 
+        ? new window.kakao.maps.LatLng(coords.lat, coords.lng)
         : new window.kakao.maps.LatLng(37.5563, 126.9236);
 
       const options = {
@@ -70,18 +53,18 @@ export default function MapContainer() {
       const map = new window.kakao.maps.Map(container, options);
       mapRef.current = map;
       setIsMapReady(true);
-      console.log('✅ 긴급 찾기 카카오맵 초기화 완료');
+      console.log('긴급 찾기 카카오맵 초기화 완료');
 
       // 사용자 위치 마커 추가
-      if (userLocation) {
-        addUserLocationMarker(map, userLocation);
+      if (coords) {
+        addUserLocationMarker(map, coords);
       }
     }
-  }, [userLocation]);
+  }, [coords]);
 
   // 사용자 위치 마커 추가
   const addUserLocationMarker = (map, location) => {
-    const userPosition = new window.kakao.maps.LatLng(location.latitude, location.longitude);
+    const userPosition = new window.kakao.maps.LatLng(location.lat, location.lng);
     
     // 사용자 위치 마커 (빨간색, 크기 키움)
     const userMarker = new window.kakao.maps.Marker({
@@ -169,7 +152,7 @@ export default function MapContainer() {
 
         // 마커 더블클릭 시 상세 페이지 이동
         window.kakao.maps.event.addListener(marker, 'dblclick', () => {
-          window.location.href = `/toilet-detail/${toilet.toiletId || toilet.id}`;
+          window.location.href = `/toilet-detail/${toilet.toiletId}`;
         });
 
       } catch (error) {
@@ -177,7 +160,7 @@ export default function MapContainer() {
       }
     });
 
-    console.log(`✅ 긴급 찾기: ${toilets.length}개의 화장실 마커가 표시되었습니다.`);
+    console.log(`긴급 찾기: ${toilets.length}개의 화장실 마커가 표시되었습니다.`);
   }, [isMapReady, toilets]);
 
   return (
@@ -199,7 +182,7 @@ export default function MapContainer() {
       </div>
 
       {/* 로딩 상태 */}
-      {!userLocation && (
+      {!coords && (
         <div className="absolute inset-0 bg-white bg-opacity-80 flex items-center justify-center">
           <div className="flex flex-col items-center gap-4">
             <div className="w-8 h-8 border-4 border-main border-t-transparent rounded-full animate-spin"></div>

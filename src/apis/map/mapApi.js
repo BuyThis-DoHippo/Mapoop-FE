@@ -27,3 +27,15 @@ export const getNearbyToilets = async (params = {}) => {
   const response = await axiosInstance.get('/api/search/home', { params });
   return response.data;
 };
+
+/**
+ * 긴급 찾기 - 가장 가까운 화장실 목록을 조회합니다 (최대 5개)
+ * 
+ * @param {Object} params - 조회 파라미터
+ * @param {number} params.lat - 위도 (필수)
+ * @param {number} params.lng - 경도 (필수)
+ */
+export const getEmergencyToilets = async (params = {}) => {
+  const response = await axiosInstance.get('/api/search/emergency', { params });
+  return response.data;
+};
