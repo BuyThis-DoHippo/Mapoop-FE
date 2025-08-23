@@ -198,7 +198,6 @@ export default function SearchStore() {
                   key={t.toiletId}
                   className="flex-shrink-0 h-[393px] w-[256px]"
                 >
-                  {/* ✅ mainImageUrl 있으면 이미지, 없으면 NearbyToilet 아이콘 */}
                   <div
                     className="relative rounded-[10px] overflow-hidden"
                     style={{ width: '256px', height: '256px' }}
