@@ -102,6 +102,65 @@ export default function MapContainer({ filters = {} }) {
     userMarker.setMap(map);
   };
 
+  // 커스텀 화장실 마커 생성
+  const createToiletMarker = (markerData, position) => {
+    const markerContent = document.createElement('div');
+    markerContent.style.cssText = `
+      position: relative;
+      width: 48.308px;
+      height: 48.308px;
+      transform: rotate(45deg);
+      border-radius: 140px 140px 0 140px;
+      border: 3px solid ${markerData.type === 'PUBLIC' ? '#36C239' : '#FF7B00'};
+      background: ${markerData.type === 'PUBLIC' ? '#36C239' : '#FFB005'};
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    `;
+    
+    const iconContainer = document.createElement('div');
+    iconContainer.style.cssText = 'transform: rotate(-45deg);';
+    iconContainer.innerHTML = '<div style="width: 24px; height: 24px; background: white; mask: url(/src/assets/svg/toilet-marker.svg) no-repeat center; mask-size: contain;"></div>';
+    markerContent.appendChild(iconContainer);
+
+    const customMarker = new window.kakao.maps.CustomOverlay({
+      position: position,
+      content: markerContent,
+      xAnchor: 0.5,
+      yAnchor: 1
+    });
+
+    // 인포윈도우 생성
+    const infowindow = new window.kakao.maps.InfoWindow({
+      content: `
+        <div style="padding:10px; width:200px;">
+          <h4 style="margin:0 0 5px 0; font-weight:bold;">${markerData.name}</h4>
+          <p style="margin:0; font-size:12px; color:#666;">${markerData.address || '주소 정보 없음'}</p>
+          <p style="margin:5px 0 0 0; font-size:12px;">
+            <span style="color:#0085B7;">★ ${markerData.rating || 0}</span>
+            <span style="margin-left:10px; background:#${markerData.type === 'PUBLIC' ? '36C239' : 'FFB005'}; color:white; padding:2px 6px; border-radius:10px; font-size:11px;">
+              ${markerData.type === 'PUBLIC' ? '공공' : '민간'}
+            </span>
+          </p>
+          ${markerData.distance ? `<p style="margin:2px 0 0 0; font-size:11px; color:#888;">거리: ${markerData.distance}m</p>` : ''}
+        </div>
+      `
+    });
+
+    // 마커 클릭 이벤트
+    markerContent.addEventListener('click', () => {
+      infowindow.open(mapRef.current, customMarker);
+    });
+
+    // 마커 더블클릭 시 상세 페이지 이동
+    markerContent.addEventListener('dblclick', () => {
+      window.location.href = `/toilet-detail/${markerData.toiletId}`;
+    });
+
+    return customMarker;
+  };
+
   // 마커 업데이트
   useEffect(() => {
     if (!isMapReady || !mapRef.current || !markers) return;
@@ -120,42 +179,9 @@ export default function MapContainer({ filters = {} }) {
           markerData.longitude
         );
 
-        // 마커 생성
-        const marker = new window.kakao.maps.Marker({
-          position: position,
-          title: markerData.name
-        });
-
-        // 지도에 마커 표시
-        marker.setMap(mapRef.current);
-        markersRef.current.push(marker);
-
-        // 인포윈도우 생성 (클릭시 화장실 정보 표시)
-        const infowindow = new window.kakao.maps.InfoWindow({
-          content: `
-            <div style="padding:10px; width:200px;">
-              <h4 style="margin:0 0 5px 0; font-weight:bold;">${markerData.name}</h4>
-              <p style="margin:0; font-size:12px; color:#666;">${markerData.address || '주소 정보 없음'}</p>
-              <p style="margin:5px 0 0 0; font-size:12px;">
-                <span style="color:#0085B7;">★ ${markerData.rating || 0}</span>
-                <span style="margin-left:10px; background:#${markerData.type === 'PUBLIC' ? '1FC37A' : 'FFB005'}; color:white; padding:2px 6px; border-radius:10px; font-size:11px;">
-                  ${markerData.type === 'PUBLIC' ? '공공' : '민간'}
-                </span>
-              </p>
-              ${markerData.distance ? `<p style="margin:2px 0 0 0; font-size:11px; color:#888;">거리: ${markerData.distance}m</p>` : ''}
-            </div>
-          `
-        });
-
-        // 마커 클릭 이벤트
-        window.kakao.maps.event.addListener(marker, 'click', () => {
-          infowindow.open(mapRef.current, marker);
-        });
-
-        // 마커 더블클릭 시 상세 페이지 이동
-        window.kakao.maps.event.addListener(marker, 'dblclick', () => {
-          window.location.href = `/toilet-detail/${markerData.toiletId}`;
-        });
+        const customMarker = createToiletMarker(markerData, position);
+        customMarker.setMap(mapRef.current);
+        markersRef.current.push(customMarker);
 
       } catch (error) {
         console.error('마커 생성 실패:', error, markerData);
