@@ -126,7 +126,6 @@ export default function SearchStore() {
               <FilterIcon className="w-5 h-5" />
             </button>
 
-            {/* 필터 팝오버 */}
             {filterOpen && (
               <div
                 className="absolute top-full right-0 z-50 mt-2"
@@ -199,11 +198,20 @@ export default function SearchStore() {
                   key={t.toiletId}
                   className="flex-shrink-0 h-[393px] w-[256px]"
                 >
+                  {/* ✅ mainImageUrl 있으면 이미지, 없으면 NearbyToilet 아이콘 */}
                   <div
                     className="relative rounded-[10px] overflow-hidden"
                     style={{ width: '256px', height: '256px' }}
                   >
-                    <NearbyToilet className="w-full h-full object-cover" />
+                    {t.mainImageUrl ? (
+                      <img
+                        src={t.mainImageUrl}
+                        alt={t.name}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <NearbyToilet className="w-full h-full object-cover" />
+                    )}
                     <span
                       className={[
                         'absolute right-3 bottom-3 h-7 px-3 rounded-full',
