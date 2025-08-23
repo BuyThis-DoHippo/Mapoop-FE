@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import SearchBar from '@/components/common/SearchBar';
 import Filter from '@/components/common/Filter';
 
@@ -22,7 +23,12 @@ const clearClass =
 export default function SearchStore() {
   const [filterOpen, setFilterOpen] = useState(false); // 필터 열림 여부
   const [selected, setSelected] = useState([]); // 선택된 필터 칩들
-  const [keyword, setKeyword] = useState(''); // 검색어
+
+  // URL 쿼리에서 keyword 읽기
+  const [searchParams] = useSearchParams();
+  const initialKeyword = searchParams.get('keyword') || '';
+  const [keyword, setKeyword] = useState(initialKeyword); // 검색어
+
   const [currentIndex, setCurrentIndex] = useState(0); // 카드 페이지네이션 인덱스
 
   // 평점 옵션

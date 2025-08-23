@@ -32,11 +32,17 @@ export default function Home() {
     setCurrentIndex((prev) => Math.min(toilets.length - 4, prev + 4));
   };
 
+  // 홈 검색창에서 입력 → /search-store 페이지로 이동
+  const handleSearch = (q) => {
+    if (!q.trim()) return;
+    navigate(`/search-store?keyword=${encodeURIComponent(q)}`);
+  };
+
   return (
     <div className="w-full">
       <section className="w-full px-[125px] pt-[65px]">
         <div className="max-w-[1193px] mx-auto">
-          <SearchBar onSearch={(q) => console.log('검색어:', q)} />
+          <SearchBar onSearch={handleSearch} />
 
           {/* 화장실 찾기 / 긴급 찾기 */}
           <div className="pt-[65px] flex items-start gap-[32px]">
@@ -220,6 +226,9 @@ export default function Home() {
                   <Arrow className="w-6 h-6" />
                 </button>
               </div>
+
+              {/* 카드 리스트 하단 넉넉한 여백 */}
+              <div className="mb-[100px]" />
             </div>
           </div>
         </div>
