@@ -1,5 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ChatbotToilet from '@/assets/svg/chatbotToilet.svg?react';
+import {
+  askChatbot,
+  getChatHistory,
+  deleteChat,
+} from '@/apis/chatbot/chatbotApi';
 
 export default function AiChatbot({ onClose }) {
   const [input, setInput] = useState('');
@@ -11,33 +16,82 @@ export default function AiChatbot({ onClose }) {
     { sender: 'bot', text: '어떤 서비스를 도와드릴까요?' },
   ]);
 
-  // 사용자 입력 전송
-  const handleSend = () => {
+  // 대화 내역 조회
+  useEffect(() => {
+    const fetchHistory = async () => {
+      try {
+        console.log('[Chatbot] 대화 내역 조회 요청...');
+        const res = await getChatHistory(1, 20);
+
+        if (res.data?.statusCode === 200) {
+          const conversations = res.data.data.conversations || [];
+          if (conversations.length > 0) {
+            const history = conversations.flatMap((c) => [
+              { id: c.id, sender: 'user', text: c.question },
+              { id: c.id, sender: 'bot', text: c.answer },
+            ]);
+            // 웰컴 메시지 유지 + history 이어붙이기
+            setMessages((prev) => [...prev, ...history]);
+          }
+        } else {
+          console.warn('[Chatbot] 대화 내역 조회 실패:', res.data);
+        }
+      } catch (err) {
+        console.error('[Chatbot] 대화 내역 조회 에러:', err);
+      }
+    };
+    fetchHistory();
+  }, []);
+
+  // 질문하기
+  const handleSend = async () => {
     if (!input.trim()) return;
     const userText = input.trim();
 
-    setMessages((prev) => [
-      ...prev,
-      { sender: 'user', text: userText },
-      {
-        sender: 'bot',
-        text: '현재 회원님의 위치에서 제일 가까운 화장실은 레드로드 R6 개방화장실입니다. 회원님의 위치에서부터 약 230m 거리에 위치했습니다.',
-      },
-    ]);
-
+    setMessages((prev) => [...prev, { sender: 'user', text: userText }]);
     setInput('');
+
+    try {
+      const res = await askChatbot(userText);
+      if (res.data?.statusCode === 200) {
+        const { id, answer } = res.data.data;
+        setMessages((prev) => [...prev, { id, sender: 'bot', text: answer }]);
+      } else {
+        setMessages((prev) => [
+          ...prev,
+          {
+            sender: 'bot',
+            text: `오류: ${res.data?.message || '알 수 없는 오류'}`,
+          },
+        ]);
+      }
+    } catch (err) {
+      console.error('[Chatbot] 질문 에러:', err);
+      setMessages((prev) => [
+        ...prev,
+        { sender: 'bot', text: '서버와 연결할 수 없어요.' },
+      ]);
+    }
+  };
+
+  // 삭제
+  const handleDelete = async (chatId) => {
+    try {
+      const res = await deleteChat(chatId);
+      if (res.data?.statusCode === 200) {
+        setMessages((prev) => prev.filter((m) => m.id !== chatId));
+      } else {
+        console.warn('[Chatbot] 삭제 실패:', res.data);
+      }
+    } catch (err) {
+      console.error('[Chatbot] 삭제 에러:', err);
+    }
   };
 
   // 칩 버튼 클릭
   const handleChipClick = (text) => {
-    setMessages((prev) => [
-      ...prev,
-      { sender: 'user', text },
-      {
-        sender: 'bot',
-        text: '현재 회원님의 위치에서 제일 가까운 화장실은 레드로드 R6 개방화장실입니다. 회원님의 위치에서부터 약 230m 거리에 위치했습니다.',
-      },
-    ]);
+    setInput(text);
+    handleSend();
   };
 
   return (
@@ -45,10 +99,9 @@ export default function AiChatbot({ onClose }) {
       className="fixed inset-0 z-50 flex justify-end bg-[rgba(0,0,0,0.3)] font-pretendard"
       onClick={onClose}
     >
-      {/* 메인 대화창 */}
       <div
         className="w-full max-w-[649px] h-screen bg-white shadow-[-11px_4px_18px_rgba(0,0,0,0.25)] 
-                      rounded-tl-[20px] rounded-br-[20px] flex flex-col"
+                    rounded-tl-[20px] rounded-br-[20px] flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
         {/* 헤더 */}
@@ -66,24 +119,26 @@ export default function AiChatbot({ onClose }) {
                   <p className="text-sm md:text-body2-bold text-gray-9 mb-1 md:mb-2">
                     MAPOOP 챗봇
                   </p>
-                  <div
-                    className="bg-main-2 text-white text-sm md:text-body2 px-4 py-3 md:px-6 md:py-4 
-                                  rounded-[20px_20px_20px_0] break-words"
-                  >
+                  <div className="bg-main-2 text-white text-sm md:text-body2 px-4 py-3 md:px-6 md:py-4 rounded-[20px_20px_20px_0] break-words">
                     {msg.text}
                   </div>
-                  {/* 두 번째 챗봇 메시지 뒤에 칩 노출 */}
+
+                  {/* 두 번째 bot 메시지 밑에 칩 버튼 */}
                   {i === 1 && (
                     <div className="flex flex-wrap gap-2 mt-3">
                       <button
-                        onClick={() => handleChipClick('가장 가까운 화장실')}
+                        onClick={() =>
+                          handleChipClick('가장 가까운 화장실을 찾아줘')
+                        }
                         className="px-4 md:px-8 py-2 border border-main-2 rounded-full 
                                    text-main-2 text-sm md:text-body2 bg-white hover:bg-main-3"
                       >
                         가장 가까운 화장실
                       </button>
                       <button
-                        onClick={() => handleChipClick('가장 평점 좋은 화장실')}
+                        onClick={() =>
+                          handleChipClick('가장 평점 좋은 화장실 알려줘')
+                        }
                         className="px-4 md:px-8 py-2 border border-main-2 rounded-full 
                                    text-main-2 text-sm md:text-body2 bg-white hover:bg-main-3"
                       >
@@ -91,14 +146,21 @@ export default function AiChatbot({ onClose }) {
                       </button>
                     </div>
                   )}
+
+                  {/* 삭제 버튼 (API 응답 메시지일 때만) */}
+                  {msg.id && (
+                    <button
+                      onClick={() => handleDelete(msg.id)}
+                      className="mt-2 text-xs text-red-500 hover:underline"
+                    >
+                      이 대화 삭제
+                    </button>
+                  )}
                 </div>
               </div>
             ) : (
               <div key={i} className="flex justify-end">
-                <div
-                  className="bg-gray-1 text-gray-6 text-sm md:text-body2 px-4 md:px-6 py-2 md:py-3 
-                                rounded-[20px_20px_0_20px] max-w-[70%] md:max-w-[300px] break-words"
-                >
+                <div className="bg-gray-1 text-gray-6 text-sm md:text-body2 px-4 md:px-6 py-2 md:py-3 rounded-[20px_20px_0_20px] max-w-[70%] md:max-w-[300px] break-words">
                   {msg.text}
                 </div>
               </div>
@@ -116,7 +178,6 @@ export default function AiChatbot({ onClose }) {
             className="flex-1 h-12 md:h-[62px] px-4 md:px-[27px] rounded-[10px] 
                        bg-main-3 text-gray-6 text-sm md:text-body2 outline-none break-words"
           />
-
           <button
             onClick={handleSend}
             className="shrink-0 w-[90px] h-12 md:w-[134px] md:h-[62px] rounded-[10px] 
