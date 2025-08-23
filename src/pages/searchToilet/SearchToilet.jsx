@@ -178,7 +178,7 @@ export default function SearchToilet() {
                   className="w-[482px] h-[343px] flex flex-col rounded-[10px] border border-[#DBDBDB] bg-white overflow-hidden flex-shrink-0 cursor-pointer hover:shadow-lg transition-shadow"
                   onClick={() => {
                     // 화장실 상세 페이지로 이동
-                    window.location.href = `/toilet-detail/${toilet.id}`;
+                    window.location.href = `/toilet-detail/${toilet.toiletId}`;
                   }}
                 >
                   {/* 이미지 영역 (190px) */}
@@ -251,7 +251,7 @@ export default function SearchToilet() {
                         className="text-[14px] font-bold leading-[20px] text-[#5C5C5C] font-pretendard hover:text-[#444] transition-colors"
                         onClick={(e) => {
                           e.stopPropagation();
-                          window.location.href = `/toilet-detail/${toilet.id}`;
+                          window.location.href = `/toilet-detail/${toilet.toiletId}`;
                         }}
                       >
                         자세히 보기 →
