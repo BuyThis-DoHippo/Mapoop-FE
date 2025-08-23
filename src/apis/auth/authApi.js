@@ -39,7 +39,7 @@ export const getKakaoAccessToken = async (code) => {
 // 카카오 로그인 (액세스 토큰으로 로그인)
 export const kakaoLogin = async (kakaoAccessToken, locationConsent = true) => {
   const requestData = {
-    kakao_access_token: kakaoAccessToken,
+    kakaoAccessToken: kakaoAccessToken,
     location_consent: locationConsent,
     location_consent_version: "1.0"
   };
