@@ -25,28 +25,21 @@ export default function SearchStore() {
   const [keyword, setKeyword] = useState(''); // 검색어
   const [currentIndex, setCurrentIndex] = useState(0); // 카드 페이지네이션 인덱스
 
+  // 평점 옵션 (정확히 이 값들만 minRating으로 인정)
+  const ratingOptions = ['4.5', '4.0', '3.5'];
+
   // API 호출 (검색 결과)
   const { data, isLoading, error } = useSearchResults(
     {
       keyword: keyword || undefined,
-      minRating: selected.find((x) => x.includes('4')) || undefined,
+      minRating: selected.find((x) => ratingOptions.includes(x)) || undefined,
       type: selected.includes('공공')
         ? 'PUBLIC'
         : selected.includes('민간')
           ? 'STORE'
           : undefined,
       tags: selected.filter(
-        (x) =>
-          ![
-            '공공',
-            '민간',
-            '4.5',
-            '4.0',
-            '3.5',
-            '4.5+',
-            '4.0+',
-            '3.5+',
-          ].includes(x)
+        (x) => !['공공', '민간', '4.5', '4.0', '3.5'].includes(x)
       ),
     },
     { enabled: true }
@@ -54,18 +47,17 @@ export default function SearchStore() {
 
   const toilets = data?.data?.toilets || [];
 
+  // 단일 선택 그룹 관리용
   const SINGLE_KIND = ['공공', '민간'];
-  const SINGLE_RATING = ['4.5', '4.0', '3.5', '4.5+', '4.0+', '3.5+'];
+  const SINGLE_RATING = ['4.5', '4.0', '3.5'];
 
+  // 칩 라벨 매핑
   const LABEL_MAP = {
     공공: { key: 'kind', mode: 'single' },
     민간: { key: 'kind', mode: 'single' },
     4.5: { key: 'minRating', mode: 'single' },
     '4.0': { key: 'minRating', mode: 'single' },
     3.5: { key: 'minRating', mode: 'single' },
-    '4.5+': { key: 'minRating', mode: 'single' },
-    '4.0+': { key: 'minRating', mode: 'single' },
-    '3.5+': { key: 'minRating', mode: 'single' },
     현재이용가능: { key: 'use', mode: 'multi' },
     '남녀 분리': { key: 'use', mode: 'multi' },
     '가게 안 화장실': { key: 'place', mode: 'multi' },
@@ -116,7 +108,6 @@ export default function SearchStore() {
       <main className="w-[1440px] mx-auto">
         {/* 검색창 + 필터 버튼 */}
         <section className="mt-[90px] pl-[198px] pr-[197px]">
-          {/* relative 기준을 검색창+버튼 줄에만 줌 */}
           <div className="inline-flex items-center gap-6 relative">
             <SearchBar variant="store" onSearch={(q) => setKeyword(q)} />
 
@@ -135,7 +126,7 @@ export default function SearchStore() {
               <FilterIcon className="w-5 h-5" />
             </button>
 
-            {/* 필터 팝오버 (검색창+버튼 기준 고정) */}
+            {/* 필터 팝오버 */}
             {filterOpen && (
               <div
                 className="absolute top-full right-0 z-50 mt-2"
@@ -146,7 +137,7 @@ export default function SearchStore() {
             )}
           </div>
 
-          {/* 선택된 필터 칩 바 (검색창 아래 별도 영역) */}
+          {/* 선택된 필터 칩 바 */}
           {selected.length > 0 && (
             <div className="mt-6 w-full">
               <span className="block mb-2 text-body2 text-gray-10">
@@ -208,7 +199,6 @@ export default function SearchStore() {
                   key={t.toiletId}
                   className="flex-shrink-0 h-[393px] w-[256px]"
                 >
-                  {/* 이미지 + 뱃지 */}
                   <div
                     className="relative rounded-[10px] overflow-hidden"
                     style={{ width: '256px', height: '256px' }}
