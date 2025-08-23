@@ -176,13 +176,8 @@ export default function Home() {
                             className="text-heading3-bold text-gray-10"
                             style={{
                               width: `${nameBox.w}px`,
-                              height: `${nameBox.h}px`,
-                              display: isTwo ? '-webkit-box' : 'block',
-                              WebkitLineClamp: isTwo ? 2 : undefined,
-                              WebkitBoxOrient: isTwo ? 'vertical' : undefined,
-                              overflow: 'hidden',
-                              whiteSpace: isTwo ? undefined : 'nowrap',
-                              textOverflow: isTwo ? undefined : 'ellipsis',
+                              whiteSpace: 'normal',
+                              wordBreak: 'break-word',
                             }}
                             title={t.name}
                           >
