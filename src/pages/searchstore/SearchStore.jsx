@@ -169,7 +169,7 @@ export default function SearchStore() {
             {/* 필터 팝오버 */}
             {filterOpen && (
               <div
-                className="absolute right-0 z-50 mt-2"
+                className="absolute right-0 z-50 -mt-2"
                 onClickCapture={handleFilterClick}
               >
                 <Filter open selected={selected} />
