@@ -25,7 +25,7 @@ export default function SearchStore() {
   const [keyword, setKeyword] = useState(''); // 검색어
   const [currentIndex, setCurrentIndex] = useState(0); // 카드 페이지네이션 인덱스
 
-  // 평점 옵션 (정확히 이 값들만 minRating으로 인정)
+  // 평점 옵션
   const ratingOptions = ['4.5', '4.0', '3.5'];
 
   // API 호출 (검색 결과)
@@ -47,7 +47,7 @@ export default function SearchStore() {
 
   const toilets = data?.data?.toilets || [];
 
-  // 단일 선택 그룹 관리용
+  // 단일 선택 그룹
   const SINGLE_KIND = ['공공', '민간'];
   const SINGLE_RATING = ['4.5', '4.0', '3.5'];
 
@@ -71,7 +71,7 @@ export default function SearchStore() {
     기저귀교환대: { key: 'special', mode: 'multi' },
   };
 
-  const clearAll = () => setSelected([]); // 전체 해제
+  const clearAll = () => setSelected([]);
   const removeOne = (label) =>
     setSelected((prev) => prev.filter((x) => x !== label));
 
@@ -182,8 +182,8 @@ export default function SearchStore() {
               </p>
             )}
 
-            {/* 카드 컨테이너 */}
             <div className="w-[1193px] flex items-center gap-6 mb-[229px]">
+              {/* 이전 화살표 */}
               <button
                 type="button"
                 aria-label="이전 목록"
@@ -194,6 +194,7 @@ export default function SearchStore() {
                 <ArrowLeft className="w-6 h-6" />
               </button>
 
+              {/* 카드 */}
               {toilets.slice(currentIndex, currentIndex + 4).map((t) => (
                 <div
                   key={t.toiletId}
@@ -203,7 +204,18 @@ export default function SearchStore() {
                     className="relative rounded-[10px] overflow-hidden"
                     style={{ width: '256px', height: '256px' }}
                   >
-                    <NearbyToilet className="w-full h-full object-cover" />
+                    {/* 이미지 있으면 표시, 없으면 아이콘 fallback */}
+                    {t.mainImageUrl ? (
+                      <img
+                        src={t.mainImageUrl}
+                        alt={t.name}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <NearbyToilet className="w-full h-full object-cover" />
+                    )}
+
+                    {/* 공공/민간 뱃지 */}
                     <span
                       className={[
                         'absolute right-3 bottom-3 h-7 px-3 rounded-full',
@@ -215,7 +227,7 @@ export default function SearchStore() {
                     </span>
                   </div>
 
-                  {/* 가게명 + 평점 */}
+                  {/* 이름 + 평점 + 태그 */}
                   <div className="mt-4">
                     <div className="flex items-start justify-between">
                       <p
@@ -236,7 +248,6 @@ export default function SearchStore() {
                       </div>
                     </div>
 
-                    {/* 태그 칩 */}
                     <div className="grid grid-cols-2 gap-2 mt-4">
                       {t.tags?.map((tag, i) => (
                         <span
@@ -254,6 +265,7 @@ export default function SearchStore() {
                 </div>
               ))}
 
+              {/* 다음 화살표 */}
               <button
                 type="button"
                 aria-label="다음 목록"
