@@ -19,12 +19,8 @@ export default function Filter({
     'text-body2 whitespace-nowrap ' +
     'focus:outline-none focus-visible:ring-2 focus-visible:ring-[#7FCBE6]';
 
-  const chipIdle =
-    chipBase +
-    ' border border-main-2 bg-white text-main-2';
-  const chipOn =
-    chipBase +
-    ' border border-main-2 bg-main-3 text-main-2';
+  const chipIdle = chipBase + ' border border-main-2 bg-white text-main-2';
+  const chipOn = chipBase + ' border border-main-2 bg-main-3 text-main-2';
 
   // 선택 확인(평점은 +표기도 허용)
   const isOn = (label) => {
@@ -59,9 +55,7 @@ export default function Filter({
 
         {/* 최소 평점 */}
         <div className="w-full flex flex-col items-start gap-4">
-          <div className="text-left text-body2 text-main-2">
-            최소 평점
-          </div>
+          <div className="text-left text-body2 text-main-2">최소 평점</div>
           <div className="flex flex-wrap items-center gap-2">
             <button type="button" className={isOn('4.5') ? chipOn : chipIdle}>
               4.5
@@ -77,15 +71,13 @@ export default function Filter({
 
         {/* 기본 시설 */}
         <div className="w-full flex flex-col items-start gap-4">
-          <div className="text-left text-body2 text-main-2">
-            기본 시설
-          </div>
+          <div className="text-left text-body2 text-main-2">기본 시설</div>
           <div className="flex flex-wrap items-center gap-2">
             <button
               type="button"
-              className={isOn('현재이용 가능') ? chipOn : chipIdle}
+              className={isOn('현재이용가능') ? chipOn : chipIdle}
             >
-              현재이용 가능
+              현재이용가능
             </button>
             <button
               type="button"
@@ -122,9 +114,7 @@ export default function Filter({
 
         {/* 상태 */}
         <div className="w-full flex flex-col items-start gap-4">
-          <div className="text-left text-body2 text-main-2">
-            상태
-          </div>
+          <div className="text-left text-body2 text-main-2">상태</div>
           <div className="flex flex-wrap items-center gap-2">
             <button
               type="button"
@@ -143,9 +133,7 @@ export default function Filter({
 
         {/* 특수 시설 */}
         <div className="w-full flex flex-col items-start gap-4">
-          <div className="text-left text-body2 text-main-2">
-            특수 시설
-          </div>
+          <div className="text-left text-body2 text-main-2">특수 시설</div>
           <div className="flex flex-wrap items-center gap-2">
             <button
               type="button"
