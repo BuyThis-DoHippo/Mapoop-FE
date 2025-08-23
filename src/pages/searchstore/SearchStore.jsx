@@ -197,6 +197,7 @@ export default function SearchStore() {
               </div>
             )}
 
+            {/* 필터 팝오버 */}
             {filterOpen && (
               <div
                 className="absolute right-0 z-50"
@@ -235,22 +236,9 @@ export default function SearchStore() {
                     className="flex-shrink-0 h-[393px]"
                     style={{ width: `${cardW}px` }}
                   >
-                    {t.mainImageUrl ? (
-                      <img
-                        src={t.mainImageUrl}
-                        alt={t.name}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <NearbyToilet className="w-full h-full object-cover" />
-                    )}
-                    <span
-                      className={[
-                        'absolute right-3 bottom-3 h-7 px-3 rounded-full',
-                        'text-[12px] font-semibold text-white flex items-center',
-                        t.type === 'PUBLIC' ? 'bg-[#1FC37A]' : 'bg-[#FFC83A]',
-                      ].join(' ')}
-
+                    <div
+                      className="relative rounded-[10px] overflow-hidden"
+                      style={{ width: `${imgW}px`, height: `${imgW}px` }}
                     >
                       <NearbyToilet className="w-full h-full object-cover" />
                       <span
