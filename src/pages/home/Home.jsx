@@ -1,10 +1,9 @@
 import SearchBar from '@/components/common/SearchBar';
 import { useNavigate } from 'react-router-dom';
-import { nearbyToilets } from '@/mocks/mockToilets';
 import { useState } from 'react';
 import AiChatbot from '@/pages/aiChatBot/AiChatbot';
 
-// svg 컴포넌트 import
+// svg 컴포넌트
 import FindToilet from '@/assets/svg/FindToilet.svg?react';
 import FindToiletHurry from '@/assets/svg/FindToiletHurry.svg?react';
 import Arrow from '@/assets/svg/arrow.svg?react';
@@ -12,24 +11,38 @@ import ArrowLeft from '@/assets/svg/arrowleft.svg?react';
 import NearbyToilet from '@/assets/svg/NearbyToilet.svg?react';
 import Star from '@/assets/svg/star.svg?react';
 
+// API hook (SearchStore와 동일한 거 활용)
+import { useSearchResults } from '@/hooks/store/useStoreApi';
+
 export default function Home() {
   const navigate = useNavigate();
   const [chatOpen, setChatOpen] = useState(false);
 
-  // 카드 폭 배열(슬라이드 4장)
-  const cardWidths = [257, 256, 256, 256];
-  const nameFrames = [
-    { w: 83, h: 29 },
-    { w: 130, h: 29 },
-    { w: 172, h: 58 },
-    { w: 136, h: 58 },
-  ];
+  // 카드 페이지네이션 인덱스
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  // API 호출 (필터링 없이 전체 조회)
+  const { data, isLoading, error } = useSearchResults({}, { enabled: true });
+  const toilets = data?.data?.toilets || [];
+
+  const handlePrev = () => {
+    setCurrentIndex((prev) => Math.max(0, prev - 4));
+  };
+  const handleNext = () => {
+    setCurrentIndex((prev) => Math.min(toilets.length - 4, prev + 4));
+  };
+
+  // 홈 검색창에서 입력 → /search-store 페이지로 이동
+  const handleSearch = (q) => {
+    if (!q.trim()) return;
+    navigate(`/search-store?keyword=${encodeURIComponent(q)}`);
+  };
 
   return (
     <div className="w-full">
       <section className="w-full px-[125px] pt-[65px]">
         <div className="max-w-[1193px] mx-auto">
-          <SearchBar onSearch={(q) => console.log('search:', q)} />
+          <SearchBar onSearch={handleSearch} />
 
           {/* 화장실 찾기 / 긴급 찾기 */}
           <div className="pt-[65px] flex items-start gap-[32px]">
@@ -94,13 +107,8 @@ export default function Home() {
           {/* 챗봇 모달 */}
           {chatOpen && <AiChatbot onClose={() => setChatOpen(false)} />}
 
-          {/* 구분선 */}
-          <div className="mt-16 w-[1193px] h-px bg-gray-1" />
-
           {/* 근처 화장실 섹션 */}
-          <div className="w-[1193px] flex flex-col items-start gap-[60px] mx-auto">
-            <div className="w-full h-px bg-gray-1" />
-
+          <div className="mt-16 w-[1193px] flex flex-col items-start gap-[60px] mx-auto">
             <div className="flex flex-col items-start gap-[44px] w-full">
               <div className="w-full flex items-start justify-between">
                 <h2 className="text-heading2 text-gray-10">
@@ -112,121 +120,115 @@ export default function Home() {
                 <button
                   type="button"
                   onClick={() => navigate('/find-toilet')}
-                  className="
-                    text-body2
-                    text-gray-4
-                    whitespace-nowrap
-                    hover:opacity-80
-                    focus:outline-none focus-visible:ring-2 focus-visible:ring-main/30
-                  "
+                  className="text-body2 text-gray-4 whitespace-nowrap hover:opacity-80"
                 >
                   화장실 더보기 →
                 </button>
               </div>
 
-              {/* 리스트: 좌우 화살표 + 카드 4장 */}
+              {isLoading && <p>로딩중...</p>}
+              {error && <p>에러 발생: {error.message}</p>}
+              {!isLoading && toilets.length === 0 && (
+                <p className="text-gray-6 text-body1 mt-8">
+                  검색 결과가 없습니다.
+                </p>
+              )}
+
               <div className="w-[1193px] flex items-center gap-6">
                 {/* 이전 화살표 */}
                 <button
                   type="button"
                   aria-label="이전 목록"
-                  className="w-6 h-6 flex-shrink-0"
+                  className="w-6 h-6 disabled:opacity-30"
+                  onClick={handlePrev}
+                  disabled={currentIndex === 0}
                 >
                   <ArrowLeft className="w-6 h-6" />
                 </button>
 
-                {nearbyToilets.map((t, idx) => {
-                  const cardW = cardWidths[idx];
-                  const imgSize = cardW;
-                  const nameBox = nameFrames[idx];
-                  const isTwo = nameBox.h >= 58;
-                  const extra = Math.max(0, 58 - nameBox.h);
-
-                  return (
+                {/* 카드 4개씩 */}
+                {toilets.slice(currentIndex, currentIndex + 4).map((t) => (
+                  <div
+                    key={t.toiletId}
+                    className="flex-shrink-0 h-[393px] w-[256px]"
+                  >
                     <div
-                      key={t.id}
-                      className="flex-shrink-0 h-[393px]"
-                      style={{ width: `${cardW}px` }}
+                      className="relative rounded-[10px] overflow-hidden"
+                      style={{ width: '256px', height: '256px' }}
                     >
-                      <div
-                        className="relative rounded-[10px] overflow-hidden"
-                        style={{
-                          width: `${imgSize}px`,
-                          height: `${imgSize}px`,
-                        }}
-                      >
-                        <NearbyToilet className="w-full h-full object-contain" />
+                      {t.mainImageUrl ? (
+                        <img
+                          src={t.mainImageUrl}
+                          alt={t.name}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <NearbyToilet className="w-full h-full object-cover" />
+                      )}
 
-                        <span
-                          className={[
-                            'absolute right-3 bottom-3 h-7 px-3 rounded-full',
-                            'text-[12px] font-semibold text-white flex items-center',
-                            t.kind === '공공' ? 'bg-[#1FC37A]' : 'bg-[#FFC83A]',
-                          ].join(' ')}
+                      <span
+                        className={[
+                          'absolute right-3 bottom-3 h-7 px-3 rounded-full',
+                          'text-[12px] font-semibold text-white flex items-center',
+                          t.type === 'PUBLIC' ? 'bg-[#1FC37A]' : 'bg-[#FFC83A]',
+                        ].join(' ')}
+                      >
+                        {t.type === 'PUBLIC' ? '공공' : '민간'}
+                      </span>
+                    </div>
+
+                    {/* 이름 + 평점 + 태그 */}
+                    <div className="mt-4">
+                      <div className="flex items-start justify-between">
+                        <p
+                          className="text-heading3-bold text-gray-10 line-clamp-2"
+                          style={{ maxWidth: '200px' }}
+                          title={t.name}
                         >
-                          {t.kind}
-                        </span>
+                          {t.name}
+                        </p>
+
+                        <div className="flex items-center gap-4">
+                          <Star className="w-6 h-6" />
+                          <span className="w-[31px] h-6 text-body1-bold text-gray-10 text-right">
+                            {t.rating !== null && t.rating !== undefined
+                              ? t.rating.toFixed(1)
+                              : '-'}
+                          </span>
+                        </div>
                       </div>
 
-                      {/* 텍스트 영역 */}
-                      <div className="mt-4">
-                        {/* 가게명 + 평점 */}
-                        <div className="flex items-start justify-between">
-                          <p
-                            className="text-heading3-bold text-gray-10"
-                            style={{
-                              width: `${nameBox.w}px`,
-                              whiteSpace: 'normal',
-                              wordBreak: 'break-word',
-                            }}
-                            title={t.name}
+                      <div className="grid grid-cols-2 gap-2 mt-4">
+                        {t.tags?.map((tag, i) => (
+                          <span
+                            key={i}
+                            className="inline-flex items-center justify-center rounded-full bg-gray-0 
+                                       px-4 py-1 h-[30px] text-body2 text-gray-8 whitespace-nowrap 
+                                       overflow-hidden text-ellipsis"
+                            title={tag}
                           >
-                            {t.name}
-                          </p>
-
-                          <div className="flex items-center gap-2">
-                            <Star className="w-6 h-6" />
-                            <span className="w-[31px] h-6 text-body1-bold text-gray-10 text-right">
-                              {t.rating.toFixed(1)}
-                            </span>
-                          </div>
-                        </div>
-
-                        <div style={{ height: `${extra}px` }} />
-
-                        {/* 태그 칩 */}
-                        <div
-                          className={`flex flex-wrap items-center gap-4`}
-                          style={{ marginTop: isTwo ? '32px' : '16px' }}
-                        >
-                          {t.tags.map((tag, i) => (
-                            <span
-                              key={i}
-                              className="inline-flex items-center justify-center rounded-[50px] bg-gray-0
-                 px-6 py-2 h-[35px]
-                 text-body2 text-gray-8
-                 whitespace-nowrap overflow-hidden text-ellipsis"
-                              title={tag}
-                            >
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
+                            {tag}
+                          </span>
+                        ))}
                       </div>
                     </div>
-                  );
-                })}
+                  </div>
+                ))}
 
+                {/* 다음 화살표 */}
                 <button
                   type="button"
                   aria-label="다음 목록"
-                  className="w-6 h-6 flex-shrink-0"
+                  className="w-6 h-6 disabled:opacity-30"
+                  onClick={handleNext}
+                  disabled={currentIndex + 4 >= toilets.length}
                 >
                   <Arrow className="w-6 h-6" />
                 </button>
               </div>
 
-              <div className="w-[1193px] h-[144px] bg-white" />
+              {/* 카드 리스트 하단 넉넉한 여백 */}
+              <div className="mb-[100px]" />
             </div>
           </div>
         </div>
