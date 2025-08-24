@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useCreateToilet, useUploadToiletImages, useDeleteToiletImage } from '@/hooks/register/useRegisterApi';
+import { useCreateToilet, useUploadToiletImages } from '@/hooks/register/useRegisterApi';
 
 export const useRegisterToilet = () => {
   const navigate = useNavigate();
@@ -13,38 +13,37 @@ export const useRegisterToilet = () => {
     is24Hours: false,
     description: '',
     specialNotes: '', // particulars
-    images: [], // 이제 { image_id, url } 형태의 객체를 저장합니다.
+    images: [], // { image_id, url } 형태의 객체를 저장합니다.
     operatingHours: {
       startHour: '09',
       startMinute: '00',
       endHour: '18',
-      endMinute: '00'
+      endMinute: '00',
     },
     facilities: [],
-    specialFacilities: []
+    specialFacilities: [],
   });
 
   const { mutateAsync: createToilet, isPending: creating } = useCreateToilet();
   const { mutateAsync: uploadImages, isPending: uploading } = useUploadToiletImages();
-  const { mutateAsync: deleteImage, isPending: deleting } = useDeleteToiletImage();
-
 
   const handleInputChange = (key, value) => {
-    setFormData(prev => ({ ...prev, [key]: value }));
+    setFormData((prev) => ({ ...prev, [key]: value }));
   };
 
   const handleArrayToggle = (key, value) => {
-    setFormData(prev => {
+    setFormData((prev) => {
       const arr = new Set(prev[key] || []);
-      if (arr.has(value)) arr.delete(value); else arr.add(value);
+      if (arr.has(value)) arr.delete(value);
+      else arr.add(value);
       return { ...prev, [key]: Array.from(arr) };
     });
   };
 
   const handleTimeChange = (timeType, value) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      operatingHours: { ...prev.operatingHours, [timeType]: value }
+      operatingHours: { ...prev.operatingHours, [timeType]: value },
     }));
   };
 
@@ -57,7 +56,7 @@ export const useRegisterToilet = () => {
 
     try {
       const res = await uploadImages(fd);
-      // ✨ 수정된 부분: API 응답의 `imageId`를 `image_id`로 변환하여 상태에 저장
+      // API 응답의 `imageId`를 `image_id`로 변환하여 상태에 저장
       const newImages = res.data.images.map(img => ({
         image_id: img.imageId, // `imageId` from response becomes `image_id` in state
         url: img.url
@@ -68,16 +67,12 @@ export const useRegisterToilet = () => {
     }
   };
   
-  const handleImageRemove = async (image_id) => {
-    try {
-      await deleteImage(image_id);
-      setFormData(prev => ({
-        ...prev,
-        images: prev.images.filter(image => image.image_id !== image_id)
-      }));
-    } catch (e) {
-      console.error(e);
-    }
+  // 임시 해결책: 프론트엔드에서만 이미지를 숨기고 실제 삭제는 하지 않음
+  const handleImageRemove = (image_id) => {
+    setFormData(prev => ({
+      ...prev,
+      images: prev.images.filter(image => image.image_id !== image_id)
+    }));
   };
 
   const validate = () => {
@@ -109,6 +104,7 @@ export const useRegisterToilet = () => {
       tags: [...formData.facilities, ...formData.specialFacilities],
       description: formData.description.trim(),
       particulars: formData.specialNotes.trim(),
+      // 현재 상태의 이미지만 전송 (삭제된 이미지는 제외)
       imageUrls: formData.images.map(img => img.url),
     };
 
@@ -124,19 +120,21 @@ export const useRegisterToilet = () => {
       }
     } catch (e) {
       console.error(e);
-      const errorMessage = e.response?.data?.message || '등록 중 오류가 발생했습니다.';
+      const errorMessage =
+        e.response?.data?.message || '등록 중 오류가 발생했습니다.';
       alert(errorMessage);
     }
   };
 
   return {
     formData,
+    setFormData,
     handleInputChange,
     handleArrayToggle,
     handleTimeChange,
     handleImageUpload,
     handleImageRemove,
     handleSubmit,
-    busy: creating || uploading || deleting,
+    busy: creating || uploading, // deleting 제거
   };
 };

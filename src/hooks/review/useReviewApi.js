@@ -1,144 +1,68 @@
+/**
+ * src/hooks/review/useReviewApi.js
+ * 리뷰 관련 API를 호출하는 react-query 훅을 관리합니다.
+ */
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import {
-  uploadReviewImages,
-  getReviewTags,
-  createReview,
-  updateReview,
-  deleteReview,
-  getToiletReviews,
-  getReviewDetail,
-  getToiletReviewCount,
-  getToiletRating,
-  getUserReviews,
-} from '@/apis/review/reviewApi';
+import * as reviewApi from '@/apis/review/reviewApi';
 
-// 이미지 업로드
-export const useUploadReviewImages = () =>
-  useMutation({
-    mutationFn: async (formData) => {
-      const r = await uploadReviewImages(formData);
-      return r?.data?.data?.imageUrls ?? [];
-    },
+/**
+ * 리뷰 이미지를 업로드하는 뮤테이션 훅
+ */
+export const useUploadReviewImages = () => {
+  return useMutation({
+    mutationFn: reviewApi.uploadReviewImages,
+    onError: (error) => {
+      console.error("Image upload failed:", error);
+      alert("이미지 업로드에 실패했습니다. 파일 크기(최대 10MB)나 형식을 확인해주세요.");
+    }
   });
-
-// 태그(문자열/객체 혼용 대응)
-const normalizeTags = (raw) => {
-  const src = raw?.data ?? raw;
-  const cast = (arr) =>
-    (arr ?? []).map((t, i) =>
-      typeof t === 'string' ? { tagId: undefined, tagName: t, _k: `${t}-${i}` } : { tagId: t.tagId ?? t.id, tagName: t.tagName ?? t.name }
-    );
-  const basic = cast(src?.basicTags);
-  const facility = cast(src?.facilityTags);
-  return { basicTags: basic, facilityTags: facility, all: [...basic, ...facility] };
 };
 
+/**
+ * 리뷰 작성용 태그 목록을 조회하는 쿼리 훅
+ */
 export const useReviewTags = (options = {}) =>
   useQuery({
-    queryKey: ['review', 'tags'],
+    queryKey: ['reviewTags'],
     queryFn: async () => {
-      const r = await getReviewTags();
-      return normalizeTags(r.data);
+      const response = await reviewApi.getReviewTags();
+      return response.data.data; // 실제 태그 배열 반환
     },
-    staleTime: 10 * 60 * 1000,
+    staleTime: 5 * 60 * 1000, // 5분간 신선한 데이터로 간주
     ...options,
   });
 
-// 생성/수정/삭제
+/**
+ * 리뷰를 생성하는 뮤테이션 훅
+ * @param {number} toiletId - 리뷰를 작성할 화장실 ID
+ */
 export const useCreateReview = (toiletId) => {
-  const qc = useQueryClient();
+  const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (payload) => {
-      const r = await createReview(toiletId, payload);
-      return r?.data?.data ?? r?.data;
-    },
+    mutationFn: (payload) => reviewApi.createReview(toiletId, payload),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['toilet', toiletId, 'reviews'] });
-      qc.invalidateQueries({ queryKey: ['toilet', toiletId, 'review-count'] });
-      qc.invalidateQueries({ queryKey: ['toilet', toiletId, 'rating'] });
+      queryClient.invalidateQueries({ queryKey: ['toiletReviews', toiletId] });
+      queryClient.invalidateQueries({ queryKey: ['toilet', toiletId] });
     },
-  });
-};
-export const useUpdateReview = (reviewId, toiletId) => {
-  const qc = useQueryClient();
-  return useMutation({
-    mutationFn: async (payload) => {
-      const r = await updateReview(reviewId, payload);
-      return r?.data?.data ?? r?.data;
-    },
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['review', reviewId] });
-      if (toiletId) {
-        qc.invalidateQueries({ queryKey: ['toilet', toiletId, 'reviews'] });
-        qc.invalidateQueries({ queryKey: ['toilet', toiletId, 'review-count'] });
-        qc.invalidateQueries({ queryKey: ['toilet', toiletId, 'rating'] });
-      }
-    },
-  });
-};
-export const useDeleteReview = (reviewId, toiletId) => {
-  const qc = useQueryClient();
-  return useMutation({
-    mutationFn: async () => deleteReview(reviewId),
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['review', reviewId] });
-      if (toiletId) {
-        qc.invalidateQueries({ queryKey: ['toilet', toiletId, 'reviews'] });
-        qc.invalidateQueries({ queryKey: ['toilet', toiletId, 'review-count'] });
-        qc.invalidateQueries({ queryKey: ['toilet', toiletId, 'rating'] });
-      }
-    },
+    onError: (error) => {
+      console.error("Failed to create review:", error);
+      alert("리뷰 등록 중 오류가 발생했습니다.");
+    }
   });
 };
 
-// 조회
-export const useToiletReviews = ({ toiletId, page = 1, size = 10, sort = 'latest' }, options = {}) =>
-  useQuery({
-    queryKey: ['toilet', toiletId, 'reviews', { page, size, sort }],
-    queryFn: async () => {
-      const r = await getToiletReviews({ toiletId, page, size, sort });
-      return r?.data?.data ?? r?.data;
+/**
+ * ✨ 추가된 부분: 리뷰 이미지 삭제를 위한 뮤테이션 훅
+ */
+export const useDeleteReviewImage = () => {
+  return useMutation({
+    mutationFn: (imageUrl) => reviewApi.deleteReviewImage(imageUrl),
+    onSuccess: () => {
+      console.log('리뷰 이미지 삭제 성공');
     },
-    enabled: !!toiletId,
-    ...options,
+    onError: (error) => {
+      console.error("Failed to delete review image:", error);
+      alert("이미지 삭제 중 오류가 발생했습니다.");
+    }
   });
-export const useReviewDetail = (reviewId, options = {}) =>
-  useQuery({
-    queryKey: ['review', reviewId],
-    queryFn: async () => {
-      const r = await getReviewDetail(reviewId);
-      return r?.data?.data ?? r?.data;
-    },
-    enabled: !!reviewId,
-    ...options,
-  });
-export const useToiletReviewCount = (toiletId, options = {}) =>
-  useQuery({
-    queryKey: ['toilet', toiletId, 'review-count'],
-    queryFn: async () => {
-      const r = await getToiletReviewCount(toiletId);
-      return r?.data?.data ?? r?.data;
-    },
-    enabled: !!toiletId,
-    ...options,
-  });
-export const useToiletRating = (toiletId, options = {}) =>
-  useQuery({
-    queryKey: ['toilet', toiletId, 'rating'],
-    queryFn: async () => {
-      const r = await getToiletRating(toiletId);
-      return r?.data?.data ?? r?.data;
-    },
-    enabled: !!toiletId,
-    ...options,
-  });
-export const useUserReviews = ({ userId, page = 1, size = 10 }, options = {}) =>
-  useQuery({
-    queryKey: ['user', userId, 'reviews', { page, size }],
-    queryFn: async () => {
-      const r = await getUserReviews({ userId, page, size });
-      return r?.data?.data ?? r?.data;
-    },
-    enabled: !!userId,
-    ...options,
-  });
+};

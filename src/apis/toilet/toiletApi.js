@@ -53,6 +53,15 @@ export const getToiletTopTags = async (toiletId) => {
 };
 
 /**
+ * 화장실 평점 분포 조회
+ * @param {number} toiletId - 화장실 ID
+ */
+export const getToiletRatingDistribution = async (toiletId) => {
+  const response = await axiosInstance.get(`/api/toilets/${toiletId}/rating-distribution`);
+  return response.data;
+};
+
+/**
  * 화장실 등록
  * @param {Object} toiletData - 화장실 정보
  */
