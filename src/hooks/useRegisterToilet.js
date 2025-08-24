@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useCreateToilet, useUploadToiletImages } from '@/hooks/register/useRegisterApi';
+import {
+  useCreateToilet,
+  useUploadToiletImages,
+} from '@/hooks/register/useRegisterApi';
 
 export const useRegisterToilet = () => {
   const navigate = useNavigate();
@@ -18,51 +21,59 @@ export const useRegisterToilet = () => {
       startHour: '09',
       startMinute: '00',
       endHour: '18',
-      endMinute: '00'
+      endMinute: '00',
     },
     facilities: [],
-    specialFacilities: []
+    specialFacilities: [],
   });
 
   const { mutateAsync: createToilet, isPending: creating } = useCreateToilet();
-  const { mutateAsync: uploadImages, isPending: uploading } = useUploadToiletImages();
+  const { mutateAsync: uploadImages, isPending: uploading } =
+    useUploadToiletImages();
 
   const handleInputChange = (key, value) => {
-    setFormData(prev => ({ ...prev, [key]: value }));
+    setFormData((prev) => ({ ...prev, [key]: value }));
   };
 
   const handleArrayToggle = (key, value) => {
-    setFormData(prev => {
+    setFormData((prev) => {
       const arr = new Set(prev[key] || []);
-      if (arr.has(value)) arr.delete(value); else arr.add(value);
+      if (arr.has(value)) arr.delete(value);
+      else arr.add(value);
       return { ...prev, [key]: Array.from(arr) };
     });
   };
 
   const handleTimeChange = (timeType, value) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      operatingHours: { ...prev.operatingHours, [timeType]: value }
+      operatingHours: { ...prev.operatingHours, [timeType]: value },
     }));
   };
 
   const handleImageUpload = (event) => {
     const files = Array.from(event.target.files || []);
-    const newImages = files.map(file => ({
-        file,
-        url: URL.createObjectURL(file),
-        id: `${file.name}-${file.lastModified}`
+    const newImages = files.map((file) => ({
+      file,
+      url: URL.createObjectURL(file),
+      id: `${file.name}-${file.lastModified}`,
     }));
-    setFormData(prev => ({ ...prev, images: [...prev.images, ...newImages] }));
+    setFormData((prev) => ({
+      ...prev,
+      images: [...prev.images, ...newImages],
+    }));
   };
 
   const handleImageRemove = (imageId) => {
-    setFormData(prev => {
-        const imageToRemove = prev.images.find(image => image.id === imageId);
-        if (imageToRemove) {
-            URL.revokeObjectURL(imageToRemove.url);
-        }
-        return { ...prev, images: prev.images.filter(image => image.id !== imageId) };
+    setFormData((prev) => {
+      const imageToRemove = prev.images.find((image) => image.id === imageId);
+      if (imageToRemove) {
+        URL.revokeObjectURL(imageToRemove.url);
+      }
+      return {
+        ...prev,
+        images: prev.images.filter((image) => image.id !== imageId),
+      };
     });
   };
 
@@ -104,7 +115,7 @@ export const useRegisterToilet = () => {
       if (newId && formData.images?.length > 0) {
         const fd = new FormData();
         // ✨ 수정된 부분: API 명세에 맞게 'images'를 'files'로 변경
-        formData.images.forEach(image => fd.append('files', image.file));
+        formData.images.forEach((image) => fd.append('files', image.file));
         await uploadImages({ toiletId: newId, imageData: fd });
       }
 
@@ -116,13 +127,15 @@ export const useRegisterToilet = () => {
       }
     } catch (e) {
       console.error(e);
-      const errorMessage = e.response?.data?.message || '등록 중 오류가 발생했습니다.';
+      const errorMessage =
+        e.response?.data?.message || '등록 중 오류가 발생했습니다.';
       alert(errorMessage);
     }
   };
 
   return {
     formData,
+    setFormData,
     handleInputChange,
     handleArrayToggle,
     handleTimeChange,
