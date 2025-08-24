@@ -1,18 +1,13 @@
-import { useState } from 'react';
-import { mockMyToilets as initialToilets } from '@/mocks/mockMyToilets';
 import ToiletCard from '@/components/mypage/ToiletCard';
+import { useMyToilets } from '@/hooks/mypage/useToiletApi';
 
 const ToiletManagement = () => {
-  const [toilets, setToilets] = useState(initialToilets);
+  const { data, isLoading, isError } = useMyToilets();
 
-  // 저장 시 리스트 업데이트
-  const handleSave = (id, updatedData) => {
-    setToilets((prev) =>
-      prev.map((toilet) =>
-        toilet.id === id ? { ...toilet, ...updatedData } : toilet
-      )
-    );
-  };
+  if (isLoading) return <p>내 화장실 불러오는 중...</p>;
+  if (isError) return <p>내 화장실 불러오기 실패</p>;
+
+  const toilets = data?.data?.toilets || [];
 
   return (
     <div className="w-full">
@@ -21,9 +16,20 @@ const ToiletManagement = () => {
       </h2>
 
       <div className="divide-y divide-gray-2 border-t border-b border-gray-2">
-        {toilets.map((toilet) => (
-          <ToiletCard key={toilet.id} toilet={toilet} onSave={handleSave} />
-        ))}
+        {toilets.length > 0 ? (
+          toilets.map((toilet) => (
+            <ToiletCard key={toilet.id} toilet={toilet} onSave={() => {}} />
+          ))
+        ) : (
+          <div className="flex flex-col items-center justify-center py-20">
+            <p className="text-heading3-regular text-gray-5 mb-4">
+              등록한 화장실이 없습니다.
+            </p>
+            <p className="text-body1 text-gray-5">
+              첫 번째 화장실을 등록해보세요!
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );
