@@ -3,12 +3,12 @@ import instance from '@/apis/instance';
 
 // 이미지 업로드(리뷰 전용)
 export const uploadReviewImages = (formData) =>
-  instance.post('/api/reviews/images', formData, {
+  instance.post('/api/images/upload', formData, {
     headers: { 'Content-Type': 'multipart/form-data' },
   });
 
 // 태그 목록
-export const getReviewTags = () => instance.get('/api/reviews/tags');
+export const getReviewTags = () => instance.get('/api/tags/review');
 
 // 리뷰 생성/수정/삭제
 export const createReview = (toiletId, payload) =>

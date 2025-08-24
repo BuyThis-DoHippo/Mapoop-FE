@@ -20,8 +20,12 @@ const ToiletHeader = ({ toilet }) => {
     <div className="flex flex-col gap-2">
       <div className="flex items-center gap-6">
         <h1 className="text-heading1 text-black">{toilet.name}</h1>
-        <div className="px-6 py-2 bg-amber-500 rounded-[20px] flex items-center">
-          <span className="text-body1-bold text-white">민간</span>
+        <div className={`px-6 py-2 rounded-[20px] flex items-center ${
+          toilet.type === 'PUBLIC' ? 'bg-[#36C239]' : 'bg-amber-500'
+        }`}>
+          <span className="text-body1-bold text-white">
+            {toilet.type === 'PUBLIC' ? '공공' : '민간'}
+          </span>
         </div>
       </div>
       <div className="flex items-center gap-4">
