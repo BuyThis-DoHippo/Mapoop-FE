@@ -5,6 +5,7 @@ import {
   getToiletRating, 
   getToiletReviewCount, 
   getToiletTopTags,
+  getToiletRatingDistribution,
   createToilet,
   updateToilet,
   uploadToiletImages,
@@ -88,6 +89,22 @@ export const useToiletTopTags = (toiletId) => {
     select: (data) => data.data,
     onError: (error) => {
       console.error('화장실 인기 태그 조회 실패:', error);
+    },
+  });
+};
+
+/**
+ * 화장실 평점 분포 조회 query
+ */
+export const useToiletRatingDistribution = (toiletId) => {
+  return useQuery({
+    queryKey: ['toiletRatingDistribution', toiletId],
+    queryFn: () => getToiletRatingDistribution(toiletId),
+    enabled: !!toiletId,
+    staleTime: 5 * 60 * 1000, // 5분
+    select: (data) => data.data,
+    onError: (error) => {
+      console.error('화장실 평점 분포 조회 실패:', error);
     },
   });
 };

@@ -1,6 +1,6 @@
 // components/toiletDetail/ToiletOperationInfo.jsx
 const ToiletOperationInfo = ({ toilet }) => {
-  if (!toilet) return null;
+  if (!toilet || !toilet.hours) return null;
 
   return (
     <div className="flex gap-7">
@@ -8,11 +8,13 @@ const ToiletOperationInfo = ({ toilet }) => {
         <div className="flex flex-col gap-6">
           <h3 className="text-body1-bold text-gray-10">영업시간</h3>
           <div className="flex flex-col gap-4">
-            <p className="text-body1-bold text-green-500">
+            <p className={`text-body1-bold ${toilet.hours.isOpenNow ? 'text-green-500' : 'text-red-500'}`}>
               {toilet.hours.isOpenNow ? '영업중' : '영업종료'}
             </p>
             <p className="text-body1 text-gray-8">
-              매일 {toilet.hours.openTime.slice(0, 5)}~{toilet.hours.closeTime.slice(0, 5)}
+              {toilet.hours.isOpen24h 
+                ? '매일 24시간' 
+                : `매일 ${toilet.hours.openTime?.slice(0, 5)}~${toilet.hours.closeTime?.slice(0, 5)}`}
             </p>
           </div>
         </div>

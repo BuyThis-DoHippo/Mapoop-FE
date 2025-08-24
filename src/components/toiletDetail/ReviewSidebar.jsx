@@ -7,7 +7,14 @@ const ReviewSidebar = ({ toilet, ratingDistribution }) => {
   const navigate = useNavigate();
 
   const renderRatingDistribution = () => {
-    if (!ratingDistribution || ratingDistribution.length === 0) return null;
+    // 평점 분포 데이터가 없거나 비어있을 경우 메시지 표시
+    if (!ratingDistribution || ratingDistribution.length === 0) {
+      return (
+        <div className="text-center text-gray-5 text-body2 py-4">
+          평점 정보가 없습니다.
+        </div>
+      );
+    }
     
     return (
       <div className="flex flex-col gap-4">
@@ -27,7 +34,8 @@ const ReviewSidebar = ({ toilet, ratingDistribution }) => {
   };
 
   const renderToiletImages = () => {
-    if (!toilet?.images || toilet.images.length === 0) return null;
+    const images = toilet?.images || [];
+    if (images.length === 0) return null;
     
     return (
       <div className="flex flex-col gap-4">
@@ -37,31 +45,31 @@ const ReviewSidebar = ({ toilet, ratingDistribution }) => {
         <div className="w-[385px]">
           {/* 첫 번째 줄: 큰 이미지 */}
           <div className="w-[385px] h-[274px] bg-gray-1 rounded-lg overflow-hidden flex items-center justify-center mb-4">
-            <ToiletPic className="w-full h-full object-cover" />
+            {images[0] ? <img src={images[0]} alt="화장실 사진 1" className="w-full h-full object-cover" /> : <ToiletPic />}
           </div>
           
           {/* 두 번째 줄: 세로 긴 이미지 + 작은 이미지 2개 */}
           <div className="flex gap-4">
             {/* 세로 긴 이미지 */}
             <div className="w-[181px] h-[290px] bg-gray-1 rounded-lg overflow-hidden flex items-center justify-center">
-              <ToiletPic className="w-full h-full object-cover" />
+              {images[1] ? <img src={images[1]} alt="화장실 사진 2" className="w-full h-full object-cover" /> : <ToiletPic />}
             </div>
             
             {/* 작은 이미지 2개 (세로 배치) */}
             <div className="flex flex-col gap-4">
               <div className="w-[188px] h-[137px] bg-gray-1 rounded-lg overflow-hidden flex items-center justify-center">
-                <ToiletPic className="w-full h-full object-cover" />
+                {images[2] ? <img src={images[2]} alt="화장실 사진 3" className="w-full h-full object-cover" /> : <ToiletPic />}
               </div>
               <div className="w-[188px] h-[137px] bg-gray-1 rounded-lg overflow-hidden flex items-center justify-center">
-                <ToiletPic className="w-full h-full object-cover" />
+                {images[3] ? <img src={images[3]} alt="화장실 사진 4" className="w-full h-full object-cover" /> : <ToiletPic />}
               </div>
             </div>
           </div>
         </div>
-        
         <button className="text-body1 self-end mt-2">
           사진 더보기 →
         </button>
+
       </div>
     );
   };
@@ -80,9 +88,7 @@ const ReviewSidebar = ({ toilet, ratingDistribution }) => {
         </div>
         
         <div className="flex flex-col gap-4">
-          <div className="flex flex-col gap-4">
-            <h3 className="text-body2-bold text-gray-8">화장실 태그</h3>
-          </div>
+          <h3 className="text-body2-bold text-gray-8">화장실 태그</h3>
           <div className="flex flex-wrap gap-4">
             {toilet.tags.map((tag, index) => (
               <div key={index} className="px-6 py-2 bg-gray-0 rounded-[50px] flex items-center">
@@ -95,10 +101,7 @@ const ReviewSidebar = ({ toilet, ratingDistribution }) => {
 
       {/* Write Review Button */}
       <button 
-        onClick={() => {
-          console.log('toilet object:', toilet); // 디버깅
-          console.log('toilet.id:', toilet.id); // ID 확인
-          navigate(`/review-toilet/${toilet.id}`)}}
+        onClick={() => navigate(`/review-toilet/${toilet.id}`)}
         className="w-full px-24 py-9 bg-main rounded-[10px] flex items-center justify-between gap-2 text-heading3-bold text-white"
       >
         <Pencil/>
