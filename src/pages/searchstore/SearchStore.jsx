@@ -237,7 +237,7 @@ export default function SearchStore() {
                   <div className="mt-4">
                     <div className="flex items-start justify-between">
                       <p
-                        className="text-heading3-bold text-gray-10 line-clamp-2"
+                        className="text-heading3-bold text-gray-10 truncate"
                         style={{ maxWidth: '200px' }}
                         title={t.name}
                       >

@@ -133,12 +133,13 @@ export default function ReviewToiletList() {
                 <div className="mt-4">
                   <div className="flex items-start justify-between">
                     <p
-                      className="text-heading3-bold text-gray-10 line-clamp-2"
+                      className="text-heading3-bold text-gray-10 truncate"
                       style={{ maxWidth: '200px' }}
                       title={t.name}
                     >
                       {t.name}
                     </p>
+
                     <div className="flex items-center gap-2">
                       <Star className="w-5 h-5" />
                       <span className="text-body1-bold text-gray-10">
