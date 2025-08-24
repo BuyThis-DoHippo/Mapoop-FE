@@ -150,7 +150,8 @@ export default function Home() {
                 {toilets.slice(currentIndex, currentIndex + 4).map((t) => (
                   <div
                     key={t.toiletId}
-                    className="flex-shrink-0 h-[393px] w-[256px]"
+                    className="flex-shrink-0 h-[393px] w-[256px] cursor-pointer"
+                    onClick={() => navigate(`/toilet-detail/${t.toiletId}`)}
                   >
                     <div
                       className="relative rounded-[10px] overflow-hidden"
@@ -181,7 +182,7 @@ export default function Home() {
                     <div className="mt-4">
                       <div className="flex items-start justify-between">
                         <p
-                          className="text-heading3-bold text-gray-10 line-clamp-2"
+                          className="text-heading3-bold text-gray-10 truncate"
                           style={{ maxWidth: '200px' }}
                           title={t.name}
                         >
