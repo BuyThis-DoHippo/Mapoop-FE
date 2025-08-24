@@ -4,7 +4,7 @@ import { useAuth } from '@/hooks/auth/useAuth';
 
 export default function Navbar() {
   const location = useLocation();
-  const { isLogin, user, handleLogout, goToLogin } = useAuth();
+  const { isLogin, handleLogout, goToLogin } = useAuth();
 
   // 가게 검색으로 묶일 경로들 (end:false 로 prefix 매칭)
   const STORE_ROUTES = ['/search-store', '/find-toilet', '/find-toilet/urgent'];
@@ -25,15 +25,12 @@ export default function Navbar() {
         <div className="mx-auto max-w-[1194px] h-[95px] flex items-center justify-between">
           {/* 로고 */}
           <NavLink to="/" aria-label="홈으로 이동">
-            <Mapoop
-              alt="MAPOOP 로고"
-              className="h-[45px] block shrink-0"
-            />
+            <Mapoop alt="MAPOOP 로고" className="h-[45px] block shrink-0" />
           </NavLink>
 
           {/* 네비게이션 */}
           <nav className="flex items-center gap-14">
-            {/* 가게 검색 (SearchStore / SearchToilet / SearchToiletUrgent 전부 여기로 활성) */}
+            {/* 가게 검색 */}
             <NavLink
               to="/search-store"
               aria-label="가게 검색"
@@ -51,51 +48,42 @@ export default function Navbar() {
               화장실 리뷰
             </NavLink>
 
-            {/* 로그인/사용자 정보 영역 */}
+            {/* 로그인 / 로그아웃 / 마이페이지 */}
             {isLogin ? (
               <div className="flex items-center gap-4">
-                {/* 사용자 정보 */}
+                {/* 마이페이지 버튼 */}
                 <NavLink
                   to="/mypage"
-                  className="flex items-center gap-2 hover:opacity-80"
+                  className="
+                    inline-flex items-center justify-center
+                    px-[24px] py-2.5 rounded-[10px]
+                    bg-main hover:bg-main-2 text-white
+                    transition-colors duration-200
+                    focus:outline-none focus-visible:ring-2
+                    focus-visible:ring-main/40 focus-visible:ring-offset-2
+                    focus-visible:ring-offset-white
+                  "
                   aria-label="마이페이지"
                 >
-                  {user?.profileImage ? (
-                    <img
-                      src={user.profileImage}
-                      alt="프로필 이미지"
-                      className="w-8 h-8 rounded-full"
-                    />
-                  ) : (
-                    <div className="w-8 h-8 bg-gray-2 rounded-full flex items-center justify-center">
-                      <span className="text-body2 text-gray-5">
-                        {user?.nickname?.[0] || 'U'}
-                      </span>
-                    </div>
-                  )}
-                  <span className="text-body1 text-gray-10">
-                    {user?.nickname || '사용자'}
-                  </span>
+                  <span className="text-body1">마이페이지</span>
                 </NavLink>
 
-                {/* 로그아웃 버튼 */}
                 <button
                   type="button"
                   onClick={handleLogout}
                   className="
-                    inline-flex items-center justify-center gap-2.5
-                    px-[37px] py-2.5 rounded-[10px]
-                    bg-gray-2 hover:bg-gray-3 text-gray-10
-                    transition-colors duration-200
-                    focus:outline-none focus-visible:ring-2
-                    focus-visible:ring-gray-4 focus-visible:ring-offset-2
-                    focus-visible:ring-offset-white
-                  "
+                      inline-flex items-center justify-center
+                      px-[24px] py-2.5 rounded-[10px]
+                      border border-main text-main font-semibold
+                      hover:bg-main hover:text-white
+                      transition-colors duration-200
+                      focus:outline-none focus-visible:ring-2
+                      focus-visible:ring-main/40 focus-visible:ring-offset-2
+                      focus-visible:ring-offset-white
+                    "
                   aria-label="로그아웃"
                 >
-                  <span className="text-body1">
-                    로그아웃
-                  </span>
+                  <span className="text-body1">로그아웃</span>
                 </button>
               </div>
             ) : (
@@ -104,7 +92,7 @@ export default function Navbar() {
                 type="button"
                 onClick={goToLogin}
                 className="
-                  inline-flex items-center justify-center gap-2.5
+                  inline-flex items-center justify-center
                   px-[37px] py-2.5 rounded-[10px]
                   bg-main hover:bg-main-2 text-white
                   transition-colors duration-200
@@ -114,9 +102,7 @@ export default function Navbar() {
                 "
                 aria-label="로그인"
               >
-                <span className="text-body1">
-                  로그인
-                </span>
+                <span className="text-body1">로그인</span>
               </button>
             )}
           </nav>
