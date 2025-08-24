@@ -30,14 +30,12 @@ const EditToilet = () => {
   const { dropdownOpen, dropdownRef, toggleDropdown, closeAllDropdowns } =
     useDropdown();
 
-  // 상세 조회
   const { data } = useQuery({
     queryKey: ['toilet', toiletId],
     queryFn: () => getToiletById(toiletId),
     enabled: !!toiletId,
   });
 
-  // 수정 mutation
   const mutation = useMutation({
     mutationFn: ({ id, toiletData }) => updateToilet({ id, toiletData }),
     onSuccess: () => {
@@ -46,13 +44,27 @@ const EditToilet = () => {
       queryClient.invalidateQueries(['myToilets']);
     },
     onError: (err) => {
-      console.error('❌ 수정 실패:', err);
+      console.error('수정 실패:', err);
       alert('수정 실패');
     },
   });
 
-  // 이미지 업로드 mutation
-  const uploadMutation = useUploadToiletImages();
+  const uploadMutation = useUploadToiletImages({
+    onSuccess: (data) => {
+      if (data?.data?.images) {
+        setFormData((prev) => ({
+          ...prev,
+          images: [
+            ...(prev.images || []),
+            ...data.data.images.map((img) => ({
+              id: img.imageId,
+              url: img.url,
+            })),
+          ],
+        }));
+      }
+    },
+  });
 
   // 상세조회 데이터 -> formData 세팅
   useEffect(() => {
@@ -70,7 +82,7 @@ const EditToilet = () => {
         name: toilet.name || '',
         type: toilet.type === 'PUBLIC' ? 'public' : 'private',
         address: toilet.location?.address || '',
-        floor: toilet.location?.floor?.toString() || '',
+        detailAddress: toilet.location?.floor?.toString() || '',
         operatingHours: {
           startHour: toilet.hours?.openTime?.split(':')[0] || '',
           startMinute: toilet.hours?.openTime?.split(':')[1] || '',
@@ -82,7 +94,11 @@ const EditToilet = () => {
         specialFacilities: selectedSpecial,
         description: toilet.description || '',
         specialNotes: toilet.particulars || '',
-        images: (toilet.images || []).map((url, idx) => ({ id: idx, url })),
+        images: (toilet.images || []).map((img, idx) =>
+          typeof img === 'string'
+            ? { id: null, url: img }
+            : { id: img.imageId, url: img.url }
+        ),
       });
     }
   }, [data, setFormData]);
@@ -99,11 +115,15 @@ const EditToilet = () => {
   };
 
   const handleSave = () => {
+    const imageIds = (formData.images || [])
+      .filter((img) => img.id)
+      .map((img) => img.id);
+
     const payload = {
       name: formData.name,
       type: formData.type === 'public' ? 'PUBLIC' : 'PRIVATE',
       address: formData.address,
-      floor: formData.floor ? Number(formData.floor) : null,
+      floor: formData.detailAddress ? Number(formData.detailAddress) : null,
       openTime: `${formData.operatingHours.startHour || '00'}:${
         formData.operatingHours.startMinute || '00'
       }:00`,
@@ -117,24 +137,24 @@ const EditToilet = () => {
       ],
       description: formData.description,
       particulars: formData.specialNotes,
+      imageIds: imageIds,
     };
 
-    console.log('🚀 수정 요청 payload:', payload);
+    console.log('🚀 최종 payload:', payload);
 
     mutation.mutate({ id: toiletId, toiletData: payload });
   };
 
-  // 이미지 업로드 핸들러
   const handleImageUpload = (event) => {
     const files = event.target.files;
     if (!files || files.length === 0) return;
 
-    const formData = new FormData();
+    const formDataObj = new FormData();
     for (let file of files) {
-      formData.append('files', file);
+      formDataObj.append('files', file);
     }
 
-    uploadMutation.mutate(formData);
+    uploadMutation.mutate(formDataObj);
   };
 
   return (

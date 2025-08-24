@@ -13,13 +13,13 @@ const AddressForm = ({ formData, onInputChange }) => {
         />
       </div>
 
-      {/* 층수, 호수 입력 */}
+      {/* 층수 입력 */}
       <div className="w-full">
         <div className="text-body1 text-gray-8 mb-4">층수</div>
         <input
           type="text"
-          value={formData.floor ?? ''}
-          onChange={(e) => onInputChange('floor', e.target.value)}
+          value={formData.detailAddress ?? ''}
+          onChange={(e) => onInputChange('detailAddress', e.target.value)}
           placeholder="층수를 입력해주세요 (예: 1, B1)"
           className="w-full h-[54px] px-6 py-4 rounded-[10px] border border-gray-3 bg-white text-body2 placeholder-gray-4 outline-none focus:border-main transition-colors"
         />

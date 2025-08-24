@@ -39,12 +39,10 @@ export const useUpdateToilet = () => {
 };
 
 // 이미지 업로드
-export const useUploadToiletImages = () => {
+export const useUploadToiletImages = (options = {}) => {
   return useMutation({
     mutationFn: (imageData) => uploadToiletImages(imageData),
-    onSuccess: (data) => {
-      console.log('✅ 이미지 업로드 성공:', data);
-    },
+    ...options,
   });
 };
 
