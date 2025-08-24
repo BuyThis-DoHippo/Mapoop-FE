@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from '@/components/layout/Navbar';
 import Home from '@/pages/home/Home';
 import SearchStore from '@/pages/searchstore/SearchStore';
@@ -41,6 +41,9 @@ function App() {
 
         {/* MyPage 중첩 라우팅 */}
         <Route path="/mypage" element={<MyPage />}>
+          {/* /mypage 들어왔을 때 기본적으로 profile로 이동 */}
+          <Route index element={<Navigate to="profile" replace />} />
+
           <Route path="reviews" element={<ReviewManagement />} />
           <Route path="profile" element={<ProfileManagement />} />
           <Route path="toilets" element={<ToiletManagement />} />
