@@ -1,5 +1,4 @@
-export const facilities = [
-  "현재이용가능", 
+export const facilities = [ 
   "남녀 분리", 
   "가게 안 화장실", 
   "24시간", 

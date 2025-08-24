@@ -7,13 +7,9 @@ const AddressForm = ({ formData, onInputChange }) => {
           type="text"
           value={formData.address}
           onChange={(e) => onInputChange('address', e.target.value)}
+          placeholder="주소를 입력해주세요"
           className="w-full h-[54px] px-6 py-4 rounded-[10px] border border-gray-3 bg-white text-body2 placeholder-gray-4 outline-none focus:border-main transition-colors"
         />
-        <div className="flex justify-end">
-          <button className="w-[108px] h-10 flex justify-center items-center gap-2 px-[20px] py-2 rounded-[10px] border border-main-2 bg-main-3 text-main-2 text-body2 hover:bg-opacity-80 transition-colors">
-            주소 찾기
-          </button>
-        </div>
       </div>
 
       <div className="w-full">
