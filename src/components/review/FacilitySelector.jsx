@@ -1,15 +1,16 @@
 import TagButton from '@/components/common/TagButton';
 
+// 각 props에 기본값으로 빈 배열([])을 할당하여 undefined 오류를 방지합니다.
 const FacilitySelector = ({ 
-  selectedFacilities,
-  selectedCondition,
-  selectedSpecialFacilities,
+  selectedFacilities = [],
+  selectedCondition = [],
+  selectedSpecialFacilities = [],
   onFacilityToggle,
   onConditionToggle,
   onSpecialFacilityToggle 
 }) => {
   const facilities = [
-    "현재이용가능", "남녀 분리", "가게 안 화장실", "24시간", "비데 있음", "위생용품 제공"
+    "남녀 분리", "가게 안 화장실", "24시간", "비데 있음", "위생용품 제공"
   ];
 
   const conditions = ["깨끗함", "칸많음"];

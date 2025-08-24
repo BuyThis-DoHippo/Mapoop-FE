@@ -2,21 +2,17 @@
 import ReviewHeader from './ReviewHeader';
 import ReviewSidebar from './ReviewSidebar';
 import ReviewList from './ReviewList';
-import useToiletStore from '@/stores/toiletStore';
 
 const ReviewSection = ({ 
   toilet, 
   reviews, 
   ratingDistribution, 
   pagination, 
-  onPageChange 
+  onPageChange,
+  onSortChange, // onSortChange prop 추가
+  currentSort,  // currentSort prop 추가
+  isLoading
 }) => {
-  const { currentSort, sortAllReviews } = useToiletStore();
-
-  const handleSortChange = (sortType) => {
-    console.log('Sort changed to:', sortType);
-    sortAllReviews(sortType);
-  };
 
   if (!toilet) return null;
 
@@ -25,8 +21,8 @@ const ReviewSection = ({
       {/* Review Header */}
       <ReviewHeader 
         toilet={toilet} 
-        onSortChange={handleSortChange}
-        currentSort={currentSort}
+        onSortChange={onSortChange} // onSortChange 핸들러 전달
+        currentSort={currentSort}   // currentSort 상태 전달
       />
 
       {/* Main Reviews Content - 48px below ReviewHeader */}
@@ -42,6 +38,7 @@ const ReviewSection = ({
           reviews={reviews}
           pagination={pagination}
           onPageChange={onPageChange}
+          isLoading={isLoading} // isLoading prop 전달
         />
       </div>
     </div>
