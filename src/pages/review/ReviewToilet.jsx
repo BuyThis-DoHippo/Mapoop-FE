@@ -1,28 +1,27 @@
 /**
  * src/pages/review/ReviewToilet.jsx
  * 리뷰 작성 페이지 컴포넌트입니다.
- * 상태 관리 로직을 수정하여 FacilitySelector와 올바르게 연동되도록 수정했습니다.
  */
 import { useState, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Pencil from '@/assets/svg/toiletDetail/pencil.svg?react';
 
-// UI 컴포넌트 Import
+// UI 컴포넌트
 import ToiletInfoCard from '@/components/review/ToiletInfoCard';
 import FacilitySelector from '@/components/review/FacilitySelector';
 import StarRating from '@/components/review/StarRating';
 import ReviewForm from '@/components/review/ReviewForm';
 
-// 데이터 로딩 및 API 요청을 위한 훅 Import
+// API 훅
+import { useUploadReviewImages, useCreateReview, useReviewTags, useDeleteReviewImage } from '@/hooks/review/useReviewApi';
 import { useToiletDetail } from '@/hooks/toilet/useToiletApi';
-import { useUploadReviewImages, useCreateReview, useReviewTags } from '@/hooks/review/useReviewApi';
 
 const ReviewToilet = () => {
   const { id } = useParams();
   const toiletId = Number(id);
   const navigate = useNavigate();
 
-  // 1. 상태 관리 (오류 수정을 위해 태그 그룹별로 상태 분리)
+  // 상태 관리
   const [rating, setRating] = useState(0);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -31,22 +30,22 @@ const ReviewToilet = () => {
   const [selectedSpecialFacilities, setSelectedSpecialFacilities] = useState([]);
   const [uploadedImageUrls, setUploadedImageUrls] = useState([]);
 
-  // 2. 데이터 조회 (React Query)
+  // 데이터 조회
   const { data: toiletData, isLoading: isToiletLoading } = useToiletDetail(toiletId);
   const { data: availableTags = [] } = useReviewTags();
 
-  // 3. API 요청 훅 (React Query Mutations)
+  // API 요청 훅
   const { mutateAsync: uploadImages, isPending: isUploading } = useUploadReviewImages();
   const { mutateAsync: createReview, isPending: isCreating } = useCreateReview(toiletId);
+  const { mutateAsync: deleteImage, isPending: isDeleting } = useDeleteReviewImage();
 
-  // 태그 이름을 ID로 변환하기 위한 Map (효율적인 탐색)
   const tagNameToIdMap = useMemo(() => {
     const map = new Map();
     availableTags.forEach(tag => map.set(tag.tagName, tag.tagId));
     return map;
   }, [availableTags]);
 
-  // 4. 이벤트 핸들러 (각 태그 그룹별 핸들러 분리)
+  // 이벤트 핸들러
   const handleFacilityToggle = (facility) => {
     setSelectedFacilities(prev => prev.includes(facility) ? prev.filter(f => f !== facility) : [...prev, facility]);
   };
@@ -65,19 +64,26 @@ const ReviewToilet = () => {
     }
 
     const formData = new FormData();
-    files.forEach(file => formData.append('files', file));
+    // 수정된 부분: 백엔드에서 기대하는 'images' 키로 변경
+    files.forEach(file => formData.append('images', file));
 
     try {
       const response = await uploadImages({ toiletId, formData });
-      const newUrls = response.data.data.images.map(img => img.url);
+      // 백엔드 응답 구조에 맞게 수정 (List<String> 직접 반환)
+      const newUrls = response.data.data; // List<String> 직접 받음
       setUploadedImageUrls(prev => [...prev, ...newUrls]);
     } catch (error) {
-      // 에러 처리는 useUploadReviewImages 훅 내부에서 alert로 이미 처리됨
+      // 에러는 훅에서 처리
     }
   };
 
-  const handleImageRemove = (urlToRemove) => {
-    setUploadedImageUrls(prev => prev.filter(url => url !== urlToRemove));
+  const handleImageRemove = async (urlToRemove) => {
+    try {
+      await deleteImage(urlToRemove);
+      setUploadedImageUrls(prev => prev.filter(url => url !== urlToRemove));
+    } catch (error) {
+      // 에러는 훅에서 처리
+    }
   };
 
   const handleSubmit = async () => {
@@ -85,7 +91,6 @@ const ReviewToilet = () => {
     if (!title.trim()) return alert('제목을 입력해주세요.');
     if (!content.trim()) return alert('내용을 입력해주세요.');
 
-    // 모든 선택된 태그를 하나의 배열로 합침
     const allSelectedTagNames = [
       ...selectedFacilities,
       ...selectedCondition,
@@ -105,11 +110,11 @@ const ReviewToilet = () => {
       alert('리뷰가 성공적으로 등록되었습니다.');
       navigate(`/toilet-detail/${toiletId}`);
     } catch (error) {
-       // 에러 처리는 useCreateReview 훅 내부에서 alert로 이미 처리됨
+      // 에러는 훅에서 처리
     }
   };
-
-  const isBusy = isUploading || isCreating;
+  
+  const isBusy = isUploading || isCreating || isDeleting;
 
   return (
     <div className="min-h-screen bg-white">
@@ -122,7 +127,6 @@ const ReviewToilet = () => {
               address={isToiletLoading ? '...' : toiletData?.location?.address}
             />
             <div className="w-full h-px bg-gray-1 my-[40px]" />
-            {/* FacilitySelector에 분리된 상태와 핸들러를 각각 전달 */}
             <FacilitySelector
               selectedFacilities={selectedFacilities}
               selectedCondition={selectedCondition}
@@ -155,7 +159,7 @@ const ReviewToilet = () => {
               >
                 <Pencil className="w-6 h-6 text-white" />
                 <span className="text-heading3-bold text-white">
-                  {isBusy ? '등록 중…' : '리뷰 작성완료'}
+                  {isBusy ? '처리 중…' : '리뷰 작성완료'}
                 </span>
               </button>
             </div>

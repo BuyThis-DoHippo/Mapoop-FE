@@ -41,13 +41,28 @@ export const useCreateReview = (toiletId) => {
   return useMutation({
     mutationFn: (payload) => reviewApi.createReview(toiletId, payload),
     onSuccess: () => {
-      // 리뷰 생성 성공 시, 해당 화장실의 관련 쿼리들을 모두 무효화하여 최신 정보로 갱신
       queryClient.invalidateQueries({ queryKey: ['toiletReviews', toiletId] });
       queryClient.invalidateQueries({ queryKey: ['toilet', toiletId] });
     },
     onError: (error) => {
       console.error("Failed to create review:", error);
       alert("리뷰 등록 중 오류가 발생했습니다.");
+    }
+  });
+};
+
+/**
+ * ✨ 추가된 부분: 리뷰 이미지 삭제를 위한 뮤테이션 훅
+ */
+export const useDeleteReviewImage = () => {
+  return useMutation({
+    mutationFn: (imageUrl) => reviewApi.deleteReviewImage(imageUrl),
+    onSuccess: () => {
+      console.log('리뷰 이미지 삭제 성공');
+    },
+    onError: (error) => {
+      console.error("Failed to delete review image:", error);
+      alert("이미지 삭제 중 오류가 발생했습니다.");
     }
   });
 };
