@@ -1,197 +1,128 @@
-import { useState, useEffect, useMemo } from 'react';
+/**
+ * src/pages/review/ReviewToilet.jsx
+ * 리뷰 작성 페이지 컴포넌트입니다.
+ * 상태 관리 로직을 수정하여 FacilitySelector와 올바르게 연동되도록 수정했습니다.
+ */
+import { useState, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Pencil from '@/assets/svg/toiletDetail/pencil.svg?react';
 
-// 기존 UI 컴포넌트
+// UI 컴포넌트 Import
 import ToiletInfoCard from '@/components/review/ToiletInfoCard';
 import FacilitySelector from '@/components/review/FacilitySelector';
 import StarRating from '@/components/review/StarRating';
 import ReviewForm from '@/components/review/ReviewForm';
 
-// 훅
+// 데이터 로딩 및 API 요청을 위한 훅 Import
 import { useToiletDetail } from '@/hooks/toilet/useToiletApi';
-import {
-  useUploadReviewImages,
-  useCreateReview,
-  useReviewTags,
-} from '@/hooks/review/useReviewApi';
+import { useUploadReviewImages, useCreateReview, useReviewTags } from '@/hooks/review/useReviewApi';
 
 const ReviewToilet = () => {
-  const { id } = useParams(); // /toilets/:id/review
+  const { id } = useParams();
   const toiletId = Number(id);
   const navigate = useNavigate();
 
-  // -----------------------------
-  // 상태 (기존 이름 유지)
-  // -----------------------------
-  const [toilet, setToilet] = useState(null);
-
+  // 1. 상태 관리 (오류 수정을 위해 태그 그룹별로 상태 분리)
   const [rating, setRating] = useState(0);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-
   const [selectedFacilities, setSelectedFacilities] = useState([]);
   const [selectedCondition, setSelectedCondition] = useState([]);
   const [selectedSpecialFacilities, setSelectedSpecialFacilities] = useState([]);
+  const [uploadedImageUrls, setUploadedImageUrls] = useState([]);
 
-  const [uploadedImages, setUploadedImages] = useState([]);
+  // 2. 데이터 조회 (React Query)
+  const { data: toiletData, isLoading: isToiletLoading } = useToiletDetail(toiletId);
+  const { data: availableTags = [] } = useReviewTags();
 
-  // -----------------------------
-  // 데이터 로딩
-  // -----------------------------
-  const { data: toiletRes } = useToiletDetail(toiletId);
-  useEffect(() => {
-    const apiData = toiletRes?.data ?? toiletRes;
-    if (apiData) setToilet(apiData);
-  }, [toiletRes]);
+  // 3. API 요청 훅 (React Query Mutations)
+  const { mutateAsync: uploadImages, isPending: isUploading } = useUploadReviewImages();
+  const { mutateAsync: createReview, isPending: isCreating } = useCreateReview(toiletId);
 
-  // 태그 API + 폴백 처리
-  const { data: tagsData, isError: tagsError } = useReviewTags();
-  const apiTags = tagsData?.all ?? [];
-  const fallbackTags = useMemo(() => {
-    const arr = Array.isArray(toilet?.tags) ? toilet.tags : [];
-    return arr.map((name, i) => ({
-      tagId: undefined,
-      tagName: name,
-      _fallbackKey: `${name}-${i}`,
-    }));
-  }, [toilet?.tags]);
+  // 태그 이름을 ID로 변환하기 위한 Map (효율적인 탐색)
+  const tagNameToIdMap = useMemo(() => {
+    const map = new Map();
+    availableTags.forEach(tag => map.set(tag.tagName, tag.tagId));
+    return map;
+  }, [availableTags]);
 
-  const allTags = apiTags.length > 0 && !tagsError ? apiTags : fallbackTags;
-
-  const nameToId = useMemo(() => {
-    const m = new Map();
-    allTags.forEach((t) => {
-      if (t.tagName) m.set(t.tagName, t.tagId);
-    });
-    return m;
-  }, [allTags]);
-
-  // -----------------------------
-  // 토글 핸들러
-  // -----------------------------
+  // 4. 이벤트 핸들러 (각 태그 그룹별 핸들러 분리)
   const handleFacilityToggle = (facility) => {
-    setSelectedFacilities((prev) =>
-      prev.includes(facility) ? prev.filter((f) => f !== facility) : [...prev, facility]
-    );
+    setSelectedFacilities(prev => prev.includes(facility) ? prev.filter(f => f !== facility) : [...prev, facility]);
   };
   const handleConditionToggle = (condition) => {
-    setSelectedCondition((prev) =>
-      prev.includes(condition) ? prev.filter((c) => c !== condition) : [...prev, condition]
-    );
+    setSelectedCondition(prev => prev.includes(condition) ? prev.filter(c => c !== condition) : [...prev, condition]);
   };
   const handleSpecialFacilityToggle = (facility) => {
-    setSelectedSpecialFacilities((prev) =>
-      prev.includes(facility) ? prev.filter((f) => f !== facility) : [...prev, facility]
-    );
+    setSelectedSpecialFacilities(prev => prev.includes(facility) ? prev.filter(f => f !== facility) : [...prev, facility]);
   };
-
-  // -----------------------------
-  // 이미지 업로드
-  // -----------------------------
-  const { mutateAsync: uploadImages, isPending: uploading } = useUploadReviewImages();
 
   const handleImageUpload = async (event) => {
-    const files = Array.from(event?.target?.files || []);
+    const files = Array.from(event.target.files);
     if (!files.length) return;
+    if (uploadedImageUrls.length + files.length > 3) {
+      return alert('이미지는 최대 3개까지 첨부할 수 있습니다.');
+    }
 
-    const fd = new FormData();
-    files.forEach((f) => fd.append('images', f));
-    const urls = await uploadImages(fd);
+    const formData = new FormData();
+    files.forEach(file => formData.append('files', file));
 
-    setUploadedImages((prev) => [
-      ...prev,
-      ...urls.map((url) => ({ id: Date.now() + Math.random(), file: null, url })),
-    ]);
+    try {
+      const response = await uploadImages({ toiletId, formData });
+      const newUrls = response.data.data.images.map(img => img.url);
+      setUploadedImageUrls(prev => [...prev, ...newUrls]);
+    } catch (error) {
+      // 에러 처리는 useUploadReviewImages 훅 내부에서 alert로 이미 처리됨
+    }
   };
 
-  const handleImageRemove = (imageId) => {
-    setUploadedImages((prev) => prev.filter((img) => img.id !== imageId));
+  const handleImageRemove = (urlToRemove) => {
+    setUploadedImageUrls(prev => prev.filter(url => url !== urlToRemove));
   };
-
-  // -----------------------------
-  // 제출
-  // -----------------------------
-  const { mutateAsync: createReview, isPending: creating } = useCreateReview(toiletId);
 
   const handleSubmit = async () => {
-    if (!rating) return alert('별점을 선택해주세요.');
+    if (rating === 0) return alert('별점을 선택해주세요.');
     if (!title.trim()) return alert('제목을 입력해주세요.');
     if (!content.trim()) return alert('내용을 입력해주세요.');
 
-    const tagNames = [
+    // 모든 선택된 태그를 하나의 배열로 합침
+    const allSelectedTagNames = [
       ...selectedFacilities,
       ...selectedCondition,
       ...selectedSpecialFacilities,
     ];
-    const tagIds = tagNames
-      .map((name) => nameToId.get(name))
-      .filter((v) => Number.isFinite(v));
 
     const payload = {
-      rating: Number(rating),
+      rating,
       title: title.trim(),
       content: content.trim(),
-      tagIds,
-      imageUrls: uploadedImages.map((i) => i.url),
-      ...(tagIds.length === 0 ? { tagNames } : {}),
+      tagIds: allSelectedTagNames.map(name => tagNameToIdMap.get(name)).filter(Boolean),
+      imageUrls: uploadedImageUrls,
     };
 
     try {
       await createReview(payload);
-      alert('리뷰가 작성되었습니다!');
-      navigate(-1);
-    } catch (e) {
-      console.error(e);
-      alert('리뷰 등록 중 오류가 발생했습니다.');
+      alert('리뷰가 성공적으로 등록되었습니다.');
+      navigate(`/toilet-detail/${toiletId}`);
+    } catch (error) {
+       // 에러 처리는 useCreateReview 훅 내부에서 alert로 이미 처리됨
     }
   };
 
-  // -----------------------------
-  // 카드 상단 정보
-  // -----------------------------
-  const toiletInfo = toilet
-    ? {
-        name: toilet.name,
-        address: toilet.location?.address,
-        images: toilet.images ?? [],
-        ratingAvg: toilet.rating?.avgRating ?? 0,
-        totalReviews: toilet.rating?.totalReviews ?? 0,
-        type: toilet.type,
-        hours: toilet.hours,
-      }
-    : {
-        name: '화장실 정보를 불러오는 중...',
-        address: '',
-        images: [],
-        ratingAvg: 0,
-        totalReviews: 0,
-        type: '',
-        hours: null,
-      };
+  const isBusy = isUploading || isCreating;
 
-  // -----------------------------
-  // 렌더
-  // -----------------------------
   return (
     <div className="min-h-screen bg-white">
       <div className="max-w-[1440px] mx-auto px-[125px] py-[65px]">
         <h1 className="text-heading1 text-gray-10 mb-[73px]">리뷰 작성하기</h1>
-
         <div className="flex items-start">
-          {/* Left Content */}
           <div className="flex-1">
             <ToiletInfoCard
-              name={toiletInfo.name}
-              address={toiletInfo.address}
-              images={toiletInfo.images}
-              ratingAvg={toiletInfo.ratingAvg}
-              totalReviews={toiletInfo.totalReviews}
-              type={toiletInfo.type}
-              hours={toiletInfo.hours}
+              name={isToiletLoading ? '로딩 중...' : toiletData?.name}
+              address={isToiletLoading ? '...' : toiletData?.location?.address}
             />
             <div className="w-full h-px bg-gray-1 my-[40px]" />
-
+            {/* FacilitySelector에 분리된 상태와 핸들러를 각각 전달 */}
             <FacilitySelector
               selectedFacilities={selectedFacilities}
               selectedCondition={selectedCondition}
@@ -201,45 +132,30 @@ const ReviewToilet = () => {
               onSpecialFacilityToggle={handleSpecialFacilityToggle}
             />
           </div>
-
           <div className="mx-12 flex items-center">
             <div className="w-px h-[861px] bg-gray-1" />
           </div>
-
-          {/* Right Content */}
           <div className="w-[513px] flex flex-col">
             <div className="mb-10">
-              <StarRating
-                value={rating}
-                rating={rating}
-                onChange={setRating}
-                onRatingChange={setRating}
-                activeColor="#00AEEF"
-              />
+              <StarRating rating={rating} onRatingChange={setRating} />
             </div>
-
             <ReviewForm
-              title={title}
-              content={content}
-              uploadedImages={uploadedImages}
-              onTitleChange={setTitle}
-              onContentChange={setContent}
+              title={title} onTitleChange={setTitle}
+              content={content} onContentChange={setContent}
+              uploadedImages={uploadedImageUrls.map(url => ({ id: url, url }))}
               onImageUpload={handleImageUpload}
-              onImageRemove={handleImageRemove}
-              uploading={uploading}
+              onImageRemove={(id) => handleImageRemove(id)}
             />
-
             <div className="mt-8">
               <button
                 type="button"
                 onClick={handleSubmit}
-                disabled={creating || uploading}
-                className="w-[385px] h-[101px] px-24 py-9 bg-main rounded-[10px] flex items-center justify-between gap-2 transition-colors disabled:opacity-60 hover:opacity-95"
-                aria-label="리뷰 작성완료"
+                disabled={isBusy}
+                className="w-[385px] h-[101px] px-24 py-9 bg-main rounded-[10px] flex items-center justify-between gap-2 transition-colors disabled:opacity-60 hover:bg-main-2"
               >
                 <Pencil className="w-6 h-6 text-white" />
                 <span className="text-heading3-bold text-white">
-                  {creating || uploading ? '등록 중…' : '리뷰 작성완료'}
+                  {isBusy ? '등록 중…' : '리뷰 작성완료'}
                 </span>
               </button>
             </div>
