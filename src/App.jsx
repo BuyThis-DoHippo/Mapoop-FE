@@ -11,6 +11,7 @@ import ToiletDetailPage from '@/pages/toiletDetail/ToiletDetailPage';
 import LoginPage from '@/pages/login/LoginPage';
 import KakaoCallback from '@/pages/login/KakaoCallback';
 import GoogleCallback from '@/pages/login/GoogleCallback';
+import ReviewToiletList from '@/pages/review/ReviewToiletList';
 
 // MyPage 관련 import
 import MyPage from '@/pages/mypage/MyPage';
@@ -31,7 +32,8 @@ function App() {
         <Route path="/ai-chatbot" element={<AiChatbot />} />
         <Route path="/toilet-detail/:id" element={<ToiletDetailPage />} />
         <Route path="/review-toilet/:id" element={<ReviewToilet />} />
-        
+        <Route path="/review-toilet" element={<ReviewToiletList />} />
+
         {/* 로그인 관련 라우트 */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/oauth/kakao/callback" element={<KakaoCallback />} />
