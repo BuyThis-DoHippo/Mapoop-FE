@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useCreateToilet, useUploadToiletImages } from '@/hooks/register/useRegisterApi';
+import { useCreateToilet, useUploadToiletImages, useDeleteToiletImage } from '@/hooks/register/useRegisterApi';
 
 export const useRegisterToilet = () => {
   const navigate = useNavigate();
@@ -26,6 +26,7 @@ export const useRegisterToilet = () => {
 
   const { mutateAsync: createToilet, isPending: creating } = useCreateToilet();
   const { mutateAsync: uploadImages, isPending: uploading } = useUploadToiletImages();
+  const { mutateAsync: deleteImage, isPending: deleting } = useDeleteToiletImage();
 
   const handleInputChange = (key, value) => {
     setFormData((prev) => ({ ...prev, [key]: value }));
@@ -67,12 +68,16 @@ export const useRegisterToilet = () => {
     }
   };
   
-  // 임시 해결책: 프론트엔드에서만 이미지를 숨기고 실제 삭제는 하지 않음
-  const handleImageRemove = (image_id) => {
-    setFormData(prev => ({
-      ...prev,
-      images: prev.images.filter(image => image.image_id !== image_id)
-    }));
+  const handleImageRemove = async (image_id) => {
+    try {
+      await deleteImage(image_id);
+      setFormData(prev => ({
+        ...prev,
+        images: prev.images.filter(image => image.image_id !== image_id)
+      }));
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   const validate = () => {
@@ -104,7 +109,6 @@ export const useRegisterToilet = () => {
       tags: [...formData.facilities, ...formData.specialFacilities],
       description: formData.description.trim(),
       particulars: formData.specialNotes.trim(),
-      // 현재 상태의 이미지만 전송 (삭제된 이미지는 제외)
       imageUrls: formData.images.map(img => img.url),
     };
 
@@ -135,6 +139,6 @@ export const useRegisterToilet = () => {
     handleImageUpload,
     handleImageRemove,
     handleSubmit,
-    busy: creating || uploading, // deleting 제거
+    busy: creating || uploading || deleting,
   };
 };
