@@ -73,12 +73,7 @@ export default function Filter({
         <div className="w-full flex flex-col items-start gap-4">
           <div className="text-left text-body2 text-main-2">기본 시설</div>
           <div className="flex flex-wrap items-center gap-2">
-            <button
-              type="button"
-              className={isOn('현재이용가능') ? chipOn : chipIdle}
-            >
-              현재이용가능
-            </button>
+            {/* ✨ '현재이용가능' 버튼 제거됨 */}
             <button
               type="button"
               className={isOn('남녀 분리') ? chipOn : chipIdle}
