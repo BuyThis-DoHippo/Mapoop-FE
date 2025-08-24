@@ -43,19 +43,21 @@ export default function AiChatbot({ onClose }) {
     fetchHistory();
   }, []);
 
-  // 질문하기
+  // 질문하기 (수정됨)
   const handleSend = async () => {
     if (!input.trim()) return;
     const userText = input.trim();
-
-    setMessages((prev) => [...prev, { sender: 'user', text: userText }]);
     setInput('');
 
     try {
       const res = await askChatbot(userText);
       if (res.data?.statusCode === 200) {
         const { id, answer } = res.data.data;
-        setMessages((prev) => [...prev, { id, sender: 'bot', text: answer }]);
+        setMessages((prev) => [
+          ...prev,
+          { id, sender: 'user', text: userText },
+          { id, sender: 'bot', text: answer },
+        ]);
       } else {
         setMessages((prev) => [
           ...prev,
