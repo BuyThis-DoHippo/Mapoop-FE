@@ -11,6 +11,7 @@ import DescriptionForm from '@/components/register/DescriptionForm';
 import ImageUpload from '@/components/register/ImageUpload';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getToiletById, updateToilet } from '@/apis/mypage/toiletApi';
+import { useUploadToiletImages } from '@/hooks/mypage/useToiletApi';
 import { facilities, specialFacilities } from '@/constants/facilityData';
 
 const EditToilet = () => {
@@ -22,7 +23,6 @@ const EditToilet = () => {
     setFormData,
     handleInputChange,
     handleArrayToggle,
-    handleImageUpload,
     handleImageRemove,
     busy,
   } = useRegisterToilet();
@@ -51,6 +51,9 @@ const EditToilet = () => {
     },
   });
 
+  // 이미지 업로드 mutation
+  const uploadMutation = useUploadToiletImages();
+
   // 상세조회 데이터 -> formData 세팅
   useEffect(() => {
     if (data?.data) {
@@ -67,7 +70,7 @@ const EditToilet = () => {
         name: toilet.name || '',
         type: toilet.type === 'PUBLIC' ? 'public' : 'private',
         address: toilet.location?.address || '',
-        floor: toilet.location?.floor?.toString() || '', // 🔥 floor 반영
+        floor: toilet.location?.floor?.toString() || '',
         operatingHours: {
           startHour: toilet.hours?.openTime?.split(':')[0] || '',
           startMinute: toilet.hours?.openTime?.split(':')[1] || '',
@@ -100,7 +103,7 @@ const EditToilet = () => {
       name: formData.name,
       type: formData.type === 'public' ? 'PUBLIC' : 'PRIVATE',
       address: formData.address,
-      floor: formData.floor ? Number(formData.floor) : null, // 🔥 floor 전송
+      floor: formData.floor ? Number(formData.floor) : null,
       openTime: `${formData.operatingHours.startHour || '00'}:${
         formData.operatingHours.startMinute || '00'
       }:00`,
@@ -119,6 +122,19 @@ const EditToilet = () => {
     console.log('🚀 수정 요청 payload:', payload);
 
     mutation.mutate({ id: toiletId, toiletData: payload });
+  };
+
+  // 이미지 업로드 핸들러
+  const handleImageUpload = (event) => {
+    const files = event.target.files;
+    if (!files || files.length === 0) return;
+
+    const formData = new FormData();
+    for (let file of files) {
+      formData.append('files', file);
+    }
+
+    uploadMutation.mutate(formData);
   };
 
   return (
