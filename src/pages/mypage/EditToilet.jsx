@@ -56,7 +56,6 @@ const EditToilet = () => {
     if (data?.data) {
       const toilet = data.data;
 
-      // tags 분리
       const selectedFacilities = (toilet.tags || []).filter((tag) =>
         facilities.includes(tag)
       );
@@ -68,8 +67,7 @@ const EditToilet = () => {
         name: toilet.name || '',
         type: toilet.type === 'PUBLIC' ? 'public' : 'private',
         address: toilet.location?.address || '',
-        detailAddress: toilet.location?.detailAddress || '',
-        floor: toilet.location?.floor || '',
+        floor: toilet.location?.floor?.toString() || '', // 🔥 floor 반영
         operatingHours: {
           startHour: toilet.hours?.openTime?.split(':')[0] || '',
           startMinute: toilet.hours?.openTime?.split(':')[1] || '',
@@ -102,7 +100,7 @@ const EditToilet = () => {
       name: formData.name,
       type: formData.type === 'public' ? 'PUBLIC' : 'PRIVATE',
       address: formData.address,
-      floor: Number(formData.floor) || 0,
+      floor: formData.floor ? Number(formData.floor) : null, // 🔥 floor 전송
       openTime: `${formData.operatingHours.startHour || '00'}:${
         formData.operatingHours.startMinute || '00'
       }:00`,
@@ -125,15 +123,14 @@ const EditToilet = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      <div className="max-w-[1440px] mx-auto px-4 lg:px-[125px] py-8 lg:py-[65px]">
-        <h1 className="text-heading1 text-gray-10 mb-8 lg:mb-16">
+      <div className="max-w-[1200px] mx-auto px-4 lg:px-[60px] py-8 lg:py-[40px]">
+        <h1 className="text-heading1 text-gray-10 mb-8 lg:mb-12">
           화장실 정보 수정
         </h1>
 
-        <div className="flex flex-col lg:flex-row gap-12 min-w-full lg:min-w-[1200px]">
+        <div className="flex flex-col lg:flex-row gap-8 w-full">
           {/* 왼쪽 폼 */}
           <div className="w-full lg:w-[400px] flex flex-col gap-8 flex-shrink-0">
-            {/* 화장실 이름 입력 */}
             <div className="flex flex-col items-start gap-2 p-10 self-stretch rounded-[10px] border border-gray-2 bg-white">
               <div className="text-body1 text-gray-10 mb-4">화장실 이름</div>
               <input
@@ -165,11 +162,6 @@ const EditToilet = () => {
             />
           </div>
 
-          {/* 세로 분할선 */}
-          <div className="hidden lg:flex items-center">
-            <div className="w-px h-full lg:h-[1180px] bg-gray-1"></div>
-          </div>
-
           {/* 오른쪽 콘텐츠 */}
           <div className="flex-1 flex flex-col gap-8">
             <FacilityTags
@@ -185,7 +177,6 @@ const EditToilet = () => {
 
             <ImageUpload onImageUpload={handleImageUpload} />
 
-            {/* 수정 버튼 */}
             <div className="flex justify-end mt-4">
               <button
                 onClick={handleSave}
