@@ -18,8 +18,9 @@ const DescriptionForm = ({ formData, onInputChange, onImageRemove }) => {
         {/* 업로드된 이미지들 */}
         {formData.images.length > 0 && (
           <div className="flex-1 pl-5 pr-4 absolute bottom-[33px] flex flex-wrap gap-4 overflow-auto">
+            {/* ✨ 수정된 부분: key와 onImageRemove에 image_id를 사용 */}
             {formData.images.map(image => (
-              <div key={image.id} className="relative">
+              <div key={image.image_id} className="relative">
                 <div className="w-[208px] h-[245px] rounded-[10px] overflow-hidden">
                   <img 
                     src={image.url} 
@@ -29,7 +30,7 @@ const DescriptionForm = ({ formData, onInputChange, onImageRemove }) => {
                 </div>
                 {/* X 버튼 */}
                 <button
-                  onClick={() => onImageRemove(image.id)}
+                  onClick={() => onImageRemove(image.image_id)}
                   className="absolute top-2 right-2 w-6 h-6 bg-black bg-opacity-50 rounded-full flex items-center justify-center text-white text-sm hover:bg-opacity-70 transition-opacity"
                 >
                   ×
