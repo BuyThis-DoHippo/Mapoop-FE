@@ -8,7 +8,7 @@ const MyPage = () => {
         <div className="flex gap-[54px]">
           {/* 사이드바 */}
           <Sidebar />
-          
+
           {/* 메인 콘텐츠 영역 */}
           <div className="flex-1">
             <Outlet />

@@ -20,31 +20,29 @@ const RegisterToilet = () => {
     busy,
   } = useRegisterToilet();
 
-  const {
-    dropdownOpen,
-    dropdownRef,
-    toggleDropdown,
-    closeAllDropdowns
-  } = useDropdown();
+  const { dropdownOpen, dropdownRef, toggleDropdown, closeAllDropdowns } =
+    useDropdown();
 
   const onTimeChange = (timeType, value) => {
     const timeValue = {
-        ...formData.operatingHours,
-        [timeType]: value
+      ...formData.operatingHours,
+      [timeType]: value,
     };
-    handleInputChange('operatingHours', timeValue)
+    handleInputChange('operatingHours', timeValue);
     closeAllDropdowns();
   };
 
   return (
     <div className="min-h-screen bg-white">
       <div className="max-w-[1440px] mx-auto px-4 lg:px-[125px] py-8 lg:py-[65px]">
-        <h1 className="text-heading1 text-gray-10 mb-8 lg:mb-16">화장실 등록</h1>
+        <h1 className="text-heading1 text-gray-10 mb-8 lg:mb-16">
+          화장실 등록
+        </h1>
 
         <div className="flex flex-col lg:flex-row gap-12 min-w-full lg:min-w-[1200px]">
           {/* 왼쪽 폼 */}
           <div className="w-full lg:w-[400px] flex flex-col gap-8 flex-shrink-0">
-            {/* ✨ 화장실 이름 입력 필드 추가 ✨ */}
+            {/* 화장실 이름 입력 */}
             <div className="flex flex-col items-start gap-2 p-10 self-stretch rounded-[10px] border border-gray-2 bg-white">
               <div className="text-body1 text-gray-10 mb-4">화장실 이름</div>
               <input
@@ -56,16 +54,19 @@ const RegisterToilet = () => {
               />
             </div>
 
+            {/* 주소 + 층수 */}
             <AddressForm
               formData={formData}
               onInputChange={handleInputChange}
             />
 
+            {/* 공중/개인 선택 */}
             <TypeSelector
               formData={formData}
               onInputChange={handleInputChange}
             />
 
+            {/* 운영 시간 */}
             <OperatingHours
               formData={formData}
               onTimeChange={onTimeChange}
@@ -94,9 +95,7 @@ const RegisterToilet = () => {
               onImageRemove={handleImageRemove}
             />
 
-            <ImageUpload
-              onImageUpload={handleImageUpload}
-            />
+            <ImageUpload onImageUpload={handleImageUpload} />
 
             {/* 등록 버튼 */}
             <div className="flex justify-end mt-4">
