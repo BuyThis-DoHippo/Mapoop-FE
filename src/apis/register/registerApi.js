@@ -23,10 +23,11 @@ export const uploadToiletImages = async (imageData) => {
 };
 
 /**
- * ✨ 수정된 부분: 화장실 이미지 단건 삭제
- * @param {number} image_id - 이미지 ID
+ * 화장실 이미지 단건 삭제
+ * @param {number} imageId - 이미지 ID (파라미터명 수정)
  */
-export const deleteToiletImage = async (image_id) => {
-  const response = await axiosInstance.delete(`/api/toilets/images/${image_id}`);
+export const deleteToiletImage = async (imageId) => {  // ✅ image_id → imageId로 변경
+  console.log('deleteToiletImage 호출됨, imageId:', imageId);
+  const response = await axiosInstance.delete(`/api/toilets/images/${imageId}`);  // ✅ 변수명도 변경
   return response.data;
 };

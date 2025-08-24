@@ -1,0 +1,221 @@
+폴더 PATH의 목록입니다.
+볼륨 일련 번호는 1C22-115B입니다.
+C:.
+│  App.jsx
+│  index.css
+│  main.jsx
+│  strucutre.tx
+│  
+├─apis
+│  │  instance.js
+│  │  
+│  ├─auth
+│  │      authApi.js
+│  │      
+│  ├─chatbot
+│  │      chatbotApi.js
+│  │      
+│  ├─home
+│  │      homeApi.js
+│  │      
+│  ├─map
+│  │      mapApi.js
+│  │      
+│  ├─mypage
+│  │      profileApi.js
+│  │      reviewApi.js
+│  │      
+│  ├─register
+│  │      registerApi.js
+│  │      
+│  ├─review
+│  │      reviewApi.js
+│  │      reviewApiList.js
+│  │      
+│  ├─store
+│  │      storeApi.js
+│  │      
+│  └─toilet
+│          toiletApi.js
+│          
+├─assets
+│  ├─fonts
+│  │      PretendardVariable.woff2
+│  │      
+│  └─svg
+│      │  arrow.svg
+│      │  arrowleft.svg
+│      │  chatbotToilet.svg
+│      │  filter.svg
+│      │  FindToilet.svg
+│      │  FindToiletHurry.svg
+│      │  Mapoop.svg
+│      │  NearbyToilet.svg
+│      │  SearchButton.svg
+│      │  star.svg
+│      │  toilet-marker.svg
+│      │  
+│      ├─login
+│      │      google-logo.svg
+│      │      kakao-login.svg
+│      │      
+│      ├─register
+│      │      arrow-down.svg
+│      │      arrow-up.svg
+│      │      
+│      ├─review
+│      │      picture.svg
+│      │      
+│      ├─toiletDetail
+│      │      arrow-down.svg
+│      │      pencil.svg
+│      │      star-blue.svg
+│      │      star-gray.svg
+│      │      toilet-pic-1.svg
+│      │      toilet-pic-2.svg
+│      │      toilet-pic-3.svg
+│      │      toilet-pic-4.svg
+│      │      
+│      └─userprofile
+│              profile.svg
+│              
+├─components
+│  ├─auth
+│  │      AuthInitializer.jsx
+│  │      
+│  ├─common
+│  │      Filter.jsx
+│  │      SearchBar.jsx
+│  │      StarDisplay.jsx
+│  │      TagButton.jsx
+│  │      
+│  ├─layout
+│  │      Navbar.jsx
+│  │      
+│  ├─mypage
+│  │      ReviewCard.jsx
+│  │      Sidebar.jsx
+│  │      ToiletCard.jsx
+│  │      UserProfile.jsx
+│  │      
+│  ├─register
+│  │      AddressForm.jsx
+│  │      DescriptionForm.jsx
+│  │      FacilityTags.jsx
+│  │      ImageUpload.jsx
+│  │      OperatingHours.jsx
+│  │      TypeSelector.jsx
+│  │      
+│  ├─review
+│  │      FacilitySelector.jsx
+│  │      ImageUpload.jsx
+│  │      ReviewForm.jsx
+│  │      StarRating.jsx
+│  │      ToiletInfoCard.jsx
+│  │      
+│  └─toiletDetail
+│          ReviewHeader.jsx
+│          ReviewList.jsx
+│          ReviewSection.jsx
+│          ReviewSidebar.jsx
+│          ToiletHeader.jsx
+│          ToiletLocation.jsx
+│          ToiletOperationInfo.jsx
+│          
+├─constants
+│      facilityData.js
+│      
+├─hooks
+│  │  useDropdown.js
+│  │  useRegisterToilet.js
+│  │  
+│  ├─auth
+│  │      useAuth.js
+│  │      useAuthApi.js
+│  │      
+│  ├─chatbot
+│  │      useChatbotApi.js
+│  │      
+│  ├─home
+│  │      useHomeApi.js
+│  │      
+│  ├─map
+│  │      useMapApi.js
+│  │      
+│  ├─mypage
+│  │      useProfileApi.js
+│  │      useReviewApi.js
+│  │      
+│  ├─register
+│  │      useRegisterApi.js
+│  │      
+│  ├─review
+│  │      useReviewApi.js
+│  │      useReviewApiList.js
+│  │      
+│  ├─store
+│  │      useStoreApi.js
+│  │      
+│  └─toilet
+│          useToiletApi.js
+│          
+├─mocks
+│      mockHome.js
+│      mockMyToilets.js
+│      mockStore.js
+│      mockToilets.jsx
+│      mockUrgent.js
+│      myPageData.js
+│      toiletData.js
+│      
+├─pages
+│  ├─aiChatBot
+│  │      AiChatbot.jsx
+│  │      
+│  ├─home
+│  │      Home.jsx
+│  │      
+│  ├─login
+│  │      GoogleCallback.jsx
+│  │      KakaoCallback.jsx
+│  │      LoginPage.jsx
+│  │      
+│  ├─mypage
+│  │      MyPage.jsx
+│  │      ProfileManagement.jsx
+│  │      ReviewManagement.jsx
+│  │      ToiletManagement.jsx
+│  │      
+│  ├─registerToilet
+│  │      RegisterToilet.jsx
+│  │      
+│  ├─review
+│  │      ReviewToilet.jsx
+│  │      ReviewToiletlist.jsx
+│  │      
+│  ├─searchstore
+│  │      SearchStore.jsx
+│  │      
+│  ├─searchToilet
+│  │      MapContainer.jsx
+│  │      SearchToilet.jsx
+│  │      
+│  ├─searchtoileturgent
+│  │      MapContainer.jsx
+│  │      SearchToiletUrgent.jsx
+│  │      
+│  └─toiletDetail
+│          toiletDetailPage.jsx
+│          
+├─stores
+│      authStore.js
+│      toiletStore.js
+│      
+├─styles
+│      fonts.css
+│      globals.css
+│      
+└─utils
+        locationUtils.js
+        ReactQueryProvider.jsx
+        
