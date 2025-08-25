@@ -14,7 +14,7 @@ export default function Navbar() {
   const goToLogin = () => navigate('/login')
   
   const STORE_ROUTES = ['/search-store', '/find-toilet', '/find-toilet/urgent'];
-
+  const REVIEW_ROUTES = ['/review-toilet', '/review-toilet/:id'];
 
   const isActiveBy = (patterns) =>
     patterns.some((p) => matchPath({ path: p, end: false }, location.pathname));
