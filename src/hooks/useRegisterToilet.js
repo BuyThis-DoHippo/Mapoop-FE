@@ -109,7 +109,7 @@ export const useRegisterToilet = () => {
       tags: [...formData.facilities, ...formData.specialFacilities],
       description: formData.description.trim(),
       particulars: formData.specialNotes.trim(),
-      imageUrls: formData.images.map(img => img.url),
+      imageIds: formData.images.map(img => img.image_id),
     };
 
     try {
