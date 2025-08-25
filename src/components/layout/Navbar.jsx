@@ -1,14 +1,20 @@
-import { NavLink, useLocation, matchPath } from 'react-router-dom';
+import { NavLink, useLocation, matchPath, useNavigate } from 'react-router-dom';
 import Mapoop from '@/assets/svg/Mapoop.svg?react';
 import { useAuth } from '@/hooks/auth/useAuth';
+import useAuthStore from '../../stores/authStore';
+import { useLogout } from '../../hooks/auth/useAuthApi';
 
 export default function Navbar() {
   const location = useLocation();
-  const { isLogin, handleLogout, goToLogin } = useAuth();
+  const navigate = useNavigate();
+  const isLogin = useAuthStore(s=>s.isLogin)
 
-  // 가게 검색으로 묶일 경로들 (end:false 로 prefix 매칭)
+  const logoutMutation = useLogout();
+  const handleLogout = ()=> logoutMutation.mutate();  // 가게 검색으로 묶일 경로들 (end:false 로 prefix 매칭)
+  const goToLogin = () => navigate('/login')
+  
   const STORE_ROUTES = ['/search-store', '/find-toilet', '/find-toilet/urgent'];
-  const REVIEW_ROUTES = ['/review-toilet'];
+
 
   const isActiveBy = (patterns) =>
     patterns.some((p) => matchPath({ path: p, end: false }, location.pathname));
