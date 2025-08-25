@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Filter from '@/components/common/Filter';
 import FilterIcon from '@/assets/svg/filter.svg?react';
 import Star from '@/assets/svg/star.svg?react';
@@ -7,6 +8,7 @@ import NearbyToilet from '@/assets/svg/NearbyToilet.svg?react';
 import { useReviewToilets } from '@/hooks/review/useReviewApiList';
 
 export default function ReviewToiletList() {
+  const navigate = useNavigate(); // 페이지 이동
   const [filterOpen, setFilterOpen] = useState(false);
   const [selected, setSelected] = useState([]);
 
@@ -104,7 +106,11 @@ export default function ReviewToiletList() {
             "
           >
             {toilets.map((t) => (
-              <div key={t.toiletId} className="h-[393px] w-[256px] mx-auto">
+              <div
+                key={t.toiletId}
+                className="h-[393px] w-[256px] mx-auto cursor-pointer"
+                onClick={() => navigate(`/toilet-detail/${t.toiletId}`)} // 화장실 상세 페이지 이동
+              >
                 <div
                   className="relative rounded-[10px] overflow-hidden"
                   style={{ width: '256px', height: '256px' }}

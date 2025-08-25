@@ -203,7 +203,7 @@ export default function SearchStore() {
                 <div
                   key={t.toiletId}
                   className="flex-shrink-0 h-[393px] w-[256px] cursor-pointer"
-                  onClick={() => navigate(`/toilet-detail/${t.toiletId}`)}
+                  onClick={() => navigate(`/toilet-detail/${t.toiletId}`)} // 화장실 상세 페이지 이동
                 >
                   <div
                     className="relative rounded-[10px] overflow-hidden"
