@@ -1,7 +1,3 @@
-/**
- * src/apis/review/reviewApi.js
- * 리뷰 관련 모든 API 요청 함수를 관리합니다.
- */
 import instance from '@/apis/instance';
 
 /**

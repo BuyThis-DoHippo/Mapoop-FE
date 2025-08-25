@@ -1,7 +1,3 @@
-// - open: 열림 여부
-// - selected: 선택된 칩 라벨 배열(선택된 칩은 연하늘 배경)
-// - onClear: 하단 "필터링 취소 X" 클릭 시 호출
-
 import PropTypes from 'prop-types';
 
 export default function Filter({
@@ -22,7 +18,7 @@ export default function Filter({
   const chipIdle = chipBase + ' border border-main-2 bg-white text-main-2';
   const chipOn = chipBase + ' border border-main-2 bg-main-3 text-main-2';
 
-  // 선택 확인(평점은 +표기도 허용)
+  // 선택 확인
   const isOn = (label) => {
     if (!selected) return false;
     if (label === '4.5' || label === '4.0' || label === '3.5') {
@@ -73,7 +69,6 @@ export default function Filter({
         <div className="w-full flex flex-col items-start gap-4">
           <div className="text-left text-body2 text-main-2">기본 시설</div>
           <div className="flex flex-wrap items-center gap-2">
-            {/* ✨ '현재이용가능' 버튼 제거됨 */}
             <button
               type="button"
               className={isOn('남녀 분리') ? chipOn : chipIdle}

@@ -156,7 +156,7 @@ export default function MapContainer({
     }
   };
 
-  // ✨ 수정된 부분: 에러가 있을 때 메시지 표시
+  //에러가 있을 때 메시지 표시
   if (error) {
     return <div className="w-full h-full flex items-center justify-center bg-gray-100"><p className="text-red-600">지도 데이터를 불러올 수 없습니다: {error.message}</p></div>;
   }

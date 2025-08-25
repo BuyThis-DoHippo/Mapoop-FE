@@ -1,7 +1,6 @@
 import { create } from 'zustand';
 import { getUserInfo } from '@/apis/auth/authApi';
 
-// --- Helper function to get cookie ---
 const getCookie = (name) => {
   const nameEQ = name + "=";
   const ca = document.cookie.split(';');
@@ -13,7 +12,7 @@ const getCookie = (name) => {
   return null;
 };
 
-// --- Helper function to set cookie ---
+
 const setCookie = (name, value, days) => {
   let expires = "";
   if (days) {
@@ -24,7 +23,7 @@ const setCookie = (name, value, days) => {
   document.cookie = name + "=" + (value || "") + expires + "; path=/; SameSite=Strict; Secure";
 };
 
-// --- Helper function to remove cookie ---
+
 const removeCookie = (name) => {
   document.cookie = name + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 };
@@ -36,17 +35,14 @@ const useAuthStore = create((set, get) => ({
   isLoading: true,
   error: null,
 
-  // ✅ **MODIFIED: App initialization logic**
   initializeAuth: async () => {
     const accessToken = getCookie('access_token');
-    // If no token, finish loading and stay logged out.
     if (!accessToken) {
       set({ isLogin: false, user: null, isLoading: false });
       return;
     }
 
     try {
-      // If token exists, try to fetch user info.
       const userInfoResponse = await getUserInfo();
       if (userInfoResponse && userInfoResponse.data) {
         set({
@@ -60,7 +56,7 @@ const useAuthStore = create((set, get) => ({
       }
     } catch (error) {
       console.error('인증 초기화 실패:', error);
-      // If fetching user fails (e.g., token expired), log out.
+
       get().logout();
       set({ isLoading: false });
     }
@@ -78,12 +74,9 @@ const useAuthStore = create((set, get) => ({
       });
       return false;
     }
-
-    // Store tokens in cookies
     setCookie('access_token', accessToken, 1); // 1 day
     setCookie('refresh_token', refreshToken, 7); // 7 days
 
-    // Update state
     set({ isLogin: true, user: user, isLoading: false, error: null });
     return true;
   },

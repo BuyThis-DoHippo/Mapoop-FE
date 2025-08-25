@@ -1,4 +1,3 @@
-// components/toiletDetail/ReviewSection.jsx
 import ReviewHeader from './ReviewHeader';
 import ReviewSidebar from './ReviewSidebar';
 import ReviewList from './ReviewList';

@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import AiChatbot from '@/pages/aiChatBot/AiChatbot';
 
-// svg 컴포넌트
 import FindToilet from '@/assets/svg/FindToilet.svg?react';
 import FindToiletHurry from '@/assets/svg/FindToiletHurry.svg?react';
 import Arrow from '@/assets/svg/arrow.svg?react';

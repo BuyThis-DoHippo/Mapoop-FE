@@ -1,4 +1,3 @@
-// components/review/ReviewForm.jsx
 import ImageUpload from './ImageUpload';
 
 const ReviewForm = ({ 

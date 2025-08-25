@@ -132,7 +132,6 @@ export default function SearchToilet() {
                       <div className="flex items-start justify-between"><h3 className="text-[24px] font-bold text-black">{toilet.name}</h3><div className="flex items-center gap-[6px]"><Star className="w-[24px] h-[24px] text-[#00AEEF]" /><span className="text-[20px] font-bold text-black">{toilet.rating ? toilet.rating.toFixed(1) : '0.0'}</span></div></div>
                       <p className="mt-[4px] text-[16px] text-[#2C2C2C]">{formatOperatingHours(toilet)}</p>
                     </div>
-                    {/* ✨ 수정된 부분 시작 */}
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-4 overflow-hidden">
                         {(toilet.tags || []).slice(0, 2).map((tag, i) => (
@@ -150,7 +149,6 @@ export default function SearchToilet() {
                         자세히 보기 →
                       </button>
                     </div>
-                    {/* ✨ 수정된 부분 끝 */}
                   </div>
                 </div>
               ))

@@ -101,7 +101,6 @@ export default function SearchToiletUrgent() {
                     </div>
                     <p className="mt-[4px] text-[16px] text-[#2C2C2C]">{t.operatingHours}</p>
                   </div>
-                  {/* ✨ 수정된 부분 시작 */}
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4 overflow-hidden">
                       {(t.tags || []).slice(0, 2).map((tag, i) => (
@@ -119,7 +118,6 @@ export default function SearchToiletUrgent() {
                       자세히 보기 →
                     </button>
                   </div>
-                  {/* ✨ 수정된 부분 끝 */}
                 </div>
               </div>
             ))}

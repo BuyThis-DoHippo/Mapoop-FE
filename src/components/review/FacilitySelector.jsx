@@ -1,6 +1,5 @@
 import TagButton from '@/components/common/TagButton';
 
-// 각 props에 기본값으로 빈 배열([])을 할당하여 undefined 오류를 방지합니다.
 const FacilitySelector = ({ 
   selectedFacilities = [],
   selectedCondition = [],

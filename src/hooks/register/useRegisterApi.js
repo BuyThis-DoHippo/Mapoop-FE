@@ -41,7 +41,6 @@ export const useUploadToiletImages = () => {
  */
 export const useDeleteToiletImage = () => {
   return useMutation({
-    // ✨ 수정된 부분: 파라미터 이름을 imageId로 통일
     mutationFn: (imageId) => deleteToiletImage(imageId),
     onSuccess: (data) => {
       console.log('화장실 이미지 삭제 성공:', data);

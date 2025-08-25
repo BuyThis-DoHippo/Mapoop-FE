@@ -1,4 +1,3 @@
-// components/toiletDetail/ToiletOperationInfo.jsx
 const ToiletOperationInfo = ({ toilet }) => {
   if (!toilet || !toilet.hours) return null;
 

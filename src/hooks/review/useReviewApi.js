@@ -1,6 +1,5 @@
 /**
- * src/hooks/review/useReviewApi.js
- * 리뷰 관련 API를 호출하는 react-query 훅을 관리합니다.
+ * 리뷰 관련 API를 호출하는 react-query 훅 관리
  */
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import * as reviewApi from '@/apis/review/reviewApi';
@@ -52,7 +51,7 @@ export const useCreateReview = (toiletId) => {
 };
 
 /**
- * ✨ 추가된 부분: 리뷰 이미지 삭제를 위한 뮤테이션 훅
+ * 리뷰 이미지 삭제를 위한 뮤테이션 훅
  */
 export const useDeleteReviewImage = () => {
   return useMutation({

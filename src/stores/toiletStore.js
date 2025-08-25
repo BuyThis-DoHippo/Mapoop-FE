@@ -23,7 +23,7 @@ const useToiletStore = create((set, get) => ({
         baseAllReviews: mockReviewsData.allReviews,
         allReviews: mockReviewsData.allReviews
           .slice()
-          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)), // ✅ 초기 최신순 = createdAt 기준
+          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)), // 초기 최신순 = createdAt 기준
         ratingDistribution: distribution,
         isLoading: false,
       });
@@ -39,7 +39,7 @@ const useToiletStore = create((set, get) => ({
     let sorted = baseAllReviews.slice();
     switch (sortType) {
       case 'latest':
-        sorted.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // ✅ 날짜 기준 최신순
+        sorted.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // 날짜 기준 최신순
         break;
       case 'rating_high':
         sorted.sort((a, b) => {

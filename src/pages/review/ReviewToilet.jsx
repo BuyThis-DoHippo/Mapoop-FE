@@ -67,7 +67,6 @@ const ReviewToilet = () => {
       const response = await uploadImages({ toiletId, formData });
       console.log('이미지 업로드 서버 응답:', JSON.stringify(response.data, null, 2));
       const newUrls = response.data.data; // ["url1", "url2"]
-      // ✨ 3. URL 문자열을 { id, url } 객체 형태로 변환하여 상태에 저장합니다.
       const newImageObjects = newUrls.map(url => ({ id: url, url: url }));
       setUploadedImages(prev => [...prev, ...newImageObjects]);
     } catch (error) {

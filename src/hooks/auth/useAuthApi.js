@@ -11,7 +11,6 @@ import {
 } from '@/apis/auth/authApi';
 import useAuthStore from '@/stores/authStore';
 
-// --- Helper function to set cookies ---
 const setCookie = (name, value, days) => {
   let expires = "";
   if (days) {
@@ -22,7 +21,6 @@ const setCookie = (name, value, days) => {
   document.cookie = name + "=" + (value || "") + expires + "; path=/; SameSite=Strict; Secure";
 };
 
-// --- Helper function to remove cookies ---
 const removeCookie = (name) => {
   document.cookie = name + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 };
@@ -51,9 +49,8 @@ export const useKakaoLogin = () => {
       console.log('로그인 API 응답:', data);
       if (data && data.data) {
         const { access_token, refresh_token } = data.data;
-        // ** MODIFIED: Store tokens in cookies **
-        setCookie('access_token', access_token, 1); // 1 day expiry
-        setCookie('refresh_token', refresh_token, 7); // 7 day expiry
+        setCookie('access_token', access_token, 1); // 1일 기한
+        setCookie('refresh_token', refresh_token, 7); // 7일 기한
       }
       const success = await handleLoginSuccess(data);
       if (success) {
@@ -89,7 +86,6 @@ export const useGoogleLogin = () => {
     onSuccess: async (data) => {
       if (data && data.data) {
         const { access_token, refresh_token } = data.data;
-        // ** MODIFIED: Store tokens in cookies **
         setCookie('access_token', access_token, 1);
         setCookie('refresh_token', refresh_token, 7);
       }
@@ -113,7 +109,6 @@ export const useLogout = () => {
   return useMutation({
     mutationFn: logout,
     onSuccess: async () => {
-      // ** MODIFIED: Remove tokens from cookies **
       removeCookie('access_token');
       removeCookie('refresh_token');
       await storeLogout();
@@ -121,7 +116,6 @@ export const useLogout = () => {
     },
     onError: (error) => {
       console.error('로그아웃 실패:', error);
-      // Even if API fails, clear client-side auth
       removeCookie('access_token');
       removeCookie('refresh_token');
       storeLogout();

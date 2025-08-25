@@ -1,4 +1,3 @@
-// components/toiletDetail/ReviewList.jsx
 import { useState, useEffect } from 'react';
 import StarBlue from '@/assets/svg/toiletDetail/star-blue.svg?react';
 import StarGray from '@/assets/svg/toiletDetail/star-gray.svg?react';
