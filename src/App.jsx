@@ -7,11 +7,11 @@ import SearchToiletUrgent from '@/pages/searchtoileturgent/SearchToiletUrgent';
 import RegisterToilet from '@/pages/registerToilet/RegisterToilet';
 import AiChatbot from '@/pages/aiChatBot/AiChatbot';
 import ReviewToilet from '@/pages/review/ReviewToilet';
-import ToiletDetailPage from '@/pages/toiletDetail/ToiletDetailPage';
+import ToiletDetailPage from '@/pages/toiletDetail/ToiletDetailPage.jsx';
 import LoginPage from '@/pages/login/LoginPage';
 import KakaoCallback from '@/pages/login/KakaoCallback';
 import GoogleCallback from '@/pages/login/GoogleCallback';
-import ReviewToiletList from '@/pages/review/ReviewToiletList';
+import ReviewToiletList from '@/pages/review/ReviewToiletlist.jsx';
 
 // MyPage 관련 import
 import MyPage from '@/pages/mypage/MyPage';
