@@ -83,7 +83,7 @@ const ProfileManagement = () => {
                 로그인 정보
               </td>
               <td className="px-6 py-4 text-body2 text-gray-10">
-                {profile?.kakao_id !== null
+                {profile?.kakaoId
                   ? `카카오 로그인 (${profile?.email})`
                   : `구글 로그인 (${profile?.email})`}
               </td>
