@@ -14,20 +14,23 @@ export const createToilet = async (toiletData) => {
  * @param {FormData} imageData - 'files'를 키로 하는 이미지 파일 데이터
  */
 export const uploadToiletImages = async (imageData) => {
-  const response = await axiosInstance.post(`/api/toilets/images/upload`, imageData, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-  });
+  const response = await axiosInstance.post(
+    `/api/toilets/images/upload`,
+    imageData,
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    }
+  );
   return response.data;
 };
 
 /**
  * 화장실 이미지 단건 삭제
- * @param {number} imageId - 이미지 ID (파라미터명 수정)
+ * @param {number} imageId - 이미지 ID
  */
-export const deleteToiletImage = async (imageId) => {  // ✅ image_id → imageId로 변경
-  console.log('deleteToiletImage 호출됨, imageId:', imageId);
-  const response = await axiosInstance.delete(`/api/toilets/images/${imageId}`);  // ✅ 변수명도 변경
+export const deleteToiletImage = async (imageId) => {
+  const response = await axiosInstance.delete(`/api/toilets/images/${imageId}`);
   return response.data;
 };

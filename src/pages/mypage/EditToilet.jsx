@@ -70,7 +70,6 @@ const EditToilet = () => {
   useEffect(() => {
     if (data?.data) {
       const toilet = data.data;
-
       const selectedFacilities = (toilet.tags || []).filter((tag) =>
         facilities.includes(tag)
       );
@@ -94,7 +93,7 @@ const EditToilet = () => {
         specialFacilities: selectedSpecial,
         description: toilet.description || '',
         specialNotes: toilet.particulars || '',
-        images: (toilet.images || []).map((img, idx) =>
+        images: (toilet.images || []).map((img) =>
           typeof img === 'string'
             ? { id: null, url: img }
             : { id: img.imageId, url: img.url }
@@ -139,8 +138,6 @@ const EditToilet = () => {
       particulars: formData.specialNotes,
       imageIds: imageIds,
     };
-
-    console.log('🚀 최종 payload:', payload);
 
     mutation.mutate({ id: toiletId, toiletData: payload });
   };

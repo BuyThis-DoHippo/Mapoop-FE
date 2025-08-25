@@ -20,7 +20,6 @@ export default function AiChatbot({ onClose }) {
   useEffect(() => {
     const fetchHistory = async () => {
       try {
-        console.log('[Chatbot] 대화 내역 조회 요청...');
         const res = await getChatHistory(1, 20);
 
         if (res.data?.statusCode === 200) {
@@ -30,11 +29,8 @@ export default function AiChatbot({ onClose }) {
               { id: c.id, sender: 'user', text: c.question },
               { id: c.id, sender: 'bot', text: c.answer },
             ]);
-            // 웰컴 메시지 유지 + history 이어붙이기
             setMessages((prev) => [...prev, ...history]);
           }
-        } else {
-          console.warn('[Chatbot] 대화 내역 조회 실패:', res.data);
         }
       } catch (err) {
         console.error('[Chatbot] 대화 내역 조회 에러:', err);
@@ -43,7 +39,7 @@ export default function AiChatbot({ onClose }) {
     fetchHistory();
   }, []);
 
-  // 질문하기 (수정됨)
+  // 질문하기
   const handleSend = async () => {
     if (!input.trim()) return;
     const userText = input.trim();
@@ -82,8 +78,6 @@ export default function AiChatbot({ onClose }) {
       const res = await deleteChat(chatId);
       if (res.data?.statusCode === 200) {
         setMessages((prev) => prev.filter((m) => m.id !== chatId));
-      } else {
-        console.warn('[Chatbot] 삭제 실패:', res.data);
       }
     } catch (err) {
       console.error('[Chatbot] 삭제 에러:', err);
@@ -149,7 +143,7 @@ export default function AiChatbot({ onClose }) {
                     </div>
                   )}
 
-                  {/* 삭제 버튼 (API 응답 메시지일 때만) */}
+                  {/* 삭제 버튼 */}
                   {msg.id && (
                     <button
                       onClick={() => handleDelete(msg.id)}

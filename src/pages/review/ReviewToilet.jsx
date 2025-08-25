@@ -9,7 +9,12 @@ import StarRating from '@/components/review/StarRating';
 import ReviewForm from '@/components/review/ReviewForm';
 
 // API 훅
-import { useUploadReviewImages, useCreateReview, useReviewTags, useDeleteReviewImage } from '@/hooks/review/useReviewApi';
+import {
+  useUploadReviewImages,
+  useCreateReview,
+  useReviewTags,
+  useDeleteReviewImage,
+} from '@/hooks/review/useReviewApi';
 import { useToiletDetail } from '@/hooks/toilet/useToiletApi';
 
 const ReviewToilet = () => {
@@ -23,34 +28,51 @@ const ReviewToilet = () => {
   const [content, setContent] = useState('');
   const [selectedFacilities, setSelectedFacilities] = useState([]);
   const [selectedCondition, setSelectedCondition] = useState([]);
-  const [selectedSpecialFacilities, setSelectedSpecialFacilities] = useState([]);
-  
+  const [selectedSpecialFacilities, setSelectedSpecialFacilities] = useState(
+    []
+  );
   const [uploadedImages, setUploadedImages] = useState([]);
 
   // 데이터 조회
-  const { data: toiletData, isLoading: isToiletLoading } = useToiletDetail(toiletId);
+  const { data: toiletData, isLoading: isToiletLoading } =
+    useToiletDetail(toiletId);
   const { data: availableTags = [] } = useReviewTags();
 
   // API 요청 훅
-  const { mutateAsync: uploadImages, isPending: isUploading } = useUploadReviewImages();
-  const { mutateAsync: createReview, isPending: isCreating } = useCreateReview(toiletId);
-  const { mutateAsync: deleteImage, isPending: isDeleting } = useDeleteReviewImage();
+  const { mutateAsync: uploadImages, isPending: isUploading } =
+    useUploadReviewImages();
+  const { mutateAsync: createReview, isPending: isCreating } =
+    useCreateReview(toiletId);
+  const { mutateAsync: deleteImage, isPending: isDeleting } =
+    useDeleteReviewImage();
 
   const tagNameToIdMap = useMemo(() => {
     const map = new Map();
-    availableTags.forEach(tag => map.set(tag.tagName, tag.tagId));
+    availableTags.forEach((tag) => map.set(tag.tagName, tag.tagId));
     return map;
   }, [availableTags]);
 
   // 이벤트 핸들러
   const handleFacilityToggle = (facility) => {
-    setSelectedFacilities(prev => prev.includes(facility) ? prev.filter(f => f !== facility) : [...prev, facility]);
+    setSelectedFacilities((prev) =>
+      prev.includes(facility)
+        ? prev.filter((f) => f !== facility)
+        : [...prev, facility]
+    );
   };
   const handleConditionToggle = (condition) => {
-    setSelectedCondition(prev => prev.includes(condition) ? prev.filter(c => c !== condition) : [...prev, condition]);
+    setSelectedCondition((prev) =>
+      prev.includes(condition)
+        ? prev.filter((c) => c !== condition)
+        : [...prev, condition]
+    );
   };
   const handleSpecialFacilityToggle = (facility) => {
-    setSelectedSpecialFacilities(prev => prev.includes(facility) ? prev.filter(f => f !== facility) : [...prev, facility]);
+    setSelectedSpecialFacilities((prev) =>
+      prev.includes(facility)
+        ? prev.filter((f) => f !== facility)
+        : [...prev, facility]
+    );
   };
 
   const handleImageUpload = async (event) => {
@@ -61,25 +83,25 @@ const ReviewToilet = () => {
     }
 
     const formData = new FormData();
-    files.forEach(file => formData.append('images', file));
+    files.forEach((file) => formData.append('images', file));
 
     try {
       const response = await uploadImages({ toiletId, formData });
-      console.log('이미지 업로드 서버 응답:', JSON.stringify(response.data, null, 2));
-      const newUrls = response.data.data; // ["url1", "url2"]
-      // ✨ 3. URL 문자열을 { id, url } 객체 형태로 변환하여 상태에 저장합니다.
-      const newImageObjects = newUrls.map(url => ({ id: url, url: url }));
-      setUploadedImages(prev => [...prev, ...newImageObjects]);
+      const newUrls = response.data.data;
+      const newImageObjects = newUrls.map((url) => ({ id: url, url: url }));
+      setUploadedImages((prev) => [...prev, ...newImageObjects]);
     } catch (error) {
-      console.error("이미지 업로드 실패:", error);
+      console.error('이미지 업로드 실패:', error);
     }
   };
 
   const handleImageRemove = async (urlToRemove) => {
     try {
       await deleteImage(urlToRemove);
-      setUploadedImages(prev => prev.filter(image => image.url !== urlToRemove));
-    } catch (error) {
+      setUploadedImages((prev) =>
+        prev.filter((image) => image.url !== urlToRemove)
+      );
+    } catch {
       // 에러는 훅에서 처리
     }
   };
@@ -99,21 +121,21 @@ const ReviewToilet = () => {
       rating,
       title: title.trim(),
       content: content.trim(),
-      tagIds: allSelectedTagNames.map(name => tagNameToIdMap.get(name)).filter(Boolean),
-      imageUrls: uploadedImages.map(image => image.url),
+      tagIds: allSelectedTagNames
+        .map((name) => tagNameToIdMap.get(name))
+        .filter(Boolean),
+      imageUrls: uploadedImages.map((image) => image.url),
     };
-
-    console.log('리뷰 등록 직전 payload:', JSON.stringify(payload, null, 2));
 
     try {
       await createReview(payload);
       alert('리뷰가 성공적으로 등록되었습니다.');
       navigate(`/toilet-detail/${toiletId}`);
-    } catch (error) {
+    } catch {
       // 에러는 훅에서 처리
     }
   };
-  
+
   const isBusy = isUploading || isCreating || isDeleting;
 
   return (
@@ -144,8 +166,10 @@ const ReviewToilet = () => {
               <StarRating rating={rating} onRatingChange={setRating} />
             </div>
             <ReviewForm
-              title={title} onTitleChange={setTitle}
-              content={content} onContentChange={setContent}
+              title={title}
+              onTitleChange={setTitle}
+              content={content}
+              onContentChange={setContent}
               uploadedImages={uploadedImages}
               onImageUpload={handleImageUpload}
               onImageRemove={(id) => handleImageRemove(id)}

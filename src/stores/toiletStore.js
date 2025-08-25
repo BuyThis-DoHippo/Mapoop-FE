@@ -1,11 +1,15 @@
 import { create } from 'zustand';
-import { mockToiletData, mockReviewsData, calculateRatingDistribution } from '@/mocks/toiletData';
+import {
+  mockToiletData,
+  mockReviewsData,
+  calculateRatingDistribution,
+} from '@/mocks/toiletData';
 
 const useToiletStore = create((set, get) => ({
   currentToilet: null,
   reviews: [],
   allReviews: [],
-  baseAllReviews: [], // 원본 보관
+  baseAllReviews: [],
   ratingDistribution: [],
   pagination: null,
   currentSort: 'latest',
@@ -16,14 +20,16 @@ const useToiletStore = create((set, get) => ({
     set({ isLoading: true, error: null });
     try {
       await new Promise((resolve) => setTimeout(resolve, 500));
-      const distribution = calculateRatingDistribution(mockReviewsData.allReviews);
+      const distribution = calculateRatingDistribution(
+        mockReviewsData.allReviews
+      );
 
       set({
         currentToilet: mockToiletData,
         baseAllReviews: mockReviewsData.allReviews,
         allReviews: mockReviewsData.allReviews
           .slice()
-          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)), // ✅ 초기 최신순 = createdAt 기준
+          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)),
         ratingDistribution: distribution,
         isLoading: false,
       });
@@ -39,20 +45,20 @@ const useToiletStore = create((set, get) => ({
     let sorted = baseAllReviews.slice();
     switch (sortType) {
       case 'latest':
-        sorted.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // ✅ 날짜 기준 최신순
+        sorted.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         break;
       case 'rating_high':
         sorted.sort((a, b) => {
           const ratingDiff = (b.rating || 0) - (a.rating || 0);
           if (ratingDiff !== 0) return ratingDiff;
-          return new Date(b.createdAt) - new Date(a.createdAt); // 동점 시 최신순
+          return new Date(b.createdAt) - new Date(a.createdAt);
         });
         break;
       case 'rating_low':
         sorted.sort((a, b) => {
           const ratingDiff = (a.rating || 0) - (b.rating || 0);
           if (ratingDiff !== 0) return ratingDiff;
-          return new Date(b.createdAt) - new Date(a.createdAt); // 동점 시 최신순
+          return new Date(b.createdAt) - new Date(a.createdAt);
         });
         break;
       default:
@@ -64,7 +70,6 @@ const useToiletStore = create((set, get) => ({
   },
 
   fetchReviews: async (toiletId, page = 1, size = 4) => {
-    console.log('fetchReviews called - toiletId:', toiletId, 'page:', page, 'size:', size);
     set({ isLoading: true, error: null });
     try {
       await new Promise((resolve) => setTimeout(resolve, 300));

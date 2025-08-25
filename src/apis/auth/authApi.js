@@ -4,14 +4,12 @@ import axiosInstance from '@/apis/instance';
 export const getKakaoLoginUrl = () => {
   const clientId = import.meta.env.VITE_KAKAO_CLIENT_ID;
   const redirectUri = import.meta.env.VITE_KAKAO_REDIRECT_URI;
-  
+
   return `https://kauth.kakao.com/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code`;
 };
 
 // 카카오 액세스 토큰 받기
 export const getKakaoAccessToken = async (code) => {
-  console.log('카카오 액세스 토큰 요청:', { code });
-  
   const response = await fetch('https://kauth.kakao.com/oauth/token', {
     method: 'POST',
     headers: {
@@ -32,27 +30,22 @@ export const getKakaoAccessToken = async (code) => {
   }
 
   const data = await response.json();
-  console.log('카카오 액세스 토큰 발급 성공');
   return data.access_token;
 };
 
-// 카카오 로그인 (액세스 토큰으로 로그인)
+// 카카오 로그인
 export const kakaoLogin = async (kakaoAccessToken, locationConsent = true) => {
   const requestData = {
     kakaoAccessToken: kakaoAccessToken,
     location_consent: locationConsent,
-    location_consent_version: "1.0"
+    location_consent_version: '1.0',
   };
-  
-  console.log('카카오 로그인 요청 전체 데이터:', requestData);
-  console.log('액세스 토큰 길이:', kakaoAccessToken?.length);
-  console.log('액세스 토큰 타입:', typeof kakaoAccessToken);
-  console.log('location_consent 타입:', typeof locationConsent);
-  console.log('location_consent_version 타입:', typeof "1.0");
-  
+
   try {
-    const response = await axiosInstance.post('/api/auth/kakao/login', requestData);
-    console.log('카카오 로그인 성공:', response.data);
+    const response = await axiosInstance.post(
+      '/api/auth/kakao/login',
+      requestData
+    );
     return response.data;
   } catch (error) {
     console.error('카카오 로그인 API 에러:', error);
@@ -68,14 +61,12 @@ export const getGoogleLoginUrl = () => {
   const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
   const redirectUri = import.meta.env.VITE_GOOGLE_REDIRECT_URI;
   const scope = 'openid email profile';
-  
+
   return `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}`;
 };
 
 // 구글 액세스 토큰 받기
 export const getGoogleAccessToken = async (code) => {
-  console.log('구글 액세스 토큰 요청:', { code });
-  
   const response = await fetch('https://oauth2.googleapis.com/token', {
     method: 'POST',
     headers: {
@@ -97,22 +88,18 @@ export const getGoogleAccessToken = async (code) => {
   }
 
   const data = await response.json();
-  console.log('구글 액세스 토큰 발급 성공');
   return data.access_token;
 };
 
-// 구글 로그인 (액세스 토큰으로 로그인)
-export const googleLogin = async (googleAccessToken, locationConsent = true) => {
-  console.log('구글 로그인 요청:', { 
-    googleAccessToken: googleAccessToken?.substring(0, 10) + '...',
-    location_consent: locationConsent,
-    location_consent_version: "1.0" 
-  });
-  
+// 구글 로그인
+export const googleLogin = async (
+  googleAccessToken,
+  locationConsent = true
+) => {
   const response = await axiosInstance.post('/api/auth/google/login', {
     googleAccessToken: googleAccessToken,
     location_consent: locationConsent,
-    location_consent_version: "1.0"
+    location_consent_version: '1.0',
   });
   return response.data;
 };
@@ -126,7 +113,7 @@ export const logout = async () => {
 // 토큰 갱신
 export const refreshToken = async (refreshToken) => {
   const response = await axiosInstance.post('/api/auth/refresh', {
-    refresh_token: refreshToken
+    refresh_token: refreshToken,
   });
   return response.data;
 };
@@ -138,10 +125,13 @@ export const getUserInfo = async () => {
 };
 
 // 위치정보 동의 업데이트
-export const updateLocationConsent = async (locationConsent, version = "1.0") => {
+export const updateLocationConsent = async (
+  locationConsent,
+  version = '1.0'
+) => {
   const response = await axiosInstance.patch('/api/users/me/location-consent', {
     location_consent: locationConsent,
-    location_consent_version: version
+    location_consent_version: version,
   });
   return response.data;
 };

@@ -13,13 +13,14 @@ import useAuthStore from '@/stores/authStore';
 
 // --- Helper function to set cookies ---
 const setCookie = (name, value, days) => {
-  let expires = "";
+  let expires = '';
   if (days) {
     const date = new Date();
-    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-    expires = "; expires=" + date.toUTCString();
+    date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+    expires = '; expires=' + date.toUTCString();
   }
-  document.cookie = name + "=" + (value || "") + expires + "; path=/; SameSite=Strict; Secure";
+  document.cookie =
+    name + '=' + (value || '') + expires + '; path=/; SameSite=Strict; Secure';
 };
 
 // --- Helper function to remove cookies ---
@@ -27,41 +28,28 @@ const removeCookie = (name) => {
   document.cookie = name + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 };
 
-
 // 카카오 로그인 mutation
 export const useKakaoLogin = () => {
   const { handleLoginSuccess } = useAuthStore();
 
   return useMutation({
     mutationFn: async ({ code, locationConsent = true }) => {
-      try {
-        console.log('1단계: 카카오 액세스 토큰 받기 시작');
-        const kakaoAccessToken = await getKakaoAccessToken(code);
-
-        console.log('2단계: 백엔드 로그인 시작');
-        const result = await kakaoLogin(kakaoAccessToken, locationConsent);
-
-        return result;
-      } catch (error) {
-        console.error('카카오 로그인 과정에서 에러 발생:', error);
-        throw error;
-      }
+      const kakaoAccessToken = await getKakaoAccessToken(code);
+      const result = await kakaoLogin(kakaoAccessToken, locationConsent);
+      return result;
     },
     onSuccess: async (data) => {
-      console.log('로그인 API 응답:', data);
       if (data && data.data) {
         const { access_token, refresh_token } = data.data;
-        // ** MODIFIED: Store tokens in cookies **
-        setCookie('access_token', access_token, 1); // 1 day expiry
-        setCookie('refresh_token', refresh_token, 7); // 7 day expiry
+        setCookie('access_token', access_token, 1);
+        setCookie('refresh_token', refresh_token, 7);
       }
       const success = await handleLoginSuccess(data);
       if (success) {
         window.location.href = '/';
       }
     },
-    onError: (error) => {
-      console.error('카카오 로그인 실패:', error);
+    onError: () => {
       alert('로그인에 실패했습니다. 다시 시도해주세요.');
       window.location.href = '/login';
     },
@@ -74,22 +62,13 @@ export const useGoogleLogin = () => {
 
   return useMutation({
     mutationFn: async ({ code, locationConsent = true }) => {
-      try {
-        console.log('1단계: 구글 액세스 토큰 받기 시작');
-        const googleAccessToken = await getGoogleAccessToken(code);
-
-        console.log('2단계: 백엔드 로그인 시작');
-        const result = await googleLogin(googleAccessToken, locationConsent);
-        return result;
-      } catch (error) {
-        console.error('구글 로그인 과정에서 에러 발생:', error);
-        throw error;
-      }
+      const googleAccessToken = await getGoogleAccessToken(code);
+      const result = await googleLogin(googleAccessToken, locationConsent);
+      return result;
     },
     onSuccess: async (data) => {
       if (data && data.data) {
         const { access_token, refresh_token } = data.data;
-        // ** MODIFIED: Store tokens in cookies **
         setCookie('access_token', access_token, 1);
         setCookie('refresh_token', refresh_token, 7);
       }
@@ -98,8 +77,7 @@ export const useGoogleLogin = () => {
         window.location.href = '/';
       }
     },
-    onError: (error) => {
-      console.error('구글 로그인 실패:', error);
+    onError: () => {
       alert('로그인에 실패했습니다. 다시 시도해주세요.');
       window.location.href = '/login';
     },
@@ -113,15 +91,12 @@ export const useLogout = () => {
   return useMutation({
     mutationFn: logout,
     onSuccess: async () => {
-      // ** MODIFIED: Remove tokens from cookies **
       removeCookie('access_token');
       removeCookie('refresh_token');
       await storeLogout();
       window.location.href = '/login';
     },
-    onError: (error) => {
-      console.error('로그아웃 실패:', error);
-      // Even if API fails, clear client-side auth
+    onError: () => {
       removeCookie('access_token');
       removeCookie('refresh_token');
       storeLogout();
@@ -149,12 +124,6 @@ export const useUpdateLocationConsent = () => {
   return useMutation({
     mutationFn: ({ locationConsent, version }) =>
       updateLocationConsent(locationConsent, version),
-    onSuccess: (data) => {
-      console.log('위치정보 동의 업데이트 성공:', data);
-    },
-    onError: (error) => {
-      console.error('위치정보 동의 업데이트 실패:', error);
-    },
   });
 };
 
@@ -171,8 +140,7 @@ export const useDeleteUser = () => {
       alert('회원 탈퇴가 완료되었습니다.');
       window.location.href = '/';
     },
-    onError: (error) => {
-      console.error('회원 탈퇴 실패:', error);
+    onError: () => {
       alert('회원 탈퇴 중 오류가 발생했습니다.');
     },
   });

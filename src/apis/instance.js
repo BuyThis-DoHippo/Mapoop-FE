@@ -20,26 +20,15 @@ const axiosInstance = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  paramsSerializer: (params) => qs.stringify(params, { arrayFormat: 'repeat' }), // 배열을 repeat 방식으로 직렬화
+  paramsSerializer: (params) => qs.stringify(params, { arrayFormat: 'repeat' }),
 });
 
-// 요청 인터셉터 (디버깅 로그 추가)
+// 요청 인터셉터
 axiosInstance.interceptors.request.use(
   (config) => {
-    console.log('axios 요청:', {
-      method: config.method?.toUpperCase(),
-      url: config.url,
-      baseURL: config.baseURL,
-      headers: config.headers,
-      params: config.params,
-      data: config.data,
-    });
-
-    // 인증이 필요한 요청에 토큰 추가
     const token = getAccessToken();
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
-      console.log('토큰 추가됨:', `Bearer ${token.substring(0, 10)}...`);
     }
     return config;
   },
@@ -52,10 +41,6 @@ axiosInstance.interceptors.request.use(
 // 응답 인터셉터
 axiosInstance.interceptors.response.use(
   (response) => {
-    console.log('axios 응답 성공:', {
-      status: response.status,
-      data: response.data,
-    });
     return response;
   },
   async (error) => {
@@ -67,12 +52,10 @@ axiosInstance.interceptors.response.use(
 
     const originalRequest = error.config;
 
-    // 401 에러 처리 (토큰 만료 등)
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
       try {
-        // 리프레시 토큰 가져오기
         const refreshToken = (() => {
           const nameEQ = 'refresh_token=';
           const ca = document.cookie.split(';');
@@ -96,19 +79,15 @@ axiosInstance.interceptors.response.use(
 
         if (refreshResponse.data.statusCode === 200) {
           const newAccessToken = refreshResponse.data.data.access_token;
-
-          // 새 토큰을 쿠키에 저장
           const expires = new Date();
-          expires.setTime(expires.getTime() + 24 * 60 * 60 * 1000); // 1일
+          expires.setTime(expires.getTime() + 24 * 60 * 60 * 1000);
           document.cookie = `access_token=${newAccessToken};expires=${expires.toUTCString()};path=/;SameSite=Strict;Secure`;
 
-          // 원래 요청에 새 토큰 설정
           originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
           return axiosInstance(originalRequest);
         }
       } catch (refreshError) {
         console.error('토큰 갱신 실패:', refreshError);
-        // 리프레시 실패 시 로그아웃 처리
         document.cookie =
           'access_token=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;';
         document.cookie =
