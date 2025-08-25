@@ -117,7 +117,8 @@ const ToiletLocation = ({ toilet }) => {
             </div>
           )}
         </div>
-        <div className="w-[300px] h-[334px] flex flex-col gap-8">
+        <div className="w-[300px] h-[334px] flex flex-col gap-12">
+          {' '}
           <div className="flex flex-col gap-4">
             <h3 className="text-body1-bold text-black">주소</h3>
             <div className="flex flex-col gap-2">
@@ -131,7 +132,6 @@ const ToiletLocation = ({ toilet }) => {
           <div className="flex flex-col gap-4">
             <h3 className="text-body1-bold text-black">화장실 태그</h3>
             <div className="flex flex-wrap gap-x-4 gap-y-4">
-              {' '}
               {toilet.tags.map((tag, index) => (
                 <div
                   key={index}
