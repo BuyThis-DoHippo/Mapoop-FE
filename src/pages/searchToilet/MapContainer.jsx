@@ -1,20 +1,24 @@
 import { useEffect, useRef, useState } from 'react';
 import { useMapMarkers, useEmergencyToilets } from '@/hooks/map/useMapApi';
 import { requestLocationWithPermission } from '@/utils/locationUtils';
+// 수정된 부분: 마커 SVG 파일을 직접 import합니다.
+import toiletMarkerUrl from '@/assets/svg/toilet-marker.svg';
 
+// 공통 MapContainer 컴포넌트
 export default function MapContainer({
   filters = {},
-  coords,
+  coords, // urgent 페이지에서 사용
   selectedToiletId,
   onMarkerClick,
-  isUrgent = false,
+  isUrgent = false, // 이 컴포넌트가 긴급 찾기용인지 구분
 }) {
   const mapRef = useRef(null);
-  const markersRef = useRef([]);
+  const markersRef = useRef([]); // { marker, data, position, index }
   const userMarkerRef = useRef(null);
   const [isMapReady, setIsMapReady] = useState(false);
   const [userLocation, setUserLocation] = useState(null);
 
+  // API 호출 로직 분기
   const emergencyParams = coords ? { lat: coords.lat, lng: coords.lng } : null;
   const { data: emergencyToilets, error: emergencyError } = useEmergencyToilets(emergencyParams || {}, {
     enabled: isUrgent && !!emergencyParams,
@@ -72,11 +76,9 @@ export default function MapContainer({
       initMap();
       return;
     }
-    // 수정된 부분: 환경 변수에서 카카오 맵 API 키를 가져옵니다.
     const KAKAO_MAP_API_KEY = import.meta.env.VITE_KAKAO_MAP_API_KEY;
 
     const script = document.createElement('script');
-    // 수정된 부분: 하드코딩된 키를 환경 변수로 교체합니다.
     script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_MAP_API_KEY}&autoload=false`;
     script.async = true;
     script.onload = () => window.kakao.maps.load(initMap);
@@ -115,11 +117,12 @@ export default function MapContainer({
 
     const content = document.createElement('div');
     content.style.cssText = 'position: relative; display: flex; flex-direction: column; align-items: center; cursor: pointer;';
+    // 수정된 부분: import한 SVG 경로를 사용합니다.
     content.innerHTML = `
       <div style="position: relative; display: flex; align-items: center; justify-content: center; width: ${finalSize}px; height: ${finalSize}px;">
         ${pulseEffect}
         <div class="marker-icon" style="width: 100%; height: 100%; transform: rotate(45deg); border-radius: 50% 50% 0 50%; border: 3px solid ${borderColor}; background: ${backgroundColor}; display: flex; align-items: center; justify-content: center; transition: all 0.2s;">
-          <div style="transform: rotate(-45deg); background: white; width: 50%; height: 50%; mask: url(/src/assets/svg/toilet-marker.svg) no-repeat center;"></div>
+          <div style="transform: rotate(-45deg); background: white; width: 50%; height: 50%; mask: url(${toiletMarkerUrl}) no-repeat center;"></div>
         </div>
       </div>
       ${isSelected ? `<div style="position: absolute; bottom: -50px; white-space: nowrap; background-color: rgba(0, 0, 0, 0.75); color: white; padding: 5px 10px; border-radius: 5px; font-size: 18px; font-weight: bold;">${markerData.name}</div>` : ''}
@@ -165,7 +168,7 @@ export default function MapContainer({
     <div className="relative w-full h-full">
       <div id={isUrgent ? 'map-urgent' : 'map'} className="w-full h-full" />
       <button onClick={moveToCurrentLocation} className="absolute top-10 right-10 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-100 transition-colors z-10" aria-label="현재 위치로 이동">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2L12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2Z" /><path d="M12 2L12 5" /><path d="M22 12L19 12" /><path d="M12 22L12 19" /><path d="M2 12L5 12" /></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2L12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2Z" /><path d="M12 2L12 5" /><path d="M22 12L19 12" /><path d="M12 22L12 19" /><path d="M2 12L5 12" /></svg>
       </button>
     </div>
   );

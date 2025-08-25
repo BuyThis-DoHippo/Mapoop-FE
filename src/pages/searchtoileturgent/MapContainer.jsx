@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { useMapMarkers, useEmergencyToilets } from '@/hooks/map/useMapApi';
 import { requestLocationWithPermission } from '@/utils/locationUtils';
+// 수정된 부분: 마커 SVG 파일을 직접 import합니다.
+import toiletMarkerUrl from '@/assets/svg/toilet-marker.svg';
 
 // 공통 MapContainer 컴포넌트
 export default function MapContainer({
@@ -74,11 +76,9 @@ export default function MapContainer({
       initMap();
       return;
     }
-    // 수정된 부분: 환경 변수에서 카카오 맵 API 키를 가져옵니다.
     const KAKAO_MAP_API_KEY = import.meta.env.VITE_KAKAO_MAP_API_KEY;
 
     const script = document.createElement('script');
-    // 수정된 부분: 하드코딩된 키를 환경 변수로 교체합니다.
     script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_MAP_API_KEY}&autoload=false`;
     script.async = true;
     script.onload = () => window.kakao.maps.load(initMap);
@@ -117,11 +117,12 @@ export default function MapContainer({
 
     const content = document.createElement('div');
     content.style.cssText = 'position: relative; display: flex; flex-direction: column; align-items: center; cursor: pointer;';
+    // 수정된 부분: import한 SVG 경로를 사용합니다.
     content.innerHTML = `
       <div style="position: relative; display: flex; align-items: center; justify-content: center; width: ${finalSize}px; height: ${finalSize}px;">
         ${pulseEffect}
         <div class="marker-icon" style="width: 100%; height: 100%; transform: rotate(45deg); border-radius: 50% 50% 0 50%; border: 3px solid ${borderColor}; background: ${backgroundColor}; display: flex; align-items: center; justify-content: center; transition: all 0.2s;">
-          <div style="transform: rotate(-45deg); background: white; width: 50%; height: 50%; mask: url(/src/assets/svg/toilet-marker.svg) no-repeat center;"></div>
+          <div style="transform: rotate(-45deg); background: white; width: 50%; height: 50%; mask: url(${toiletMarkerUrl}) no-repeat center;"></div>
         </div>
       </div>
       ${isSelected ? `<div style="position: absolute; bottom: -50px; white-space: nowrap; background-color: rgba(0, 0, 0, 0.75); color: white; padding: 5px 10px; border-radius: 5px; font-size: 18px; font-weight: bold;">${markerData.name}</div>` : ''}

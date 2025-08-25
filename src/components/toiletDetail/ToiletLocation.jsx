@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import ToiletMarker from '@/assets/svg/toilet-marker.svg?react';
+// 수정된 부분: 마커 SVG 파일을 직접 import합니다.
+import toiletMarkerUrl from '@/assets/svg/toilet-marker.svg';
 
 const ToiletLocation = ({ toilet }) => {
   const mapRef = useRef(null);
@@ -14,11 +15,9 @@ const ToiletLocation = ({ toilet }) => {
       return;
     }
     
-    // 수정된 부분: 환경 변수에서 카카오 맵 API 키를 가져옵니다.
     const KAKAO_MAP_API_KEY = import.meta.env.VITE_KAKAO_MAP_API_KEY;
 
     const script = document.createElement('script');
-    // 수정된 부분: 하드코딩된 키를 환경 변수로 교체합니다.
     script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_MAP_API_KEY}&autoload=false`;
     script.async = true;
 
@@ -57,31 +56,24 @@ const ToiletLocation = ({ toilet }) => {
       toiletData.location.longitude
     );
 
-    const markerContent = document.createElement('div');
-    markerContent.style.cssText = `
-      position: relative;
-      width: 48.308px;
-      height: 48.308px;
-      transform: rotate(45deg);
-      border-radius: 140px 140px 0 140px;
-      border: 3px solid ${toiletData.type === 'PUBLIC' ? '#36C239' : '#FF7B00'};
-      background: ${toiletData.type === 'PUBLIC' ? '#36C239' : '#FFB005'};
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-    `;
+    // 수정된 부분: 마커 스타일 로직을 다른 파일과 통일하고, import한 SVG 경로를 사용합니다.
+    const borderColor = toiletData.type === 'PUBLIC' ? '#027E00' : '#FF7B00';
+    const backgroundColor = toiletData.type === 'PUBLIC' ? '#36C239' : '#FFB005';
 
-    const iconContainer = document.createElement('div');
-    iconContainer.style.cssText = 'transform: rotate(-45deg);';
-    iconContainer.innerHTML = '<div style="width: 24px; height: 24px; background: white; mask: url(/src/assets/svg/toilet-marker.svg) no-repeat center; mask-size: contain;"></div>';
-    markerContent.appendChild(iconContainer);
+    const markerContent = document.createElement('div');
+    markerContent.style.cssText = 'position: relative; display: flex; flex-direction: column; align-items: center; cursor: pointer;';
+    markerContent.innerHTML = `
+      <div style="position: relative; display: flex; align-items: center; justify-content: center; width: 48px; height: 48px;">
+        <div class="marker-icon" style="width: 100%; height: 100%; transform: rotate(45deg); border-radius: 50% 50% 0 50%; border: 3px solid ${borderColor}; background: ${backgroundColor}; display: flex; align-items: center; justify-content: center; transition: all 0.2s;">
+          <div style="transform: rotate(-45deg); background: white; width: 50%; height: 50%; mask: url(${toiletMarkerUrl}) no-repeat center;"></div>
+        </div>
+      </div>
+    `;
 
     const customMarker = new window.kakao.maps.CustomOverlay({
       position: position,
       content: markerContent,
-      xAnchor: 0.5,
-      yAnchor: 1
+      yAnchor: 1.4
     });
 
     customMarker.setMap(map);
@@ -93,7 +85,7 @@ const ToiletLocation = ({ toilet }) => {
           <p style="margin:0; font-size:12px; color:#666;">${toiletData.location.address}</p>
           <p style="margin:5px 0 0 0; font-size:12px;">
             <span style="color:#0085B7;">★ ${toiletData.rating.avg_rating}</span>
-            <span style="margin-left:10px; background:#${toiletData.type === 'PUBLIC' ? '36C239' : 'FFB005'}; color:white; padding:2px 6px; border-radius:10px; font-size:11px;">
+            <span style="margin-left:10px; background:${toiletData.type === 'PUBLIC' ? '#36C239' : '#FFB005'}; color:white; padding:2px 6px; border-radius:10px; font-size:11px;">
               ${toiletData.type === 'PUBLIC' ? '공공' : '민간'}
             </span>
           </p>
