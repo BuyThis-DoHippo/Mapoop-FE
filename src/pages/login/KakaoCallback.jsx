@@ -32,6 +32,7 @@ const KakaoCallback = () => {
     const code = searchParams.get('code');
     handleKakaoCallback(code, locationConsent);
     setShowLocationConsent(false);
+    window.location.href = '/';
   };
 
   if (showLocationConsent) {
