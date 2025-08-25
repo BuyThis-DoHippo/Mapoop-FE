@@ -117,7 +117,7 @@ const ToiletLocation = ({ toilet }) => {
             </div>
           )}
         </div>
-        <div className="w-[300px] h-[334px] flex flex-col gap-12">
+        <div className="w-[300px] flex flex-col gap-12">
           {' '}
           <div className="flex flex-col gap-4">
             <h3 className="text-body1-bold text-black">주소</h3>
