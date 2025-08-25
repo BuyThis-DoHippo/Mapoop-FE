@@ -48,9 +48,10 @@ export const useKakaoLogin = () => {
     onSuccess: async (data) => {
       console.log('로그인 API 응답:', data);
       if (data && data.data) {
-        const { access_token, refresh_token } = data.data;
-        setCookie('access_token', access_token, 1); // 1일 기한
-        setCookie('refresh_token', refresh_token, 7); // 7일 기한
+        // 'access_token'을 'accessToken'으로, 'refresh_token'을 'refreshToken'으로 수정
+        const { accessToken, refreshToken } = data.data; 
+        setCookie('access_token', accessToken, 1); 
+        setCookie('refresh_token', refreshToken, 7);
       }
       const success = await handleLoginSuccess(data);
       if (success) {
@@ -84,9 +85,8 @@ export const useGoogleLogin = () => {
       }
     },
     onSuccess: async (data) => {
-      console.log('로그인 API 응답:', data); // API 응답 데이터 확인을 위한 로그 추가
       if (data && data.data) {
-        const { access_token, refresh_token } = data.data;
+        const { access_token, refresh_token } = data.data; // 문제의 부분
         setCookie('access_token', access_token, 1);
         setCookie('refresh_token', refresh_token, 7);
       }
@@ -95,6 +95,7 @@ export const useGoogleLogin = () => {
         window.location.href = '/';
       }
     },
+
     onError: (error) => {
       console.error('구글 로그인 실패:', error);
       alert('로그인에 실패했습니다. 다시 시도해주세요.');
