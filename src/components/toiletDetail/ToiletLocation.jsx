@@ -14,7 +14,7 @@ const ToiletLocation = ({ toilet }) => {
       initMap();
       return;
     }
-    
+
     const KAKAO_MAP_API_KEY = import.meta.env.VITE_KAKAO_MAP_API_KEY;
 
     const script = document.createElement('script');
@@ -44,7 +44,7 @@ const ToiletLocation = ({ toilet }) => {
       const map = new window.kakao.maps.Map(container, options);
       mapRef.current = map;
       setIsMapReady(true);
-      
+
       addToiletMarker(map, toilet);
     }
   }, [toilet]);
@@ -57,11 +57,13 @@ const ToiletLocation = ({ toilet }) => {
     );
 
     const borderColor = toiletData.type === 'PUBLIC' ? '#027E00' : '#FF7B00';
-    const backgroundColor = toiletData.type === 'PUBLIC' ? '#36C239' : '#FFB005';
+    const backgroundColor =
+      toiletData.type === 'PUBLIC' ? '#36C239' : '#FFB005';
 
     const markerContent = document.createElement('div');
-    markerContent.style.cssText = 'position: relative; display: flex; flex-direction: column; align-items: center; cursor: pointer;';
-    
+    markerContent.style.cssText =
+      'position: relative; display: flex; flex-direction: column; align-items: center; cursor: pointer;';
+
     // 수정된 부분: 아이콘 div의 style 속성을 더 명확하게 수정합니다.
     markerContent.innerHTML = `
       <div style="position: relative; display: flex; align-items: center; justify-content: center; width: 48px; height: 48px;">
@@ -74,7 +76,7 @@ const ToiletLocation = ({ toilet }) => {
     const customMarker = new window.kakao.maps.CustomOverlay({
       position: position,
       content: markerContent,
-      yAnchor: 1.4
+      yAnchor: 1.4,
     });
 
     customMarker.setMap(map);
@@ -91,7 +93,7 @@ const ToiletLocation = ({ toilet }) => {
             </span>
           </p>
         </div>
-      `
+      `,
     });
 
     markerContent.addEventListener('click', () => {
@@ -106,11 +108,12 @@ const ToiletLocation = ({ toilet }) => {
       <h2 className="text-heading3-bold text-black">화장실 위치</h2>
       <div className="w-[992px] h-[334px] flex gap-10">
         <div className="w-[682px] h-[334px] relative bg-gray-1 rounded-[10px] border border-gray-2 overflow-hidden">
-          <div id="toilet-detail-map" className="w-full h-full">
-          </div>
+          <div id="toilet-detail-map" className="w-full h-full"></div>
           {!isMapReady && (
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="text-heading3-regular text-gray-5">지도 로딩 중...</div>
+              <div className="text-heading3-regular text-gray-5">
+                지도 로딩 중...
+              </div>
             </div>
           )}
         </div>
@@ -129,7 +132,10 @@ const ToiletLocation = ({ toilet }) => {
             <h3 className="text-body1-bold text-black">화장실 태그</h3>
             <div className="flex gap-4 flex-wrap">
               {toilet.tags.map((tag, index) => (
-                <div key={index} className="px-6 py-2 bg-gray-0 rounded-[50px] flex items-center">
+                <div
+                  key={index}
+                  className="px-6 py-2 bg-gray-0 rounded-[50px] flex items-center"
+                >
                   <span className="text-body2 text-gray-8">{tag}</span>
                 </div>
               ))}

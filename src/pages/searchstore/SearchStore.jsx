@@ -1,19 +1,16 @@
 import { useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import SearchBar from '@/components/common/SearchBar';
 import Filter from '@/components/common/Filter';
 
-// 아이콘들
 import FilterIcon from '@/assets/svg/filter.svg?react';
 import Arrow from '@/assets/svg/arrow.svg?react';
 import ArrowLeft from '@/assets/svg/arrowleft.svg?react';
 import Star from '@/assets/svg/star.svg?react';
 import NearbyToilet from '@/assets/svg/NearbyToilet.svg?react';
 
-// API hooks
 import { useSearchResults } from '@/hooks/store/useStoreApi';
 
-// 칩 스타일 정의
 const chipSelectedClass =
   'inline-flex items-center px-4 h-[32px] rounded-full border border-main-2 bg-main-1 text-main-2 text-body2 shadow-sm transition-colors hover:bg-main-2 hover:text-white';
 
@@ -21,6 +18,7 @@ const clearClass =
   'inline-flex items-center justify-center h-[32px] px-4 rounded-full border border-gray-3 bg-gray-0 text-gray-4 text-body2 transition-colors hover:bg-gray-1 hover:text-gray-6';
 
 export default function SearchStore() {
+  const navigate = useNavigate(); // 페이지 이동
   const [filterOpen, setFilterOpen] = useState(false); // 필터 열림 여부
   const [selected, setSelected] = useState([]); // 선택된 필터 칩들
 
@@ -204,7 +202,8 @@ export default function SearchStore() {
               {toilets.slice(currentIndex, currentIndex + 4).map((t) => (
                 <div
                   key={t.toiletId}
-                  className="flex-shrink-0 h-[393px] w-[256px]"
+                  className="flex-shrink-0 h-[393px] w-[256px] cursor-pointer"
+                  onClick={() => navigate(`/toilet-detail/${t.toiletId}`)} // 화장실 상세 페이지 이동
                 >
                   <div
                     className="relative rounded-[10px] overflow-hidden"
