@@ -1,7 +1,3 @@
-/**
- * src/pages/review/ReviewToilet.jsx
- * 리뷰 작성 페이지 컴포넌트입니다.
- */
 import { useState, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Pencil from '@/assets/svg/toiletDetail/pencil.svg?react';
@@ -28,7 +24,8 @@ const ReviewToilet = () => {
   const [selectedFacilities, setSelectedFacilities] = useState([]);
   const [selectedCondition, setSelectedCondition] = useState([]);
   const [selectedSpecialFacilities, setSelectedSpecialFacilities] = useState([]);
-  const [uploadedImageUrls, setUploadedImageUrls] = useState([]);
+  
+  const [uploadedImages, setUploadedImages] = useState([]);
 
   // 데이터 조회
   const { data: toiletData, isLoading: isToiletLoading } = useToiletDetail(toiletId);
@@ -59,28 +56,28 @@ const ReviewToilet = () => {
   const handleImageUpload = async (event) => {
     const files = Array.from(event.target.files);
     if (!files.length) return;
-    if (uploadedImageUrls.length + files.length > 3) {
+    if (uploadedImages.length + files.length > 3) {
       return alert('이미지는 최대 3개까지 첨부할 수 있습니다.');
     }
 
     const formData = new FormData();
-    // 수정된 부분: 백엔드에서 기대하는 'images' 키로 변경
     files.forEach(file => formData.append('images', file));
 
     try {
       const response = await uploadImages({ toiletId, formData });
-      // 백엔드 응답 구조에 맞게 수정 (List<String> 직접 반환)
-      const newUrls = response.data.data; // List<String> 직접 받음
-      setUploadedImageUrls(prev => [...prev, ...newUrls]);
+      const newUrls = response.data.data; // ["url1", "url2"]
+      // ✨ 3. URL 문자열을 { id, url } 객체 형태로 변환하여 상태에 저장합니다.
+      const newImageObjects = newUrls.map(url => ({ id: url, url: url }));
+      setUploadedImages(prev => [...prev, ...newImageObjects]);
     } catch (error) {
-      // 에러는 훅에서 처리
+      console.error("이미지 업로드 실패:", error);
     }
   };
 
   const handleImageRemove = async (urlToRemove) => {
     try {
       await deleteImage(urlToRemove);
-      setUploadedImageUrls(prev => prev.filter(url => url !== urlToRemove));
+      setUploadedImages(prev => prev.filter(image => image.url !== urlToRemove));
     } catch (error) {
       // 에러는 훅에서 처리
     }
@@ -102,7 +99,7 @@ const ReviewToilet = () => {
       title: title.trim(),
       content: content.trim(),
       tagIds: allSelectedTagNames.map(name => tagNameToIdMap.get(name)).filter(Boolean),
-      imageUrls: uploadedImageUrls,
+      imageUrls: uploadedImages.map(image => image.url),
     };
 
     try {
@@ -146,7 +143,7 @@ const ReviewToilet = () => {
             <ReviewForm
               title={title} onTitleChange={setTitle}
               content={content} onContentChange={setContent}
-              uploadedImages={uploadedImageUrls.map(url => ({ id: url, url }))}
+              uploadedImages={uploadedImages}
               onImageUpload={handleImageUpload}
               onImageRemove={(id) => handleImageRemove(id)}
             />
