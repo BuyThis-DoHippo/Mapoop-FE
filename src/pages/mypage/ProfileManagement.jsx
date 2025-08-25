@@ -81,13 +81,16 @@ const ProfileManagement = () => {
                 <td className="bg-gray-0 px-6 py-4 text-body2-bold text-gray-10">
                   로그인 정보
                 </td>
-                <td className="px-6 py-4 text-body2 text-gray-10">
-                  {profile?.kakao_id
-                    ? `카카오 로그인 (${profile?.email})`
-                    : profile?.google_id
-                      ? `구글 로그인 (${profile?.email})`
-                      : `일반 로그인 (${profile?.email})`}
-                </td>
+                <tr>
+                  <td className="bg-gray-0 px-6 py-4 text-body2-bold text-gray-10">
+                    로그인 정보
+                  </td>
+                  <td className="px-6 py-4 text-body2 text-gray-10">
+                    {profile?.kakao_id !== null
+                      ? `카카오 로그인 (${profile?.email})`
+                      : `구글 로그인 (${profile?.email})`}
+                  </td>
+                </tr>
               </tr>
             </tr>
           </tbody>
