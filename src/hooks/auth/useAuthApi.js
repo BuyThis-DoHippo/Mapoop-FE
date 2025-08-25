@@ -27,7 +27,7 @@ const removeCookie = (name) => {
 
 
 // 카카오 로그인 mutation
-export const useKakaoLogin = () => {
+export const useKakaoLogin = (navigate) => {
   const { handleLoginSuccess } = useAuthStore();
 
   return useMutation({
@@ -55,19 +55,19 @@ export const useKakaoLogin = () => {
       }
       const success = await handleLoginSuccess(data);
       if (success) {
-        window.location.href = '/';
+        navigate('/');
       }
     },
     onError: (error) => {
       console.error('카카오 로그인 실패:', error);
       alert('로그인에 실패했습니다. 다시 시도해주세요.');
-      window.location.href = '/login';
+      navigate('/login');
     },
   });
 };
 
 // 구글 로그인 mutation
-export const useGoogleLogin = () => {
+export const useGoogleLogin = (navigate) => {
   const { handleLoginSuccess } = useAuthStore();
 
   return useMutation({
@@ -93,14 +93,14 @@ export const useGoogleLogin = () => {
     }
     const success = await handleLoginSuccess(data);
     if (success) {
-      window.location.href = '/';
+      navigate('/');
     }
   },
 
     onError: (error) => {
       console.error('구글 로그인 실패:', error);
       alert('로그인에 실패했습니다. 다시 시도해주세요.');
-      window.location.href = '/login';
+      navigate('/login');
     },
   });
 };

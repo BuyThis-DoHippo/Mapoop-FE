@@ -15,9 +15,9 @@ export const useAuth = () => {
     clearError 
   } = useAuthStore();
 
-  const kakaoLoginMutation = useKakaoLogin();
-  const googleLoginMutation = useGoogleLogin();
-  const logoutMutation = useLogout();
+  const kakaoLoginMutation = useKakaoLogin(navigate);
+  const googleLoginMutation = useGoogleLogin(navigate);
+  const logoutMutation = useLogout(navigate);
 
   // 앱 초기화 시 로그인 상태 확인
   useEffect(() => {
