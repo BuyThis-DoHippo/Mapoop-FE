@@ -27,7 +27,6 @@ export default function MapContainer({
       enabled: !isUrgent,
   });
 
-  // ✨ 수정된 부분: 에러 상태를 올바르게 조합
   const markers = isUrgent ? emergencyToilets : searchMarkers;
   const error = isUrgent ? emergencyError : searchError;
 
@@ -75,8 +74,12 @@ export default function MapContainer({
       initMap();
       return;
     }
+    // 수정된 부분: 환경 변수에서 카카오 맵 API 키를 가져옵니다.
+    const KAKAO_MAP_API_KEY = import.meta.env.VITE_KAKAO_MAP_API_KEY;
+
     const script = document.createElement('script');
-    script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=211e0345de882006dea58a648ef58c88&autoload=false`;
+    // 수정된 부분: 하드코딩된 키를 환경 변수로 교체합니다.
+    script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_MAP_API_KEY}&autoload=false`;
     script.async = true;
     script.onload = () => window.kakao.maps.load(initMap);
     document.head.appendChild(script);
@@ -156,7 +159,6 @@ export default function MapContainer({
     }
   };
 
-  // ✨ 수정된 부분: 에러가 있을 때 메시지 표시
   if (error) {
     return <div className="w-full h-full flex items-center justify-center bg-gray-100"><p className="text-red-600">지도 데이터를 불러올 수 없습니다: {error.message}</p></div>;
   }
@@ -165,7 +167,7 @@ export default function MapContainer({
     <div className="relative w-full h-full">
       <div id={isUrgent ? 'map-urgent' : 'map'} className="w-full h-full" />
       <button onClick={moveToCurrentLocation} className="absolute top-10 right-10 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-100 transition-colors z-10" aria-label="현재 위치로 이동">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2L12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2Z" /><path d="M12 2L12 5" /><path d="M22 12L19 12" /><path d="M12 22L12 19" /><path d="M2 12L5 12" /></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2L12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2Z" /><path d="M12 2L12 5" /><path d="M22 12L19 12" /><path d="M12 22L12 19" /><path d="M2 12L5 12" /></svg>
       </button>
     </div>
   );

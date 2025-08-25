@@ -2,21 +2,19 @@ import { useEffect, useRef, useState } from 'react';
 import { useMapMarkers, useEmergencyToilets } from '@/hooks/map/useMapApi';
 import { requestLocationWithPermission } from '@/utils/locationUtils';
 
-// 공통 MapContainer 컴포넌트
 export default function MapContainer({
   filters = {},
-  coords, // urgent 페이지에서 사용
+  coords,
   selectedToiletId,
   onMarkerClick,
-  isUrgent = false, // 이 컴포넌트가 긴급 찾기용인지 구분
+  isUrgent = false,
 }) {
   const mapRef = useRef(null);
-  const markersRef = useRef([]); // { marker, data, position, index }
+  const markersRef = useRef([]);
   const userMarkerRef = useRef(null);
   const [isMapReady, setIsMapReady] = useState(false);
   const [userLocation, setUserLocation] = useState(null);
 
-  // API 호출 로직 분기
   const emergencyParams = coords ? { lat: coords.lat, lng: coords.lng } : null;
   const { data: emergencyToilets, error: emergencyError } = useEmergencyToilets(emergencyParams || {}, {
     enabled: isUrgent && !!emergencyParams,
@@ -27,7 +25,6 @@ export default function MapContainer({
       enabled: !isUrgent,
   });
 
-  // ✨ 수정된 부분: 에러 상태를 올바르게 조합
   const markers = isUrgent ? emergencyToilets : searchMarkers;
   const error = isUrgent ? emergencyError : searchError;
 
@@ -75,8 +72,12 @@ export default function MapContainer({
       initMap();
       return;
     }
+    // 수정된 부분: 환경 변수에서 카카오 맵 API 키를 가져옵니다.
+    const KAKAO_MAP_API_KEY = import.meta.env.VITE_KAKAO_MAP_API_KEY;
+
     const script = document.createElement('script');
-    script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=211e0345de882006dea58a648ef58c88&autoload=false`;
+    // 수정된 부분: 하드코딩된 키를 환경 변수로 교체합니다.
+    script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_MAP_API_KEY}&autoload=false`;
     script.async = true;
     script.onload = () => window.kakao.maps.load(initMap);
     document.head.appendChild(script);
@@ -156,7 +157,6 @@ export default function MapContainer({
     }
   };
 
-  //에러가 있을 때 메시지 표시
   if (error) {
     return <div className="w-full h-full flex items-center justify-center bg-gray-100"><p className="text-red-600">지도 데이터를 불러올 수 없습니다: {error.message}</p></div>;
   }

@@ -9,19 +9,20 @@ const ToiletLocation = ({ toilet }) => {
   useEffect(() => {
     if (!toilet?.location?.latitude || !toilet?.location?.longitude) return;
 
-    // 이미 로드된 경우 다시 불러오지 않음
     if (window.kakao && window.kakao.maps) {
       initMap();
       return;
     }
+    
+    // 수정된 부분: 환경 변수에서 카카오 맵 API 키를 가져옵니다.
+    const KAKAO_MAP_API_KEY = import.meta.env.VITE_KAKAO_MAP_API_KEY;
 
-    // 스크립트 태그 생성
     const script = document.createElement('script');
-    script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=211e0345de882006dea58a648ef58c88&autoload=false`;
+    // 수정된 부분: 하드코딩된 키를 환경 변수로 교체합니다.
+    script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_MAP_API_KEY}&autoload=false`;
     script.async = true;
 
     script.onload = () => {
-      // SDK 로드 후 맵 초기화
       window.kakao.maps.load(initMap);
     };
 
@@ -32,7 +33,7 @@ const ToiletLocation = ({ toilet }) => {
       if (!container) return;
 
       const center = new window.kakao.maps.LatLng(
-        toilet.location.latitude, 
+        toilet.location.latitude,
         toilet.location.longitude
       );
 
@@ -44,8 +45,7 @@ const ToiletLocation = ({ toilet }) => {
       const map = new window.kakao.maps.Map(container, options);
       mapRef.current = map;
       setIsMapReady(true);
-
-      // 화장실 마커 추가
+      
       addToiletMarker(map, toilet);
     }
   }, [toilet]);
@@ -53,11 +53,10 @@ const ToiletLocation = ({ toilet }) => {
   // 화장실 마커 추가
   const addToiletMarker = (map, toiletData) => {
     const position = new window.kakao.maps.LatLng(
-      toiletData.location.latitude, 
+      toiletData.location.latitude,
       toiletData.location.longitude
     );
 
-    // 커스텀 마커 HTML
     const markerContent = document.createElement('div');
     markerContent.style.cssText = `
       position: relative;
@@ -72,13 +71,12 @@ const ToiletLocation = ({ toilet }) => {
       justify-content: center;
       cursor: pointer;
     `;
-    
+
     const iconContainer = document.createElement('div');
     iconContainer.style.cssText = 'transform: rotate(-45deg);';
     iconContainer.innerHTML = '<div style="width: 24px; height: 24px; background: white; mask: url(/src/assets/svg/toilet-marker.svg) no-repeat center; mask-size: contain;"></div>';
     markerContent.appendChild(iconContainer);
 
-    // CustomOverlay로 마커 생성
     const customMarker = new window.kakao.maps.CustomOverlay({
       position: position,
       content: markerContent,
@@ -88,7 +86,6 @@ const ToiletLocation = ({ toilet }) => {
 
     customMarker.setMap(map);
 
-    // 인포윈도우 생성
     const infowindow = new window.kakao.maps.InfoWindow({
       content: `
         <div style="padding:10px; width:200px;">
@@ -104,7 +101,6 @@ const ToiletLocation = ({ toilet }) => {
       `
     });
 
-    // 마커 클릭 이벤트 (CustomOverlay는 DOM 이벤트 사용)
     markerContent.addEventListener('click', () => {
       infowindow.open(map, customMarker);
     });
@@ -116,10 +112,8 @@ const ToiletLocation = ({ toilet }) => {
     <div className="flex flex-col gap-6">
       <h2 className="text-heading3-bold text-black">화장실 위치</h2>
       <div className="w-[992px] h-[334px] flex gap-10">
-        {/* Map */}
         <div className="w-[682px] h-[334px] relative bg-gray-1 rounded-[10px] border border-gray-2 overflow-hidden">
           <div id="toilet-detail-map" className="w-full h-full">
-            {/* 카카오맵 스크립트로 로드되는 부분 */}
           </div>
           {!isMapReady && (
             <div className="absolute inset-0 flex items-center justify-center">
@@ -127,8 +121,6 @@ const ToiletLocation = ({ toilet }) => {
             </div>
           )}
         </div>
-
-        {/* Location Info */}
         <div className="w-[300px] h-[334px] flex flex-col gap-8">
           <div className="flex flex-col gap-4">
             <h3 className="text-body1-bold text-black">주소</h3>
@@ -136,12 +128,10 @@ const ToiletLocation = ({ toilet }) => {
               <p className="text-body1 text-black">{toilet.location.address}</p>
             </div>
           </div>
-
           <div className="flex flex-col gap-4">
             <h3 className="text-body1-bold text-black">장소 설명</h3>
             <p className="text-body1 text-black">{toilet.description}</p>
           </div>
-
           <div className="flex flex-col gap-4">
             <h3 className="text-body1-bold text-black">화장실 태그</h3>
             <div className="flex gap-4 flex-wrap">
