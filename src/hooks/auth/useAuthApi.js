@@ -54,8 +54,8 @@ export const useKakaoLogin = (navigate) => {
         setCookie('refresh_token', refreshToken, 7);
       }
        await handleLoginSuccess(data);
-
         navigate('/');
+        window.location.href = '/';
       
     },
     onError: (error) => {
@@ -94,6 +94,7 @@ export const useGoogleLogin = (navigate) => {
      await handleLoginSuccess(data);
    
       navigate('/');
+      window.location.href = '/';
     
   },
 
