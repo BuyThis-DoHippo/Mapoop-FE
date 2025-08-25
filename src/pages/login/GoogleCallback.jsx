@@ -32,7 +32,6 @@ const GoogleCallback = () => {
     const code = searchParams.get('code');
     handleGoogleCallback(code, locationConsent);
     setShowLocationConsent(false);
-    window.location.href = '/';
   };
 
   if (showLocationConsent) {

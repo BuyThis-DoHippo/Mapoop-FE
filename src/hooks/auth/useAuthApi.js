@@ -91,10 +91,10 @@ export const useGoogleLogin = (navigate) => {
       setCookie('access_token', accessToken, 1);
       setCookie('refresh_token', refreshToken, 7);
     }
-    const success = await handleLoginSuccess(data);
-    if (success) {
+     await handleLoginSuccess(data);
+   
       navigate('/');
-    }
+    
   },
 
     onError: (error) => {
