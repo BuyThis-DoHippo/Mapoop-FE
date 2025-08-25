@@ -84,6 +84,7 @@ export const useGoogleLogin = () => {
       }
     },
     onSuccess: async (data) => {
+      console.log('로그인 API 응답:', data); // API 응답 데이터 확인을 위한 로그 추가
       if (data && data.data) {
         const { access_token, refresh_token } = data.data;
         setCookie('access_token', access_token, 1);

@@ -39,17 +39,18 @@ export const getKakaoAccessToken = async (code) => {
 // 카카오 로그인 (액세스 토큰으로 로그인)
 export const kakaoLogin = async (kakaoAccessToken, locationConsent = true) => {
   const requestData = {
-    kakao_access_token: kakaoAccessToken,
-    location_consent: locationConsent,
-    location_consent_version: "1.0"
+    // API 명세에 맞게 파라미터 이름 수정
+    kakaoAccessToken: kakaoAccessToken,
+    locationConsent: locationConsent,
+    locationConsentVersion: "1.0"
   };
-  
+
   console.log('카카오 로그인 요청 전체 데이터:', requestData);
   console.log('액세스 토큰 길이:', kakaoAccessToken?.length);
   console.log('액세스 토큰 타입:', typeof kakaoAccessToken);
   console.log('location_consent 타입:', typeof locationConsent);
   console.log('location_consent_version 타입:', typeof "1.0");
-  
+
   try {
     const response = await axiosInstance.post('/api/auth/kakao/login', requestData);
     console.log('카카오 로그인 성공:', response.data);
@@ -103,16 +104,17 @@ export const getGoogleAccessToken = async (code) => {
 
 // 구글 로그인 (액세스 토큰으로 로그인)
 export const googleLogin = async (googleAccessToken, locationConsent = true) => {
-  console.log('구글 로그인 요청:', { 
-    google_access_token: googleAccessToken?.substring(0, 10) + '...',
-    location_consent: locationConsent,
-    location_consent_version: "1.0" 
+  console.log('구글 로그인 요청:', {
+    googleAccessToken: googleAccessToken?.substring(0, 10) + '...',
+    locationConsent: locationConsent,
+    locationConsentVersion: "1.0"
   });
-  
+
   const response = await axiosInstance.post('/api/auth/google/login', {
-    google_access_token: googleAccessToken,
-    location_consent: locationConsent,
-    location_consent_version: "1.0"
+    // API 문서에 맞게 파라미터 이름 수정
+    googleAccessToken: googleAccessToken,
+    locationConsent: locationConsent,
+    locationConsentVersion: "1.0"
   });
   return response.data;
 };
