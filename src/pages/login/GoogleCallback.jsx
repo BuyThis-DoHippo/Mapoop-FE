@@ -32,6 +32,7 @@ const GoogleCallback = () => {
     const code = searchParams.get('code');
     handleGoogleCallback(code, locationConsent);
     setShowLocationConsent(false);
+    window.location.href = '/';
   };
 
   if (showLocationConsent) {
@@ -83,16 +84,10 @@ const GoogleCallback = () => {
   return (
     <div className="min-h-screen bg-white flex items-center justify-center">
       <div className="flex flex-col items-center gap-8">
-        {isGoogleLoading ? (
-          <>
+        {isGoogleLoading && (<>
             <div className="w-16 h-16 border-4 border-main border-t-transparent rounded-full animate-spin"></div>
             <p className="text-body1 text-gray-10">구글 로그인 처리 중...</p>
-          </>
-        ) : (
-          <>
-            <div className="w-16 h-16 border-4 border-gray-3 border-t-transparent rounded-full animate-spin"></div>
-            <p className="text-body1 text-gray-10">로그인 처리 중...</p>
-          </>
+</>
         )}
       </div>
     </div>
