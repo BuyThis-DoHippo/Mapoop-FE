@@ -30,7 +30,7 @@ const ProfileManagement = () => {
     enabled: !!profile?.id,
   });
 
-  // 상태 처리 → 조건부 return 대신 변수로 UI 분기
+  // 상태 처리
   if (isLoading || toiletLoading || reviewLoading) {
     return <p>로딩 중...</p>;
   }
@@ -57,6 +57,7 @@ const ProfileManagement = () => {
 
         <table className="w-[893px] border border-gray-2">
           <tbody>
+            {/* 사용자 이름 */}
             <tr className="border-b border-gray-2">
               <td className="w-[142px] h-[48px] bg-gray-0 px-6 py-4 text-body2-bold text-gray-10">
                 사용자 이름
@@ -65,6 +66,8 @@ const ProfileManagement = () => {
                 {profile?.name}
               </td>
             </tr>
+
+            {/* 이메일 */}
             <tr className="border-b border-gray-2">
               <td className="bg-gray-0 px-6 py-4 text-body2-bold text-gray-10">
                 이메일
@@ -73,25 +76,17 @@ const ProfileManagement = () => {
                 {profile?.email}
               </td>
             </tr>
+
+            {/* 로그인 정보 */}
             <tr>
               <td className="bg-gray-0 px-6 py-4 text-body2-bold text-gray-10">
                 로그인 정보
               </td>
-              <tr>
-                <td className="bg-gray-0 px-6 py-4 text-body2-bold text-gray-10">
-                  로그인 정보
-                </td>
-                <tr>
-                  <td className="bg-gray-0 px-6 py-4 text-body2-bold text-gray-10">
-                    로그인 정보
-                  </td>
-                  <td className="px-6 py-4 text-body2 text-gray-10">
-                    {profile?.kakao_id !== null
-                      ? `카카오 로그인 (${profile?.email})`
-                      : `구글 로그인 (${profile?.email})`}
-                  </td>
-                </tr>
-              </tr>
+              <td className="px-6 py-4 text-body2 text-gray-10">
+                {profile?.kakao_id !== null
+                  ? `카카오 로그인 (${profile?.email})`
+                  : `구글 로그인 (${profile?.email})`}
+              </td>
             </tr>
           </tbody>
         </table>
