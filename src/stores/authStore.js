@@ -63,7 +63,11 @@ const useAuthStore = create((set, get) => ({
   },
 
   handleLoginSuccess: async (loginResponse) => {
-    const { accessToken, refreshToken, user } = loginResponse.data;
+    const {
+      access_token: accessToken,
+      refresh_token: refreshToken,
+      user,
+    } = loginResponse.data;
 
     if (!accessToken || !refreshToken) {
       set({
