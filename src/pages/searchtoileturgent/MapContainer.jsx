@@ -4,21 +4,19 @@ import { requestLocationWithPermission } from '@/utils/locationUtils';
 // 수정된 부분: 마커 SVG 파일을 직접 import합니다.
 import toiletMarkerUrl from '@/assets/svg/toilet-marker.svg';
 
-// 공통 MapContainer 컴포넌트
 export default function MapContainer({
   filters = {},
-  coords, // urgent 페이지에서 사용
+  coords,
   selectedToiletId,
   onMarkerClick,
-  isUrgent = true, // 이 컴포넌트가 긴급 찾기용인지 구분
+  isUrgent = true,
 }) {
   const mapRef = useRef(null);
-  const markersRef = useRef([]); // { marker, data, position, index }
+  const markersRef = useRef([]);
   const userMarkerRef = useRef(null);
   const [isMapReady, setIsMapReady] = useState(false);
   const [userLocation, setUserLocation] = useState(null);
 
-  // API 호출 로직 분기
   const emergencyParams = coords ? { lat: coords.lat, lng: coords.lng } : null;
   const { data: emergencyToilets, error: emergencyError } = useEmergencyToilets(emergencyParams || {}, {
     enabled: isUrgent && !!emergencyParams,
@@ -117,12 +115,12 @@ export default function MapContainer({
 
     const content = document.createElement('div');
     content.style.cssText = 'position: relative; display: flex; flex-direction: column; align-items: center; cursor: pointer;';
-    // 수정된 부분: import한 SVG 경로를 사용합니다.
+    // 수정된 부분: 아이콘 div의 style 속성을 더 명확하게 수정합니다.
     content.innerHTML = `
       <div style="position: relative; display: flex; align-items: center; justify-content: center; width: ${finalSize}px; height: ${finalSize}px;">
         ${pulseEffect}
-        <div class="marker-icon" style="width: 100%; height: 100%; transform: rotate(45deg); border-radius: 50% 50% 0 50%; border: 3px solid ${borderColor}; background: ${backgroundColor}; display: flex; align-items: center; justify-content: center; transition: all 0.2s;">
-          <div style="transform: rotate(-45deg); background: white; width: 50%; height: 50%; mask: url(${toiletMarkerUrl}) no-repeat center;"></div>
+        <div class="marker-icon" style="width: 100%; height: 100%; transform: rotate(45deg); border-radius: 50% 50% 0 50%; border: 3px solid ${borderColor}; background-color: ${backgroundColor}; display: flex; align-items: center; justify-content: center; transition: all 0.2s;">
+          <div style="transform: rotate(-45deg); background-color: white; width: 50%; height: 50%; mask: url(${toiletMarkerUrl}) no-repeat center / contain; -webkit-mask: url(${toiletMarkerUrl}) no-repeat center / contain;"></div>
         </div>
       </div>
       ${isSelected ? `<div style="position: absolute; bottom: -50px; white-space: nowrap; background-color: rgba(0, 0, 0, 0.75); color: white; padding: 5px 10px; border-radius: 5px; font-size: 18px; font-weight: bold;">${markerData.name}</div>` : ''}

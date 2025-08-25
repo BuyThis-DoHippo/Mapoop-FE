@@ -56,16 +56,17 @@ const ToiletLocation = ({ toilet }) => {
       toiletData.location.longitude
     );
 
-    // 수정된 부분: 마커 스타일 로직을 다른 파일과 통일하고, import한 SVG 경로를 사용합니다.
     const borderColor = toiletData.type === 'PUBLIC' ? '#027E00' : '#FF7B00';
     const backgroundColor = toiletData.type === 'PUBLIC' ? '#36C239' : '#FFB005';
 
     const markerContent = document.createElement('div');
     markerContent.style.cssText = 'position: relative; display: flex; flex-direction: column; align-items: center; cursor: pointer;';
+    
+    // 수정된 부분: 아이콘 div의 style 속성을 더 명확하게 수정합니다.
     markerContent.innerHTML = `
       <div style="position: relative; display: flex; align-items: center; justify-content: center; width: 48px; height: 48px;">
-        <div class="marker-icon" style="width: 100%; height: 100%; transform: rotate(45deg); border-radius: 50% 50% 0 50%; border: 3px solid ${borderColor}; background: ${backgroundColor}; display: flex; align-items: center; justify-content: center; transition: all 0.2s;">
-          <div style="transform: rotate(-45deg); background: white; width: 50%; height: 50%; mask: url(${toiletMarkerUrl}) no-repeat center;"></div>
+        <div class="marker-icon" style="width: 100%; height: 100%; transform: rotate(45deg); border-radius: 50% 50% 0 50%; border: 3px solid ${borderColor}; background-color: ${backgroundColor}; display: flex; align-items: center; justify-content: center; transition: all 0.2s;">
+          <div style="transform: rotate(-45deg); background-color: white; width: 50%; height: 50%; mask: url(${toiletMarkerUrl}) no-repeat center / contain; -webkit-mask: url(${toiletMarkerUrl}) no-repeat center / contain;"></div>
         </div>
       </div>
     `;
